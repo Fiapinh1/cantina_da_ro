@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Dashboard - Galinhada da Rô</title>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+    :root{
+      --bg:#0a0908;
+      --panel:#1a1816;
+      --text:#f5f3f0;
+      --muted:#b8a89a;
+      --accent:#ff6b35;
+      --accent2:#f77f00;
+      --dark:#3d2a23;
+      --ok:#4ade80;
+      --pending:#fbbf24;
+      --danger:#ef4444;
+    }
+
+    *{ 
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body{
+      margin:0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
+      color:var(--text);
+      min-height:100vh;
+      padding-bottom:20px;
+    }
+
+    /* NAVBAR */
+    .navbar{
+      background: rgba(26,24,22,.98);
+      backdrop-filter: blur(10px);
+      border-bottom:2px solid rgba(255,107,53,.3);
+      padding:12px 16px;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    .navbar-brand{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom:12px;
+    }
+
+    .navbar-menu{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+    }
+
+    .nav-btn{
+      flex:1;
+      padding:10px 12px;
+      border-radius:10px;
+      border:2px solid transparent;
+      background:rgba(255,107,53,.1);
+      color:var(--muted);
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      transition: all .3s;
+      font-family: 'Poppins', sans-serif;
+      font-size:11px;
+      max-width:110px;
+    }
+
+    .nav-btn svg{
+      width:20px;
+      height:20px;
+    }
+
+    .nav-btn:active{
+      transform: scale(0.95);
+    }
+
+    .nav-btn.active{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
+
+    /* CONTAINER */
+    .container{
+      padding:16px;
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    @media (min-width: 768px){
+      .container{
+        padding:24px;
+      }
+    }
+
+    /* HEADER */
+    .header{
+      text-align:center;
+      margin-bottom:20px;
+      padding:20px 16px;
+      background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(247,127,0,.1));
+      border-radius:16px;
+      border:2px solid rgba(255,107,53,.3);
+    }
+
+    .header h1{
+      font-size:24px;
+      font-weight:900;
+      margin:0 0 6px 0;
+      color:var(--text);
+    }
+
+    .header p{
+      font-size:13px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    /* STATS */
+    .stats-grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    @media (min-width: 768px){
+      .stats-grid{
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-card{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:16px;
+      text-align:center;
+    }
+
+    .stat-icon{
+      width:48px;
+      height:48px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 12px auto;
+    }
+
+    .stat-icon.orange{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+
+    .stat-icon.green{
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+    }
+
+    .stat-icon.yellow{
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    }
+
+    .stat-icon svg{
+      width:24px;
+      height:24px;
+      color:#fff;
+    }
+
+    .stat-label{
+      font-size:11px;
+      font-weight:600;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin:0 0 6px 0;
+    }
+
+    .stat-value{
+      font-size:24px;
+      font-weight:900;
+      color:var(--text);
+      margin:0;
+    }
+
+    /* FILTERS */
+    .filters{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .filter-group{
+      margin-bottom:12px;
+    }
+
+    .filter-group:last-child{
+      margin-bottom:0;
+    }
+
+    .filter-group label{
+      display:block;
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      margin:0 0 8px 2px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .filter-input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      border:2px solid rgba(255,107,53,.2);
+      background:rgba(0,0,0,.3);
+      color:var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size:14px;
+      outline:none;
+    }
+
+    .filter-input:focus{
+      border-color:var(--accent);
+      background:rgba(0,0,0,.5);
+    }
+
+    @media (min-width: 768px){
+      .filters{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:16px;
+      }
+      .filter-group{
+        margin-bottom:0;
+      }
+    }
+
+    /* ORDERS */
+    .orders-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:16px;
+    }
+
+    .orders-title{
+      font-size:18px;
+      font-weight:700;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .refresh-btn{
+      padding:10px 16px;
+      border-radius:10px;
+      border:2px solid var(--accent);
+      background:rgba(255,107,53,.1);
+      color:var(--accent);
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      font-family: 'Poppins', sans-serif;
+      font-size:13px;
+    }
+
+    .refresh-btn:active{
+      transform: scale(0.95);
+    }
+
+    /* ORDER CARD */
+    .order-card{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:12px;
+    }
+
+    .order-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:12px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(255,107,53,.2);
+    }
+
+    .order-client{
+      flex:1;
+    }
+
+    .order-name{
+      font-size:16px;
+      font-weight:700;
+      color:var(--text);
+      margin:0 0 4px 0;
+    }
+
+    .order-date{
+      font-size:11px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .status-badge{
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .status-badge.pending{
+      background:rgba(251,191,36,.2);
+      color:#fbbf24;
+      border:1px solid #fbbf24;
+    }
+
+    .status-badge.delivered{
+      background:rgba(74,222,128,.2);
+      color:#4ade80;
+      border:1px solid #4ade80;
+    }
+
+    .status-badge.cancelled{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+      border:1px solid #ef4444;
+    }
+
+    .order-info{
+      display:grid;
+      gap:8px;
+      margin-bottom:12px;
+    }
+
+    .order-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+    }
+
+    .order-row svg{
+      width:16px;
+      height:16px;
+      color:var(--accent);
+      flex-shrink:0;
+    }
+
+    .order-row strong{
+      color:var(--muted);
+      min-width:70px;
+    }
+
+    .order-row span{
+      color:var(--text);
+      font-weight:600;
+    }
+
+    .order-token{
+      background:rgba(255,107,53,.1);
+      padding:10px;
+      border-radius:8px;
+      text-align:center;
+      margin-bottom:12px;
+      border:1px solid rgba(255,107,53,.3);
+    }
+
+    .order-token-label{
+      font-size:10px;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      margin:0 0 4px 0;
+    }
+
+    .order-token-value{
+      font-size:18px;
+      font-weight:900;
+      color:var(--accent);
+      font-family: 'Courier New', monospace;
+      letter-spacing:2px;
+      margin:0;
+    }
+
+    .order-actions{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:8px;
+    }
+
+    .order-actions.full{
+      grid-template-columns: 1fr;
+    }
+
+    .action-btn{
+      padding:10px;
+      border-radius:8px;
+      border:none;
+      font-weight:600;
+      cursor:pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+    }
+
+    .action-btn:active{
+      transform: scale(0.95);
+    }
+
+    .action-btn.primary{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
+
+    .action-btn.danger{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+      border:1px solid #ef4444;
+    }
+
+    .action-btn.success{
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color:#fff;
+    }
+
+    .action-btn.secondary{
+      background:rgba(255,107,53,.1);
+      color:var(--accent);
+      border:1px solid var(--accent);
+    }
+
+    /* MODAL */
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.85);
+      backdrop-filter:blur(4px);
+      z-index:1000;
+      padding:20px;
+      overflow-y:auto;
+    }
+
+    .modal.active{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .modal-content{
+      background: linear-gradient(135deg, rgba(61,42,35,.95), rgba(26,24,22,.95));
+      border:2px solid rgba(255,107,53,.3);
+      border-radius:20px;
+      padding:24px;
+      max-width:500px;
+      width:100%;
+    }
+
+    .modal-header{
+      margin-bottom:20px;
+      text-align:center;
+    }
+
+    .modal-header h2{
+      font-size:20px;
+      font-weight:900;
+      margin:0 0 6px 0;
+    }
+
+    .modal-header p{
+      font-size:13px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .modal-body{
+      margin-bottom:20px;
+    }
+
+    .info-item{
+      padding:12px;
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      border:1px solid rgba(255,107,53,.2);
+      margin-bottom:10px;
+    }
+
+    .info-item label{
+      font-size:11px;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .info-item p{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+      margin:0;
+    }
+
+    .token-input{
+      width:100%;
+      padding:14px;
+      border-radius:10px;
+      border:2px solid var(--accent);
+      background:rgba(0,0,0,.3);
+      color:var(--text);
+      font-family: 'Courier New', monospace;
+      font-size:18px;
+      font-weight:700;
+      text-align:center;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      outline:none;
+      margin-top:12px;
+    }
+
+    .status-select{
+      width:100%;
+      padding:14px;
+      border-radius:10px;
+      border:2px solid var(--accent);
+      background:rgba(0,0,0,.3);
+      color:var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size:15px;
+      font-weight:600;
+      outline:none;
+      margin-top:12px;
+    }
+
+    .modal-footer{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    .modal-btn{
+      padding:14px;
+      border-radius:10px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .modal-btn:active{
+      transform: scale(0.95);
+    }
+
+    .modal-btn.cancel{
+      background:rgba(255,255,255,.1);
+      color:var(--text);
+      border:2px solid rgba(255,255,255,.2);
+    }
+
+    .modal-btn.confirm{
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color:#fff;
+    }
+
+    .modal-btn.danger{
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color:#fff;
+    }
+
+    .loading-state,
+    .empty-state{
+      text-align:center;
+      padding:40px 20px;
+      color:var(--muted);
+    }
+
+    .loading-state svg,
+    .empty-state svg{
+      width:48px;
+      height:48px;
+      margin-bottom:16px;
+      opacity:.5;
+    }
+
+    .loading-state svg{
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      from{ transform:rotate(0deg); }
+      to{ transform:rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      🍗 Galinhada da Rô
+    </div>
+    <div class="navbar-menu">
+      <button class="nav-btn active">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-btn" onclick="window.location.href='novo-pedido-mobile.html'">
+        <i data-lucide="plus-circle"></i>
+        <span>Novo Pedido</span>
+      </button>
+      <button class="nav-btn" onclick="window.location.href='relatorios-mobile.html'">
+        <i data-lucide="bar-chart-3"></i>
+        <span>Relatórios</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTAINER -->
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <h1>📊 Dashboard</h1>
+      <p>Gerencie suas entregas</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i data-lucide="shopping-bag"></i>
+        </div>
+        <p class="stat-label">Total</p>
+        <p class="stat-value" id="statTotal">0</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon yellow">
+          <i data-lucide="clock"></i>
+        </div>
+        <p class="stat-label">Pendentes</p>
+        <p class="stat-value" id="statPending">0</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon green">
+          <i data-lucide="check-circle"></i>
+        </div>
+        <p class="stat-label">Entregues</p>
+        <p class="stat-value" id="statDelivered">0</p>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i data-lucide="dollar-sign"></i>
+        </div>
+        <p class="stat-label">Vendido</p>
+        <p class="stat-value" id="statRevenue">R$ 0</p>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <div class="filter-group">
+        <label>Buscar por nome</label>
+        <input type="text" class="filter-input" id="filterName" placeholder="Digite o nome...">
+      </div>
+
+      <div class="filter-group">
+        <label>Status</label>
+        <select class="filter-input" id="filterStatus">
+          <option value="">Todos</option>
+          <option value="pendente">Pendentes</option>
+          <option value="entregue">Entregues</option>
+          <option value="cancelado">Cancelados</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ORDERS HEADER -->
+    <div class="orders-header">
+      <h2 class="orders-title">
+        <i data-lucide="list"></i>
+        Pedidos
+      </h2>
+      <button class="refresh-btn" onclick="loadOrders()">
+        <i data-lucide="refresh-cw"></i>
+        Atualizar
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loadingState" class="loading-state">
+      <i data-lucide="loader"></i>
+      <p>Carregando pedidos...</p>
+    </div>
+
+    <!-- EMPTY -->
+    <div id="emptyState" class="empty-state" style="display:none;">
+      <i data-lucide="inbox"></i>
+      <h3>Nenhum pedido encontrado</h3>
+      <p>Crie seu primeiro pedido para começar</p>
+    </div>
+
+    <!-- ORDERS LIST -->
+    <div id="ordersList"></div>
+
+  </div>
+
+  <!-- MODAL VALIDAR -->
+  <div class="modal" id="validateModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔑 Validar Entrega</h2>
+        <p>Digite o token do cliente</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-item">
+          <label>Cliente</label>
+          <p id="modalClientName">—</p>
+        </div>
+
+        <div class="info-item">
+          <label>Token Correto</label>
+          <p id="modalCorrectToken" style="color:var(--accent);font-family:'Courier New',monospace;font-size:20px;">—</p>
+        </div>
+
+        <input type="text" class="token-input" id="tokenInput" placeholder="Digite o token" maxlength="7">
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn cancel" onclick="closeModal()">
+          <i data-lucide="x"></i>
+          Cancelar
+        </button>
+        <button class="modal-btn confirm" onclick="confirmDelivery()">
+          <i data-lucide="check"></i>
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ALTERAR STATUS -->
+  <div class="modal" id="changeStatusModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔄 Alterar Status</h2>
+        <p>Escolha o novo status</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-item">
+          <label>Cliente</label>
+          <p id="modalStatusClientName">—</p>
+        </div>
+
+        <select class="status-select" id="newStatusSelect">
+          <option value="pendente">⏳ Pendente</option>
+          <option value="entregue">✅ Entregue</option>
+          <option value="cancelado">❌ Cancelado</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn cancel" onclick="closeModal()">
+          <i data-lucide="x"></i>
+          Cancelar
+        </button>
+        <button class="modal-btn confirm" onclick="confirmChangeStatus()">
+          <i data-lucide="check"></i>
+          Alterar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EXCLUIR -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🗑️ Excluir Pedido</h2>
+        <p>Esta ação não pode ser desfeita</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="info-item">
+          <label>Cliente</label>
+          <p id="modalDeleteClientName">—</p>
+        </div>
+
+        <p style="color:var(--danger);font-size:13px;text-align:center;margin:16px 0 0 0;">
+          ⚠️ Tem certeza que deseja excluir este pedido?
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="modal-btn cancel" onclick="closeModal()">
+          <i data-lucide="x"></i>
+          Cancelar
+        </button>
+        <button class="modal-btn danger" onclick="confirmDelete()">
+          <i data-lucide="trash-2"></i>
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzWZqrvpUyfTwwl0cnDL9SmnruhVrRRNhzT0sDwsIaRTDdY-77jcwgLne7mESpSUCfy/exec";
+
+    lucide.createIcons();
+
+    let allOrders = [];
+    let currentOrder = null;
+
+    // Carregar pedidos
+    async function loadOrders(){
+      const loadingEl = document.getElementById('loadingState');
+      const emptyEl = document.getElementById('emptyState');
+      const listEl = document.getElementById('ordersList');
+
+      loadingEl.style.display = 'block';
+      emptyEl.style.display = 'none';
+      listEl.innerHTML = '';
+
+      try {
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getOrders`);
+        const data = await response.json();
+        
+        allOrders = data.orders || [];
+        
+        if(allOrders.length === 0){
+          loadingEl.style.display = 'none';
+          emptyEl.style.display = 'block';
+          updateStats();
+        } else {
+          loadingEl.style.display = 'none';
+          renderOrders();
+          updateStats();
+        }
+
+      } catch(error){
+        console.error('Erro:', error);
+        loadingEl.innerHTML = '<p style="color:var(--danger)">❌ Erro ao carregar</p>';
+      }
+    }
+
+    // Renderizar pedidos
+    function renderOrders(){
+      const listEl = document.getElementById('ordersList');
+      const filterName = document.getElementById('filterName').value.toLowerCase();
+      const filterStatus = document.getElementById('filterStatus').value;
+
+      let filtered = allOrders.filter(order => {
+        const matchName = order.nome.toLowerCase().includes(filterName);
+        const matchStatus = !filterStatus || order.status === filterStatus;
+        return matchName && matchStatus;
+      });
+
+      listEl.innerHTML = '';
+
+      if(filtered.length === 0){
+        listEl.innerHTML = '<div class="empty-state"><i data-lucide="inbox"></i><h3>Nenhum pedido encontrado</h3></div>';
+        lucide.createIcons();
+        return;
+      }
+
+      filtered.forEach(order => {
+        const card = document.createElement('div');
+        card.className = 'order-card';
+        
+        const statusClass = order.status === 'entregue' ? 'delivered' : order.status === 'cancelado' ? 'cancelled' : 'pending';
+        const statusText = order.status === 'entregue' ? 'Entregue' : order.status === 'cancelado' ? 'Cancelado' : 'Pendente';
+        
+        card.innerHTML = `
+          <div class="order-header">
+            <div class="order-client">
+              <p class="order-name">${order.nome}</p>
+              <p class="order-date">${order.timestamp}</p>
+            </div>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+          </div>
+
+          <div class="order-info">
+            <div class="order-row">
+              <i data-lucide="phone"></i>
+              <strong>Contato:</strong>
+              <span>${order.contato}</span>
+            </div>
+            <div class="order-row">
+              <i data-lucide="shopping-bag"></i>
+              <strong>Quantidade:</strong>
+              <span>${order.quantidade} marmita${order.quantidade > 1 ? 's' : ''}</span>
+            </div>
+            <div class="order-row">
+              <i data-lucide="dollar-sign"></i>
+              <strong>Valor:</strong>
+              <span>${order.valor}</span>
+            </div>
+          </div>
+
+          <div class="order-token">
+            <p class="order-token-label">🔑 Token</p>
+            <p class="order-token-value">${order.token}</p>
+          </div>
+
+          <div class="order-actions ${order.status === 'entregue' ? 'full' : ''}">
+            ${order.status === 'pendente' ? `
+              <button class="action-btn primary" onclick="openValidateModal(${order.rowIndex})">
+                <i data-lucide="check"></i> Validar
+              </button>
+              <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
+                <i data-lucide="edit-3"></i> Status
+              </button>
+            ` : order.status === 'entregue' ? `
+              <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
+                <i data-lucide="edit-3"></i> Alterar Status
+              </button>
+            ` : `
+              <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
+                <i data-lucide="edit-3"></i> Status
+              </button>
+              <button class="action-btn danger" onclick="openDeleteModal(${order.rowIndex})">
+                <i data-lucide="trash-2"></i> Excluir
+              </button>
+            `}
+            ${order.status !== 'entregue' ? `
+              <button class="action-btn danger" onclick="openDeleteModal(${order.rowIndex})" style="grid-column: span 2;">
+                <i data-lucide="trash-2"></i> Excluir Pedido
+              </button>
+            ` : ''}
+          </div>
+        `;
+
+        listEl.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    // Atualizar estatísticas
+    function updateStats(){
+      const total = allOrders.length;
+      const pending = allOrders.filter(o => o.status === 'pendente' || !o.status || o.status === '').length;
+      const delivered = allOrders.filter(o => o.status === 'entregue').length;
+      
+      const revenue = allOrders.reduce((sum, order) => {
+        try {
+          const valorStr = (order.valor || 'R$ 0,00').toString();
+          const value = parseFloat(valorStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
+          return sum + (isNaN(value) ? 0 : value);
+        } catch(e) {
+          return sum;
+        }
+      }, 0);
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statDelivered').textContent = delivered;
+      document.getElementById('statRevenue').textContent = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(revenue);
+    }
+
+    // Modais
+    function openValidateModal(rowIndex){
+      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
+      document.getElementById('modalClientName').textContent = currentOrder.nome;
+      document.getElementById('modalCorrectToken').textContent = currentOrder.token;
+      document.getElementById('tokenInput').value = '';
+      document.getElementById('validateModal').classList.add('active');
+      document.getElementById('tokenInput').focus();
+      lucide.createIcons();
+    }
+
+    function openChangeStatusModal(rowIndex){
+      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
+      document.getElementById('modalStatusClientName').textContent = currentOrder.nome;
+      document.getElementById('newStatusSelect').value = currentOrder.status || 'pendente';
+      document.getElementById('changeStatusModal').classList.add('active');
+      lucide.createIcons();
+    }
+
+    function openDeleteModal(rowIndex){
+      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
+      document.getElementById('modalDeleteClientName').textContent = currentOrder.nome;
+      document.getElementById('deleteModal').classList.add('active');
+      lucide.createIcons();
+    }
+
+    function closeModal(){
+      document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+      currentOrder = null;
+    }
+
+    async function confirmDelivery(){
+      const inputToken = document.getElementById('tokenInput').value.trim().toUpperCase();
+      
+      if(!inputToken){
+        alert('⚠️ Digite o token!');
+        return;
+      }
+
+      if(inputToken !== currentOrder.token){
+        alert('❌ Token incorreto!');
+        return;
+      }
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'markDelivered',
+            rowIndex: currentOrder.rowIndex
+          })
+        });
+
+        alert('✅ Pedido entregue!');
+        closeModal();
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        alert('❌ Erro ao marcar entrega!');
+      }
+    }
+
+    async function confirmChangeStatus(){
+      const newStatus = document.getElementById('newStatusSelect').value;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'changeStatus',
+            rowIndex: currentOrder.rowIndex,
+            newStatus: newStatus
+          })
+        });
+
+        alert('✅ Status alterado!');
+        closeModal();
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        alert('❌ Erro ao alterar status!');
+      }
+    }
+
+    async function confirmDelete(){
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'deleteOrder',
+            rowIndex: currentOrder.rowIndex
+          })
+        });
+
+        alert('✅ Pedido excluído!');
+        closeModal();
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        alert('❌ Erro ao excluir!');
+      }
+    }
+
+    // Filtros
+    document.getElementById('filterName').addEventListener('input', renderOrders);
+    document.getElementById('filterStatus').addEventListener('change', renderOrders);
+
+    // Fechar modal ao clicar fora
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if(e.target === modal){
+          closeModal();
+        }
+      });
+    });
+
+    // Carregar ao iniciar
+    loadOrders();
+  </script>
+</body>
+</html>
