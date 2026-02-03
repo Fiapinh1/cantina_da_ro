@@ -3,7 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description" content="Criar novo pedido - Galinhada da Rô">
+  <meta name="theme-color" content="#ff6b35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
+  
   <title>Novo Pedido - Mobile</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -495,7 +506,7 @@
       🍗 Galinhada da Rô
     </div>
     <div class="navbar-menu">
-      <button class="nav-btn" onclick="window.location.href='index.html'">
+      <button class="nav-btn" onclick="window.location.href='dashboard.html'">
         <i data-lucide="layout-dashboard"></i>
         <span>Dashboard</span>
       </button>
@@ -503,7 +514,7 @@
         <i data-lucide="plus-circle"></i>
         <span>Novo Pedido</span>
       </button>
-      <button class="nav-btn" onclick="window.location.href='relatorios-mobile.html'">
+      <button class="nav-btn" onclick="window.location.href='relatorios.html'">
         <i data-lucide="bar-chart-3"></i>
         <span>Relatórios</span>
       </button>
@@ -526,7 +537,7 @@
           <i data-lucide="user"></i>
           Nome do cliente
         </label>
-        <input type="text" id="inName" placeholder="Ex: Beatriz Lins" autocomplete="name" />
+        <input type="text" id="inName" placeholder="Ex: Ronair" autocomplete="name" />
       </div>
 
       <div class="form-group">
@@ -603,6 +614,12 @@
           <i data-lucide="calendar"></i>
           <strong>Retirada:</strong>
           <span>07/03/2026</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="map-pin"></i>
+          <strong>Endereço:</strong>
+          <span>R. Yolanda Motta Leite, 1439</span>
         </div>
       </div>
     </div>
@@ -686,6 +703,14 @@
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
             <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 marmita - R$ 20,00</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">📍</div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Endereço de Retirada</div>
+            <div style="font-size:15px;font-weight:700;color:#3d2a23;margin:0;">R. Yolanda Motta Leite, 1439</div>
           </div>
         </div>
       </div>
