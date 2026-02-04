@@ -1251,6 +1251,49 @@
         return;
       }
 
+      // VERIFICAR PAGAMENTO ANTES DE ENTREGAR
+      if(currentOrder.pagamento === 'aguardando'){
+        // Mostrar aviso de pagamento pendente
+        const modalPagamento = document.getElementById('validateModal');
+        const originalContent = modalPagamento.querySelector('.modal-content').innerHTML;
+        
+        modalPagamento.querySelector('.modal-content').innerHTML = `
+          <h3 style="margin:0 0 20px 0;font-size:20px;display:flex;align-items:center;gap:8px;color:#f59e0b;">
+            <i data-lucide="alert-triangle"></i>
+            Pagamento Pendente
+          </h3>
+          <div style="background:rgba(245,158,11,.1);border:2px solid #f59e0b;border-radius:10px;padding:16px;margin-bottom:20px;">
+            <p style="margin:0 0 10px 0;font-size:15px;font-weight:600;color:var(--text);">
+              Cliente: ${currentOrder.nome}
+            </p>
+            <p style="margin:0;font-size:14px;color:var(--muted);">
+              ⚠️ Este pedido está com pagamento <strong style="color:#f59e0b;">aguardando</strong>
+            </p>
+          </div>
+          <p style="font-size:15px;margin-bottom:20px;color:var(--text);text-align:center;">
+            O cliente pagou agora na retirada?
+          </p>
+          <div style="display:flex;gap:10px;">
+            <button 
+              onclick="cancelarValidacao()" 
+              style="flex:1;padding:14px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:transparent;color:var(--text);font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;font-size:15px;"
+            >
+              Não, Cancelar
+            </button>
+            <button 
+              onclick="confirmarPagamentoEEntregar()" 
+              style="flex:1;padding:14px;border-radius:8px;border:none;background:linear-gradient(135deg, #4ade80, #22c55e);color:#000;font-weight:700;cursor:pointer;font-family:'Poppins',sans-serif;font-size:15px;"
+            >
+              ✓ Sim, Cliente Pagou
+            </button>
+          </div>
+        `;
+        
+        lucide.createIcons();
+        return;
+      }
+
+      // PAGAMENTO OK - ENTREGAR NORMALMENTE
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
@@ -1269,6 +1312,52 @@
       } catch(error){
         console.error('Erro:', error);
         showToast('Erro ao marcar como entregue. Tente novamente.', 'error');
+      }
+    }
+
+    // Cancelar validação quando pagamento pendente
+    function cancelarValidacao(){
+      closeModal();
+      showToast('Validação cancelada. Solicite o pagamento ao cliente.', 'error');
+    }
+
+    // Marcar como pago E entregar
+    async function confirmarPagamentoEEntregar(){
+      try {
+        // 1. Atualizar pagamento para "pago"
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'editOrder',
+            rowIndex: currentOrder.rowIndex,
+            nome: currentOrder.nome,
+            contato: currentOrder.contato,
+            quantidade: currentOrder.quantidade,
+            itens: currentOrder.itens,
+            pagamento: 'pago'
+          })
+        });
+
+        // 2. Marcar como entregue
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'markDelivered',
+            rowIndex: currentOrder.rowIndex
+          })
+        });
+
+        showToast(`✓ Pagamento recebido! Pedido de ${currentOrder.nome} entregue!`);
+        closeModal();
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        showToast('Erro ao processar. Tente novamente.', 'error');
       }
     }
 
