@@ -21,7 +21,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="icon-192.png">
 
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
@@ -643,13 +643,62 @@
       from{ transform:rotate(0deg); }
       to{ transform:rotate(360deg); }
     }
+
+    /* BOTÃO FLUTUANTE VALIDADOR */
+    .fab-validador{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      width:64px;
+      height:64px;
+      border-radius:50%;
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color:#fff;
+      border:none;
+      box-shadow: 0 8px 24px rgba(74,222,128,.4);
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: all .3s;
+      z-index:1000;
+      text-decoration:none;
+    }
+
+    .fab-validador:hover{
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 12px 32px rgba(74,222,128,.6);
+    }
+
+    .fab-validador:active{
+      transform: scale(0.95);
+    }
+
+    .fab-validador svg{
+      width:32px;
+      height:32px;
+    }
+
+    @media (max-width: 768px){
+      .fab-validador{
+        bottom:20px;
+        right:20px;
+        width:56px;
+        height:56px;
+      }
+      .fab-validador svg{
+        width:28px;
+        height:28px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-brand">
-      🍗 Galinhada da Rô
+      <i data-lucide="utensils" style="width:20px;height:20px;"></i>
+      Galinhada da Rô
     </div>
     <div class="navbar-menu">
       <button class="nav-btn active">
@@ -672,7 +721,7 @@
     
     <!-- HEADER -->
     <div class="header">
-      <h1>📊 Dashboard</h1>
+      <h1><i data-lucide="layout-dashboard" style="width:28px;height:28px;vertical-align:middle;"></i> Dashboard</h1>
       <p>Gerencie suas entregas</p>
     </div>
 
@@ -810,7 +859,7 @@
 
         <select class="status-select" id="newStatusSelect">
           <option value="pendente">⏳ Pendente</option>
-          <option value="entregue">✅ Entregue</option>
+          <option value="entregue"><i data-lucide="check-circle" style="width:20px;height:20px;"></i> Entregue</option>
           <option value="cancelado">❌ Cancelado</option>
         </select>
       </div>
@@ -1077,13 +1126,47 @@
           })
         });
 
-        alert('✅ Pedido entregue!');
+        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Pedido entregue!');
         closeModal();
         loadOrders();
 
       } catch(error){
         console.error('Erro:', error);
         alert('❌ Erro ao marcar entrega!');
+      }
+    }
+
+    // Editar contato
+    function openEditModal(order){
+      currentOrder = order;
+      document.getElementById('editContactInput').value = order.contato;
+      document.getElementById('editModal').classList.add('active');
+      lucide.createIcons();
+    }
+
+    async function confirmEditContact(){
+      const newContact = document.getElementById('editContactInput').value.trim();
+      if(!newContact){
+        alert('Digite um telefone válido');
+        return;
+      }
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'editContact',
+            rowIndex: currentOrder.rowIndex,
+            newContact: newContact
+          })
+        });
+        alert('✅ Contato atualizado!');
+        closeModal();
+        loadOrders();
+      } catch(error){
+        console.error('Erro:', error);
+        alert('❌ Erro ao atualizar contato!');
       }
     }
 
@@ -1102,7 +1185,7 @@
           })
         });
 
-        alert('✅ Status alterado!');
+        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Status alterado!');
         closeModal();
         loadOrders();
 
@@ -1124,7 +1207,7 @@
           })
         });
 
-        alert('✅ Pedido excluído!');
+        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Pedido excluído!');
         closeModal();
         loadOrders();
 
@@ -1150,8 +1233,8 @@
     // Carregar ao iniciar
     loadOrders();
 
-    // Registrar Service Worker (PWA)
-    if ('serviceWorker' in navigator) {
+    // Registrar Service Worker (PWA) - apenas em HTTPS
+    if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
           .then(registration => {
@@ -1232,5 +1315,30 @@
       });
     });
   </script>
+
+  <!-- BOTÃO FLUTUANTE VALIDADOR -->
+  <!-- MODAL EDITAR CONTATO -->
+  <div class="modal" id="editModal">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-content">
+      <h3 style="margin:0 0 20px 0;font-size:20px;">
+        <i data-lucide="edit-3"></i>
+        Editar Contato
+      </h3>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;">Novo Telefone</label>
+        <input type="tel" id="editContactInput" placeholder="(31) 99999-9999" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:16px;font-family:'Poppins',sans-serif;">
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="closeModal()" style="flex:1;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:transparent;color:var(--text);font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">Cancelar</button>
+        <button onclick="confirmEditContact()" class="modal-btn confirm" style="flex:1;"><i data-lucide="save"></i> Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <a href="validador.html" class="fab-validador" title="Validador Rápido">
+    <i data-lucide="scan-line"></i>
+  </a>
+
 </body>
 </html>
