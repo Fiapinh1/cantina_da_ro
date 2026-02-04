@@ -1226,15 +1226,27 @@
       }
     }
 
-    async function openValidateModal(rowIndex){
-      const order = allOrders.find(o => o.rowIndex === rowIndex);
-      if(!order) return;
+    function openValidateModal(rowIndex){
+      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!currentOrder) return;
+      
+      document.getElementById('modalClientName').textContent = currentOrder.nome;
+      document.getElementById('modalCorrectToken').textContent = currentOrder.token;
+      document.getElementById('tokenInput').value = '';
+      document.getElementById('validateModal').classList.add('active');
+      document.getElementById('tokenInput').focus();
+      lucide.createIcons();
+    }
 
-      const inputToken = prompt(`Digite o token do cliente ${order.nome}:\n\nToken correto: ${order.token}`);
+    async function confirmDelivery(){
+      const inputToken = document.getElementById('tokenInput').value.trim().toUpperCase();
       
-      if(!inputToken) return; // Cancelou
-      
-      if(inputToken.trim().toUpperCase() !== order.token.toUpperCase()){
+      if(!inputToken){
+        showToast('Digite o token!', 'error');
+        return;
+      }
+
+      if(inputToken !== currentOrder.token.toUpperCase()){
         showToast('Token incorreto! Verifique e tente novamente.', 'error');
         return;
       }
@@ -1246,11 +1258,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'markDelivered',
-            rowIndex: rowIndex
+            rowIndex: currentOrder.rowIndex
           })
         });
 
-        showToast(`Pedido de ${order.nome} marcado como entregue!`);
+        showToast(`Pedido de ${currentOrder.nome} marcado como entregue!`);
+        closeModal();
         loadOrders();
 
       } catch(error){
@@ -1259,21 +1272,18 @@
       }
     }
 
-    async function openChangeStatusModal(rowIndex){
-      const order = allOrders.find(o => o.rowIndex === rowIndex);
-      if(!order) return;
+    function openChangeStatusModal(rowIndex){
+      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!currentOrder) return;
+      
+      document.getElementById('modalStatusClientName').textContent = currentOrder.nome;
+      document.getElementById('newStatusSelect').value = currentOrder.status || 'pendente';
+      document.getElementById('changeStatusModal').classList.add('active');
+      lucide.createIcons();
+    }
 
-      const novoStatus = prompt(`Alterar status de: ${order.nome}\n\nStatus atual: ${order.status}\n\nDigite:\n1 = Pendente\n2 = Entregue\n3 = Cancelado`);
-      
-      if(!novoStatus) return;
-      
-      const statusMap = {'1': 'pendente', '2': 'entregue', '3': 'cancelado'};
-      const newStatus = statusMap[novoStatus];
-      
-      if(!newStatus){
-        showToast('Opção inválida!', 'error');
-        return;
-      }
+    async function confirmChangeStatus(){
+      const newStatus = document.getElementById('newStatusSelect').value;
 
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
@@ -1282,12 +1292,13 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'changeStatus',
-            rowIndex: rowIndex,
+            rowIndex: currentOrder.rowIndex,
             newStatus: newStatus
           })
         });
 
         showToast(`Status alterado para: ${newStatus}`);
+        closeModal();
         loadOrders();
 
       } catch(error){
@@ -1372,28 +1383,6 @@
         ;
         closeModal();
         loadOrders();
-      } catch(error){
-        console.error('Erro:', error);
-        ;
-      }
-    }
-
-    async function confirmDelete(rowIndex){
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'deleteOrder',
-            rowIndex: currentOrder.rowIndex
-          })
-        });
-
-        showToast('Pedido excluído com sucesso!');
-        closeModal();
-        loadOrders();
-
       } catch(error){
         console.error('Erro:', error);
         ;
