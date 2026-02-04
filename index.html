@@ -22,6 +22,7 @@
   <link rel="icon" type="image/png" href="icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
@@ -1159,6 +1160,9 @@
                 <i data-lucide="sliders"></i> Status
               </button>
             `}
+            <button class="action-btn" onclick="reprintVoucher(${order.rowIndex})" style="background:rgba(168,85,247,.15);color:#a855f7;border:2px solid #a855f7;grid-column:span 2;">
+              <i data-lucide="printer"></i> Reimprimir Vale
+            </button>
             <button class="action-btn danger" onclick="confirmDelete(${order.rowIndex})" style="grid-column:span 2;">
               <i data-lucide="trash-2"></i> Excluir Pedido
             </button>
@@ -1201,6 +1205,123 @@
     }
 
     // Modais
+    // Reimprimir vale
+    async function reprintVoucher(rowIndex){
+      const order = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!order) return;
+
+      showToast('Gerando vale...', 'success');
+
+      // Criar vale HTML
+      const voucherHTML = `
+        <div style="width:400px;background:#fff;padding:0;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.2);overflow:hidden;font-family:'Poppins',sans-serif;">
+          <div style="background:linear-gradient(135deg,#ff6b35 0%,#f77f00 100%);padding:24px;text-align:center;">
+            <div style="font-size:28px;font-weight:900;color:#fff;margin:0 0 8px 0;">🍗 VALE GALINHADA</div>
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:1px;margin:0;">Galinhada da Rô</div>
+          </div>
+
+          <div style="background:#f5f3f0;padding:16px;text-align:center;border-bottom:2px dashed #d9b99a;">
+            <div style="font-size:12px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 4px 0;">Data de Retirada</div>
+            <div style="font-size:22px;font-weight:900;color:#3d2a23;margin:0;">07/03</div>
+          </div>
+
+          <div style="background:#fff;padding:24px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">👤</div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Cliente</div>
+                <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;">${order.nome}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">📞</div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Contato</div>
+                <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;">${order.contato}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">🛍️</div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
+                <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;">${String(order.quantidade).padStart(2,'0')} marmita${order.quantidade > 1 ? 's' : ''} - ${order.valor}</div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+              <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">📍</div>
+              <div style="flex:1;">
+                <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Endereço de Retirada</div>
+                <div style="font-size:15px;font-weight:700;color:#3d2a23;margin:0;">R. Yolanda Motta Leite, 1439</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,107,53,.15);padding:18px;border-bottom:2px solid rgba(61,42,35,.1);">
+            <div style="font-size:16px;font-weight:900;color:#3d2a23;text-align:center;text-transform:uppercase;margin:0 0 12px 0;">📋 Resumo do Pedido</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+              ${(order.itens || 'Galinhada, Vinagrete').split(',').map(item => 
+                `<span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">${item.trim()}</span>`
+              ).join('')}
+            </div>
+          </div>
+
+          <div style="background:#fff;padding:16px;border-radius:16px;text-align:center;border:2px dashed #ff6b35;margin:16px;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 6px 0;">🔑 Token de Retirada</div>
+            <div style="font-size:28px;font-weight:900;color:#ff6b35;font-family:'Courier New',monospace;letter-spacing:3px;margin:0;">${order.token}</div>
+          </div>
+
+          <div style="background:linear-gradient(135deg,#4ade80,#22c55e);padding:16px 20px;display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:700;font-size:14px;text-align:center;">
+            <span style="font-size:24px;">✓</span>
+            <span>Apresente este vale no dia da retirada</span>
+          </div>
+        </div>
+      `;
+
+      // Criar elemento temporário fora da tela
+      const tempDiv = document.createElement('div');
+      tempDiv.style.cssText = 'position:fixed;left:-9999px;top:0;';
+      tempDiv.innerHTML = voucherHTML;
+      document.body.appendChild(tempDiv);
+
+      // Aguardar um frame para garantir renderização
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      try {
+        // Gerar imagem com html2canvas
+        const canvas = await html2canvas(tempDiv.firstElementChild, {
+          backgroundColor: '#ffffff',
+          scale: 2.5,
+          useCORS: true,
+          logging: false,
+          width: 400,
+          height: null
+        });
+
+        // Converter para download
+        canvas.toBlob(function(blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          const fileName = `vale-${order.token}-${order.nome.replace(/\s+/g, '-')}.png`;
+          link.download = fileName;
+          link.href = url;
+          link.click();
+          URL.revokeObjectURL(url);
+          
+          showToast(`Vale de ${order.nome} baixado!`);
+        }, 'image/png', 1.0);
+
+      } catch(error){
+        console.error('Erro ao gerar vale:', error);
+        showToast('Erro ao gerar vale. Tente novamente.', 'error');
+      } finally {
+        // Remover elemento temporário
+        document.body.removeChild(tempDiv);
+      }
+    }
+
     // Excluir pedido direto (sem modal)
     async function confirmDelete(rowIndex){
       const order = allOrders.find(o => o.rowIndex === rowIndex);
