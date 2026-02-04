@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" type="image/png" href="icon-192.png">
 
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
@@ -503,7 +503,7 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-brand">
-      🍗 Galinhada da Rô
+      <i data-lucide="utensils" style="width:20px;height:20px;"></i> Galinhada da Rô
     </div>
     <div class="navbar-menu">
       <button class="nav-btn" onclick="window.location.href='index.html'">
@@ -526,7 +526,7 @@
     
     <!-- HEADER -->
     <div class="header">
-      <h1>🍗 Vale Galinhada</h1>
+      <h1><i data-lucide="chef-hat" style="width:24px;height:24px;vertical-align:middle;"></i> Vale Galinhada</h1>
       <p>Preencha os dados do pedido</p>
     </div>
 
@@ -537,7 +537,7 @@
           <i data-lucide="user"></i>
           Nome do cliente
         </label>
-        <input type="text" id="inName" placeholder="Ex: Ronair" autocomplete="name" />
+        <input type="text" id="inName" placeholder="Ex: Beatriz Lins" autocomplete="name" />
       </div>
 
       <div class="form-group">
@@ -627,7 +627,7 @@
     <!-- TOKEN -->
     <div class="token-section">
       <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:700;">
-        🔑 Token de Retirada
+        <i data-lucide="key" style="width:16px;height:16px;vertical-align:middle;"></i> Token de Retirada
       </h3>
       
       <div class="token-display">
@@ -691,7 +691,7 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">📱</div>
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i></div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Contato</div>
             <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vContactHidden">—</div>
@@ -699,7 +699,7 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">🛍️</div>
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="shopping-bag" style="width:16px;height:16px;vertical-align:middle;"></i></div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
             <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 marmita - R$ 20,00</div>
@@ -707,7 +707,7 @@
         </div>
 
         <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">📍</div>
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="map-pin" style="width:16px;height:16px;vertical-align:middle;"></i></div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Endereço de Retirada</div>
             <div style="font-size:15px;font-weight:700;color:#3d2a23;margin:0;">R. Yolanda Motta Leite, 1439</div>
@@ -724,7 +724,7 @@
       </div>
 
       <div style="background:#fff;padding:16px;border-radius:16px;text-align:center;border:2px dashed #ff6b35;margin-bottom:16px;">
-        <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 6px 0;">🔑 Token de Retirada</div>
+        <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 6px 0;"><i data-lucide="key" style="width:16px;height:16px;vertical-align:middle;"></i> Token de Retirada</div>
         <div style="font-size:28px;font-weight:900;color:#ff6b35;font-family:'Courier New',monospace;letter-spacing:3px;margin:0;" id="vTokenHidden">----</div>
       </div>
 
@@ -772,14 +772,11 @@
     // Gerar token simples
     function generateToken(){
       const contact = $("inContact").value || "";
-      const name = $("inName").value || "";
       
       const digits = contact.replace(/\D/g, '');
       const last4 = digits.slice(-4) || '0000';
-      const firstLetter = name.charAt(0).toUpperCase() || 'X';
-      const random = Math.floor(Math.random() * 99).toString().padStart(2, '0');
       
-      return `${last4}${firstLetter}${random}`;
+      return last4;
     }
 
     function safeText(v){ return (v ?? "").toString().trim(); }
@@ -954,7 +951,7 @@
       }
 
       if(!navigator.share){
-        alert("📱 Compartilhamento não suportado neste navegador. Use 'Baixar' e envie manualmente.");
+        alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento não suportado neste navegador. Use "Baixar" e envie manualmente.');
         return;
       }
 
