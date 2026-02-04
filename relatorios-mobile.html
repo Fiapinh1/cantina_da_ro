@@ -15,7 +15,7 @@
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="icon" type="image/png" href="icon-192.png">
 
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -319,6 +319,15 @@
 
     /* IMPRESSÃO */
     @media print{
+      .header button,
+      .cards-grid,
+      .chart-container,
+      .top-items:not(.orders-list-print){
+        display:none !important;
+      }
+      .orders-list-print{
+        display:block !important;
+      }
       body{
         background:#fff;
         color:#000;
@@ -395,7 +404,7 @@
   <div class="container">
     
     <div class="header">
-      <h1>📊 Relatórios</h1>
+      <h1><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> Relatórios</h1>
       <p>Análise das vendas</p>
       
       <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
@@ -458,7 +467,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title">👥 Clientes</div>
+          <div class="card-title"><i data-lucide="users" style="width:18px;height:18px;"></i> Clientes</div>
           <div class="metric">
             <div class="metric-label">Total de Clientes</div>
             <div class="metric-value" id="totalClientes">0</div>
@@ -483,19 +492,19 @@
       </div>
 
       <div class="chart-container">
-        <h2 class="chart-title">📊 Status dos Pedidos</h2>
+        <h2 class="chart-title"><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> Status dos Pedidos</h2>
         <canvas id="statusChart"></canvas>
       </div>
 
       <div class="top-items">
-        <h2 class="chart-title">🏆 Itens Mais Pedidos</h2>
+        <h2 class="chart-title"><i data-lucide="trophy" style="width:18px;height:18px;"></i> Itens Mais Pedidos</h2>
         <div id="topItemsList"></div>
       </div>
 
       <!-- LISTA DETALHADA DE PEDIDOS -->
-      <div class="top-items" style="margin-top:20px;">
+      <div class="top-items orders-list-print" style="margin-top:20px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <h2 class="chart-title" style="margin:0;">📋 Lista de Pedidos</h2>
+          <h2 class="chart-title" style="margin:0;"><i data-lucide="clipboard-list" style="width:18px;height:18px;"></i> Lista de Pedidos</h2>
           <select id="filterStatus" onchange="renderOrdersList()" style="
             padding:8px 12px;
             border-radius:8px;
@@ -681,7 +690,7 @@
           <div class="order-details-row">
             <div class="order-detail">📱 ${order.contato}</div>
             <div class="order-detail">🛍️ ${order.quantidade} marmita${order.quantidade > 1 ? 's' : ''}</div>
-            <div class="order-detail">💰 ${order.valor}</div>
+            <div class="order-detail"><i data-lucide="dollar-sign" style="width:18px;height:18px;"></i> ${order.valor}</div>
             <div class="order-detail">🔑 ${order.token}</div>
           </div>
         </div>
