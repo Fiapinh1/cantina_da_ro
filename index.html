@@ -995,11 +995,15 @@
 
     // Atualizar estatísticas
     function updateStats(){
-      const total = allOrders.length;
-      const pending = allOrders.filter(o => o.status === 'pendente' || !o.status || o.status === '').length;
-      const delivered = allOrders.filter(o => o.status === 'entregue').length;
+      // Filtrar apenas pedidos NÃO cancelados
+      const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
       
-      const revenue = allOrders.reduce((sum, order) => {
+      const total = activeOrders.length;
+      const pending = activeOrders.filter(o => o.status === 'pendente' || !o.status || o.status === '').length;
+      const delivered = activeOrders.filter(o => o.status === 'entregue').length;
+      
+      // Calcular receita apenas de pedidos NÃO cancelados
+      const revenue = activeOrders.reduce((sum, order) => {
         try {
           const valorStr = (order.valor || 'R$ 0,00').toString();
           const value = parseFloat(valorStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
