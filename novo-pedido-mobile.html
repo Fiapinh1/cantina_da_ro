@@ -537,7 +537,7 @@
           <i data-lucide="user"></i>
           Nome do cliente
         </label>
-        <input type="text" id="inName" placeholder="Ex: Ronair " autocomplete="name" />
+        <input type="text" id="inName" placeholder="Ex: Nome completo" autocomplete="name" />
       </div>
 
       <div class="form-group">
@@ -776,7 +776,8 @@
       const digits = contact.replace(/\D/g, '');
       const last4 = digits.slice(-4) || '0000';
       
-      return last4;
+      // Garantir que sempre tenha 4 dígitos (adiciona zeros à esquerda se necessário)
+      return last4.padStart(4, '0');
     }
 
     function safeText(v){ return (v ?? "").toString().trim(); }
