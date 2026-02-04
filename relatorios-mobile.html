@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description" content="Relatórios e estatísticas - Galinhada da Rô">
+  <meta name="theme-color" content="#ff6b35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
   <title>Relatórios - Galinhada da Rô</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -246,6 +256,119 @@
       from{ transform:rotate(0deg); }
       to{ transform:rotate(360deg); }
     }
+
+    /* LISTA DE PEDIDOS */
+    .order-item{
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+      border-left:4px solid var(--accent);
+    }
+
+    .order-header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:8px;
+    }
+
+    .order-name-row{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .order-status-badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:12px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .order-status-badge.pendente{
+      background:rgba(251,191,36,.2);
+      color:#fbbf24;
+    }
+
+    .order-status-badge.entregue{
+      background:rgba(74,222,128,.2);
+      color:#4ade80;
+    }
+
+    .order-status-badge.cancelado{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+    }
+
+    .order-details-row{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:6px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .order-detail{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    /* IMPRESSÃO */
+    @media print{
+      body{
+        background:#fff;
+        color:#000;
+      }
+      
+      .navbar, 
+      .header button,
+      button{
+        display:none !important;
+      }
+
+      .container{
+        max-width:100%;
+        padding:20px;
+      }
+
+      .header{
+        background:#fff;
+        border:2px solid #ff6b35;
+        page-break-after:avoid;
+      }
+
+      .header h1{
+        color:#ff6b35;
+      }
+
+      .cards-grid,
+      .chart-container,
+      .top-items{
+        page-break-inside:avoid;
+        background:#fff;
+        border:1px solid #ddd;
+        margin-bottom:20px;
+      }
+
+      .card{
+        background:#f5f5f5;
+        border:1px solid #ddd;
+      }
+
+      .order-item{
+        background:#f9f9f9;
+        border-left:3px solid #ff6b35;
+        page-break-inside:avoid;
+      }
+
+      canvas{
+        max-height:300px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -254,7 +377,7 @@
       🍗 Galinhada da Rô
     </div>
     <div class="navbar-menu">
-      <button class="nav-btn" onclick="window.location.href='index.html'">
+      <button class="nav-btn" onclick="window.location.href='dashboard-mobile.html'">
         <i data-lucide="layout-dashboard"></i>
         <span>Dashboard</span>
       </button>
@@ -274,6 +397,44 @@
     <div class="header">
       <h1>📊 Relatórios</h1>
       <p>Análise das vendas</p>
+      
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+        <button onclick="window.print()" style="
+          padding:12px 24px;
+          border-radius:10px;
+          border:2px solid var(--accent);
+          background:rgba(255,107,53,.15);
+          color:var(--accent);
+          font-weight:700;
+          cursor:pointer;
+          font-family:'Poppins',sans-serif;
+          font-size:14px;
+          display:flex;
+          align-items:center;
+          gap:8px;
+        ">
+          <i data-lucide="printer"></i>
+          Imprimir Relatório
+        </button>
+        
+        <button onclick="exportToExcel()" style="
+          padding:12px 24px;
+          border-radius:10px;
+          border:none;
+          background:linear-gradient(135deg, var(--accent), var(--accent2));
+          color:#fff;
+          font-weight:700;
+          cursor:pointer;
+          font-family:'Poppins',sans-serif;
+          font-size:14px;
+          display:flex;
+          align-items:center;
+          gap:8px;
+        ">
+          <i data-lucide="download"></i>
+          Exportar Lista
+        </button>
+      </div>
     </div>
 
     <div id="loadingState" class="loading">
@@ -331,6 +492,29 @@
         <div id="topItemsList"></div>
       </div>
 
+      <!-- LISTA DETALHADA DE PEDIDOS -->
+      <div class="top-items" style="margin-top:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h2 class="chart-title" style="margin:0;">📋 Lista de Pedidos</h2>
+          <select id="filterStatus" onchange="renderOrdersList()" style="
+            padding:8px 12px;
+            border-radius:8px;
+            border:2px solid rgba(255,107,53,.3);
+            background:rgba(0,0,0,.3);
+            color:var(--text);
+            font-family:'Poppins',sans-serif;
+            font-size:13px;
+            font-weight:600;
+          ">
+            <option value="">Todos</option>
+            <option value="pendente">Pendentes</option>
+            <option value="entregue">Entregues</option>
+            <option value="cancelado">Cancelados</option>
+          </select>
+        </div>
+        <div id="ordersList"></div>
+      </div>
+
     </div>
 
   </div>
@@ -359,6 +543,7 @@
         }
         
         generateReports();
+        renderOrdersList();
 
       } catch(error){
         console.error('Erro:', error);
@@ -368,19 +553,22 @@
 
     function generateReports(){
       try {
-        const totalMarmitas = allOrders.reduce((sum, o) => sum + parseInt(o.quantidade || 0), 0);
-        const totalReceita = allOrders.reduce((sum, o) => {
+        // Filtrar apenas pedidos NÃO cancelados
+        const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
+        
+        const totalMarmitas = activeOrders.reduce((sum, o) => sum + parseInt(o.quantidade || 0), 0);
+        const totalReceita = activeOrders.reduce((sum, o) => {
           const valorStr = (o.valor || 'R$ 0,00').toString();
           const value = parseFloat(valorStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
           return sum + (isNaN(value) ? 0 : value);
         }, 0);
         
-        const totalClientes = new Set(allOrders.map(o => o.nome).filter(Boolean)).size;
-        const mediaPedido = allOrders.length > 0 ? (totalMarmitas / allOrders.length).toFixed(1) : 0;
+        const totalClientes = new Set(activeOrders.map(o => o.nome).filter(Boolean)).size;
+        const mediaPedido = activeOrders.length > 0 ? (totalMarmitas / activeOrders.length).toFixed(1) : 0;
         
-        const entregues = allOrders.filter(o => o.status === 'entregue').length;
-        const pendentes = allOrders.filter(o => o.status === 'pendente' || !o.status).length;
-        const taxaEntrega = allOrders.length > 0 ? ((entregues / allOrders.length) * 100).toFixed(0) : 0;
+        const entregues = activeOrders.filter(o => o.status === 'entregue').length;
+        const pendentes = activeOrders.filter(o => o.status === 'pendente' || !o.status).length;
+        const taxaEntrega = activeOrders.length > 0 ? ((entregues / activeOrders.length) * 100).toFixed(0) : 0;
 
         document.getElementById('totalMarmitas').textContent = totalMarmitas;
         document.getElementById('totalReceita').textContent = new Intl.NumberFormat('pt-BR', {
@@ -467,6 +655,67 @@
         console.error('Erro:', error);
         alert('Erro ao processar dados');
       }
+    }
+
+    // Renderizar lista de pedidos
+    function renderOrdersList(){
+      const filterStatus = document.getElementById('filterStatus').value;
+      const ordersList = document.getElementById('ordersList');
+      
+      let filtered = filterStatus ? allOrders.filter(o => o.status === filterStatus) : allOrders;
+      
+      if(filtered.length === 0){
+        ordersList.innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px;">Nenhum pedido encontrado</p>';
+        return;
+      }
+
+      ordersList.innerHTML = filtered.map(order => `
+        <div class="order-item">
+          <div class="order-header-row">
+            <div class="order-name-row">${order.nome}</div>
+            <div class="order-status-badge ${order.status || 'pendente'}">${
+              order.status === 'entregue' ? 'Entregue' : 
+              order.status === 'cancelado' ? 'Cancelado' : 'Pendente'
+            }</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-detail">📱 ${order.contato}</div>
+            <div class="order-detail">🛍️ ${order.quantidade} marmita${order.quantidade > 1 ? 's' : ''}</div>
+            <div class="order-detail">💰 ${order.valor}</div>
+            <div class="order-detail">🔑 ${order.token}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Exportar para Excel/CSV
+    function exportToExcel(){
+      const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
+      
+      if(activeOrders.length === 0){
+        alert('Nenhum pedido para exportar');
+        return;
+      }
+
+      // Criar CSV
+      let csv = 'Nome,Contato,Quantidade,Valor,Token,Status,Data\\n';
+      
+      activeOrders.forEach(order => {
+        csv += `"${order.nome}","${order.contato}",${order.quantidade},"${order.valor}","${order.token}","${order.status || 'pendente'}","${order.timestamp}"\\n`;
+      });
+
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `pedidos-galinhada-${new Date().toLocaleDateString('pt-BR')}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     loadReports();
