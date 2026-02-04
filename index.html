@@ -691,6 +691,109 @@
         height:28px;
       }
     }
+
+    /* NOTIFICAÇÕES TOAST */
+    .toast{
+      position:fixed;
+      bottom:30px;
+      right:30px;
+      min-width:300px;
+      max-width:400px;
+      background:rgba(26,24,22,.95);
+      backdrop-filter:blur(10px);
+      border-radius:12px;
+      padding:16px 20px;
+      box-shadow:0 8px 32px rgba(0,0,0,.4);
+      border:2px solid rgba(255,107,53,.3);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      z-index:10000;
+      animation:slideInRight .3s ease;
+      pointer-events:auto;
+    }
+
+    .toast.success{
+      border-color:#4ade80;
+    }
+
+    .toast.error{
+      border-color:#ef4444;
+    }
+
+    .toast-icon{
+      width:24px;
+      height:24px;
+      flex-shrink:0;
+    }
+
+    .toast.success .toast-icon{
+      color:#4ade80;
+    }
+
+    .toast.error .toast-icon{
+      color:#ef4444;
+    }
+
+    .toast-message{
+      flex:1;
+      font-size:14px;
+      font-weight:600;
+      color:var(--text);
+    }
+
+    .toast-close{
+      width:20px;
+      height:20px;
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      cursor:pointer;
+      padding:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:all .2s;
+    }
+
+    .toast-close:hover{
+      color:var(--text);
+    }
+
+    @keyframes slideInRight{
+      from{
+        transform:translateX(400px);
+        opacity:0;
+      }
+      to{
+        transform:translateX(0);
+        opacity:1;
+      }
+    }
+
+    @keyframes slideOutRight{
+      from{
+        transform:translateX(0);
+        opacity:1;
+      }
+      to{
+        transform:translateX(400px);
+        opacity:0;
+      }
+    }
+
+    .toast.hiding{
+      animation:slideOutRight .3s ease forwards;
+    }
+
+    @media (max-width: 768px){
+      .toast{
+        bottom:20px;
+        right:20px;
+        left:20px;
+        min-width:auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -917,6 +1020,34 @@
     let allOrders = [];
     let currentOrder = null;
 
+    // Sistema de notificações Toast
+    function showToast(message, type = 'success'){
+      // Remover toasts antigos
+      document.querySelectorAll('.toast').forEach(t => t.remove());
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      const icon = type === 'success' ? 'check-circle' : 'alert-circle';
+      
+      toast.innerHTML = `
+        <i data-lucide="${icon}" class="toast-icon"></i>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+          <i data-lucide="x"></i>
+        </button>
+      `;
+      
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      
+      // Auto remover após 4 segundos
+      setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
     // Carregar pedidos
     async function loadOrders(){
       const loadingEl = document.getElementById('loadingState');
@@ -1001,6 +1132,13 @@
               <strong>Valor:</strong>
               <span>${order.valor}</span>
             </div>
+            <div class="order-row">
+              <i data-lucide="credit-card"></i>
+              <strong>Pagamento:</strong>
+              <span class="status-badge ${order.pagamento === 'pago' ? 'delivered' : 'pending'}">
+                ${order.pagamento === 'pago' ? '✅ Pago' : '⏳ Aguardando'}
+              </span>
+            </div>
           </div>
 
           <div class="order-token">
@@ -1008,31 +1146,22 @@
             <p class="order-token-value">${order.token}</p>
           </div>
 
-          <div class="order-actions ${order.status === 'entregue' ? 'full' : ''}">
+          <div class="order-actions" style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <button class="action-btn" onclick="openEditModal(allOrders.find(o => o.rowIndex === ${order.rowIndex}))" style="background:rgba(59,130,246,.15);color:#3b82f6;border:2px solid #3b82f6;">
+              <i data-lucide="edit-3"></i> Editar
+            </button>
             ${order.status === 'pendente' ? `
               <button class="action-btn primary" onclick="openValidateModal(${order.rowIndex})">
                 <i data-lucide="check"></i> Validar
               </button>
-              <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
-                <i data-lucide="edit-3"></i> Status
-              </button>
-            ` : order.status === 'entregue' ? `
-              <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
-                <i data-lucide="edit-3"></i> Alterar Status
-              </button>
             ` : `
               <button class="action-btn secondary" onclick="openChangeStatusModal(${order.rowIndex})">
-                <i data-lucide="edit-3"></i> Status
-              </button>
-              <button class="action-btn danger" onclick="openDeleteModal(${order.rowIndex})">
-                <i data-lucide="trash-2"></i> Excluir
+                <i data-lucide="sliders"></i> Status
               </button>
             `}
-            ${order.status !== 'entregue' ? `
-              <button class="action-btn danger" onclick="openDeleteModal(${order.rowIndex})" style="grid-column: span 2;">
-                <i data-lucide="trash-2"></i> Excluir Pedido
-              </button>
-            ` : ''}
+            <button class="action-btn danger" onclick="confirmDelete(${order.rowIndex})" style="grid-column:span 2;">
+              <i data-lucide="trash-2"></i> Excluir Pedido
+            </button>
           </div>
         `;
 
@@ -1072,46 +1201,41 @@
     }
 
     // Modais
-    function openValidateModal(rowIndex){
-      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
-      document.getElementById('modalClientName').textContent = currentOrder.nome;
-      document.getElementById('modalCorrectToken').textContent = currentOrder.token;
-      document.getElementById('tokenInput').value = '';
-      document.getElementById('validateModal').classList.add('active');
-      document.getElementById('tokenInput').focus();
-      lucide.createIcons();
-    }
+    // Excluir pedido direto (sem modal)
+    async function confirmDelete(rowIndex){
+      const order = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!order) return;
 
-    function openChangeStatusModal(rowIndex){
-      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
-      document.getElementById('modalStatusClientName').textContent = currentOrder.nome;
-      document.getElementById('newStatusSelect').value = currentOrder.status || 'pendente';
-      document.getElementById('changeStatusModal').classList.add('active');
-      lucide.createIcons();
-    }
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'deleteOrder',
+            rowIndex: rowIndex
+          })
+        });
 
-    function openDeleteModal(rowIndex){
-      currentOrder = allOrders.find(o => o.rowIndex === rowIndex);
-      document.getElementById('modalDeleteClientName').textContent = currentOrder.nome;
-      document.getElementById('deleteModal').classList.add('active');
-      lucide.createIcons();
-    }
+        showToast(`Pedido de ${order.nome} excluído com sucesso!`);
+        loadOrders();
 
-    function closeModal(){
-      document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-      currentOrder = null;
-    }
-
-    async function confirmDelivery(){
-      const inputToken = document.getElementById('tokenInput').value.trim().toUpperCase();
-      
-      if(!inputToken){
-        alert('⚠️ Digite o token!');
-        return;
+      } catch(error){
+        console.error('Erro:', error);
+        showToast('Erro ao excluir pedido. Tente novamente.', 'error');
       }
+    }
 
-      if(inputToken !== currentOrder.token){
-        alert('❌ Token incorreto!');
+    async function openValidateModal(rowIndex){
+      const order = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!order) return;
+
+      const inputToken = prompt(`Digite o token do cliente ${order.nome}:\n\nToken correto: ${order.token}`);
+      
+      if(!inputToken) return; // Cancelou
+      
+      if(inputToken.trim().toUpperCase() !== order.token.toUpperCase()){
+        showToast('Token incorreto! Verifique e tente novamente.', 'error');
         return;
       }
 
@@ -1122,32 +1246,116 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'markDelivered',
-            rowIndex: currentOrder.rowIndex
+            rowIndex: rowIndex
           })
         });
 
-        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Pedido entregue!');
-        closeModal();
+        showToast(`Pedido de ${order.nome} marcado como entregue!`);
         loadOrders();
 
       } catch(error){
         console.error('Erro:', error);
-        alert('❌ Erro ao marcar entrega!');
+        showToast('Erro ao marcar como entregue. Tente novamente.', 'error');
       }
+    }
+
+    async function openChangeStatusModal(rowIndex){
+      const order = allOrders.find(o => o.rowIndex === rowIndex);
+      if(!order) return;
+
+      const novoStatus = prompt(`Alterar status de: ${order.nome}\n\nStatus atual: ${order.status}\n\nDigite:\n1 = Pendente\n2 = Entregue\n3 = Cancelado`);
+      
+      if(!novoStatus) return;
+      
+      const statusMap = {'1': 'pendente', '2': 'entregue', '3': 'cancelado'};
+      const newStatus = statusMap[novoStatus];
+      
+      if(!newStatus){
+        showToast('Opção inválida!', 'error');
+        return;
+      }
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'changeStatus',
+            rowIndex: rowIndex,
+            newStatus: newStatus
+          })
+        });
+
+        showToast(`Status alterado para: ${newStatus}`);
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        showToast('Erro ao alterar status.', 'error');
+      }
+    }
+
+    function closeModal(){
+      document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+      currentOrder = null;
     }
 
     // Editar contato
     function openEditModal(order){
       currentOrder = order;
-      document.getElementById('editContactInput').value = order.contato;
+      document.getElementById('editNameInput').value = order.nome || '';
+      document.getElementById('editContactInput').value = order.contato || '';
+      document.getElementById('editQtyInput').value = order.quantidade || 1;
+      document.getElementById('editItemsInput').value = order.itens || '';
+      document.getElementById('editPaymentInput').value = order.pagamento || 'aguardando';
       document.getElementById('editModal').classList.add('active');
       lucide.createIcons();
     }
 
+    async function confirmEdit(){
+      const nome = document.getElementById('editNameInput').value.trim();
+      const contato = document.getElementById('editContactInput').value.trim();
+      const quantidade = parseInt(document.getElementById('editQtyInput').value);
+      const itens = document.getElementById('editItemsInput').value.trim();
+      const pagamento = document.getElementById('editPaymentInput').value;
+
+      if(!nome || !contato || !quantidade){
+        return;
+        return;
+      }
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'editOrder',
+            rowIndex: currentOrder.rowIndex,
+            nome: nome,
+            contato: contato,
+            quantidade: quantidade,
+            itens: itens,
+            pagamento: pagamento
+          })
+        });
+
+        ;
+        closeModal();
+        loadOrders();
+
+      } catch(error){
+        console.error('Erro:', error);
+        ;
+      }
+    }
+
+    // Manter função antiga para compatibilidade
     async function confirmEditContact(){
       const newContact = document.getElementById('editContactInput').value.trim();
       if(!newContact){
-        alert('Digite um telefone válido');
+        showToast('Digite um telefone válido!', 'error');
         return;
       }
       try {
@@ -1161,41 +1369,16 @@
             newContact: newContact
           })
         });
-        alert('✅ Contato atualizado!');
+        ;
         closeModal();
         loadOrders();
       } catch(error){
         console.error('Erro:', error);
-        alert('❌ Erro ao atualizar contato!');
+        ;
       }
     }
 
-    async function confirmChangeStatus(){
-      const newStatus = document.getElementById('newStatusSelect').value;
-
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'changeStatus',
-            rowIndex: currentOrder.rowIndex,
-            newStatus: newStatus
-          })
-        });
-
-        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Status alterado!');
-        closeModal();
-        loadOrders();
-
-      } catch(error){
-        console.error('Erro:', error);
-        alert('❌ Erro ao alterar status!');
-      }
-    }
-
-    async function confirmDelete(){
+    async function confirmDelete(rowIndex){
       try {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
@@ -1207,13 +1390,13 @@
           })
         });
 
-        alert('<i data-lucide="check-circle" style="width:20px;height:20px;"></i> Pedido excluído!');
+        showToast('Pedido excluído com sucesso!');
         closeModal();
         loadOrders();
 
       } catch(error){
         console.error('Erro:', error);
-        alert('❌ Erro ao excluir!');
+        ;
       }
     }
 
@@ -1317,21 +1500,47 @@
   </script>
 
   <!-- BOTÃO FLUTUANTE VALIDADOR -->
-  <!-- MODAL EDITAR CONTATO -->
+  <!-- MODAL EDITAR PEDIDO COMPLETO -->
   <div class="modal" id="editModal">
     <div class="modal-backdrop" onclick="closeModal()"></div>
-    <div class="modal-content">
-      <h3 style="margin:0 0 20px 0;font-size:20px;">
+    <div class="modal-content" style="max-width:500px;">
+      <h3 style="margin:0 0 20px 0;font-size:20px;display:flex;align-items:center;gap:8px;">
         <i data-lucide="edit-3"></i>
-        Editar Contato
+        Editar Pedido
       </h3>
-      <div style="margin-bottom:16px;">
-        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;">Novo Telefone</label>
-        <input type="tel" id="editContactInput" placeholder="(31) 99999-9999" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:16px;font-family:'Poppins',sans-serif;">
+      
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Nome do Cliente</label>
+        <input type="text" id="editNameInput" placeholder="Nome completo" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
       </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Telefone</label>
+        <input type="tel" id="editContactInput" placeholder="(31) 99999-9999" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Quantidade de Marmitas</label>
+        <input type="number" id="editQtyInput" min="1" placeholder="1" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
+        <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px;">💡 Valor recalcula automático (R$ 20/marmita)</small>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Itens do Pedido</label>
+        <input type="text" id="editItemsInput" placeholder="Galinhada, Vinagrete" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Status de Pagamento</label>
+        <select id="editPaymentInput" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;cursor:pointer;">
+          <option value="pago">✅ Pago</option>
+          <option value="aguardando">⏳ Aguardando Pagamento</option>
+        </select>
+      </div>
+
       <div style="display:flex;gap:10px;">
-        <button onclick="closeModal()" style="flex:1;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:transparent;color:var(--text);font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;">Cancelar</button>
-        <button onclick="confirmEditContact()" class="modal-btn confirm" style="flex:1;"><i data-lucide="save"></i> Salvar</button>
+        <button onclick="closeModal()" style="flex:1;padding:13px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:transparent;color:var(--text);font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;font-size:14px;">Cancelar</button>
+        <button onclick="confirmEdit()" class="modal-btn confirm" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;"><i data-lucide="save"></i> Salvar</button>
       </div>
     </div>
   </div>
