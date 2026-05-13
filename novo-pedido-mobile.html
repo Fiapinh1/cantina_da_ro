@@ -195,6 +195,39 @@
       box-shadow: 0 0 0 4px rgba(255,107,53,.1);
     }
 
+    select{
+      background:#141210;
+      color:var(--text);
+      color-scheme: dark;
+    }
+
+    select option{
+      background:#141210;
+      color:var(--text);
+    }
+
+    .payment-select{
+      padding:14px 16px;
+      font-size:15px;
+      font-weight:600;
+      background:#141210;
+      border:2px solid rgba(255,107,53,.3);
+    }
+
+    .icon-inline{
+      width:18px;
+      height:18px;
+      color:var(--accent);
+      flex:0 0 auto;
+    }
+
+    .chip-icon{
+      width:16px;
+      height:16px;
+      color:#ff6b35;
+      flex:0 0 auto;
+    }
+
     input[readonly]{
       background:rgba(0,0,0,.2);
       color:var(--muted);
@@ -673,9 +706,9 @@
           <i data-lucide="credit-card"></i>
           Status de Pagamento
         </label>
-        <select id="inPayment" style="padding:14px 16px;font-size:15px;font-weight:600;font-family:'Poppins',sans-serif;background:rgba(255,107,53,.05);border:2px solid rgba(255,107,53,.3);border-radius:12px;color:var(--text);width:100%;outline:none;cursor:pointer;transition:all .3s;">
-          <option value="aguardando">⏳ Aguardando Pagamento</option>
-          <option value="pago">✓ Pago</option>
+        <select id="inPayment" class="payment-select">
+          <option value="aguardando">Aguardando Pagamento</option>
+          <option value="pago">Pago</option>
         </select>
       </div>
     </div>
@@ -683,27 +716,61 @@
     <!-- ITEMS -->
     <div class="items-section">
       <div class="items-title">
-        🍽️ Itens do Pedido
+        <i data-lucide="utensils"></i>
+        Itens do Pedido
       </div>
       
       <div class="check-item checked">
         <input type="checkbox" class="item-checkbox" data-label="Caldos" checked disabled id="check1" />
-        <label for="check1">🥣 Caldos (obrigatório)</label>
+        <label for="check1">
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path>
+            <path d="M4 12h16"></path>
+            <path d="M9 4c0 2-2 2-2 4"></path>
+            <path d="M13 4c0 2-2 2-2 4"></path>
+            <path d="M17 4c0 2-2 2-2 4"></path>
+          </svg>
+          Caldos (obrigatório)
+        </label>
       </div>
 
       <div class="check-item checked" onclick="toggleCheck(this, 'check2')">
         <input type="checkbox" class="item-checkbox" data-label="Feijão" checked id="check2" />
-        <label for="check2">🍲 Feijão</label>
+        <label for="check2">
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path>
+            <path d="M4 12h16"></path>
+            <path d="M9 11c0-1 .8-2 2-2s2 1 2 2-.8 2-2 2-2-1-2-2Z" stroke-width="1.6"></path>
+            <path d="M14.8 10.8c.6-.8 1.8-1.2 2.6-.7.8.5.7 1.7.1 2.5-.6.8-1.8 1.2-2.6.7-.8-.5-.7-1.7-.1-2.5Z" stroke-width="1.6"></path>
+          </svg>
+          Feijão
+        </label>
       </div>
 
       <div class="check-item" onclick="toggleCheck(this, 'check3')">
         <input type="checkbox" class="item-checkbox" data-label="Costela" id="check3" />
-        <label for="check3">🥩 Costela</label>
+        <label for="check3">
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path>
+            <path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path>
+            <path d="M7.5 7.5l9 9"></path>
+            <path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path>
+          </svg>
+          Costela
+        </label>
       </div>
 
       <div class="check-item" onclick="toggleCheck(this, 'check4')">
         <input type="checkbox" class="item-checkbox" data-label="Frango" id="check4" />
-        <label for="check4">🍗 Frango</label>
+        <label for="check4">
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path>
+            <path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path>
+            <path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path>
+            <path d="M8 16l-2.5 2.5"></path>
+          </svg>
+          Frango
+        </label>
       </div>
     </div>
 
@@ -730,7 +797,13 @@
         <div class="preview-row">
           <i data-lucide="shopping-bag"></i>
           <strong>Quantidade:</strong>
-          <span id="vQty">01 marmita - R$ 20,00</span>
+          <span id="vQty">01 porção - R$ 20,00</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="credit-card"></i>
+          <strong>Pagamento:</strong>
+          <span id="vPayment">Aguardando Pagamento</span>
         </div>
 
         <div class="preview-row">
@@ -809,7 +882,7 @@
     </div>
 
     <div class="hint">
-      💡 <b>Dicas:</b> Preencha os dados, gere o token e salve. O vale é atualizado automaticamente!
+      <i data-lucide="lightbulb" style="width:16px;height:16px;vertical-align:middle;"></i> <b>Dicas:</b> Preencha os dados, gere o token e salve. O vale é atualizado automaticamente!
     </div>
 
     <button class="btn btn-new-order" id="btnNewOrder">
@@ -832,7 +905,7 @@
 
       <div style="background:#fff;padding:24px;border-radius:20px;margin-bottom:16px;">
         <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">👤</div>
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="user" style="width:16px;height:16px;vertical-align:middle;"></i></div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Cliente</div>
             <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vNameHidden">—</div>
@@ -851,7 +924,15 @@
           <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="shopping-bag" style="width:16px;height:16px;vertical-align:middle;"></i></div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
-            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 marmita - R$ 20,00</div>
+            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 porção - R$ 20,00</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid rgba(61,42,35,.1);">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="credit-card" style="width:16px;height:16px;vertical-align:middle;"></i></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Pagamento</div>
+            <div style="font-size:16px;font-weight:800;color:#3d2a23;margin:0;" id="vPaymentHidden">Aguardando Pagamento</div>
           </div>
         </div>
 
@@ -865,10 +946,11 @@
       </div>
 
       <div style="background:rgba(255,107,53,.15);padding:18px;border-radius:20px;border:2px solid rgba(61,42,35,.2);margin-bottom:16px;">
-        <div style="font-size:16px;font-weight:900;color:#3d2a23;text-align:center;text-transform:uppercase;margin:0 0 12px 0;">📋 Resumo do Pedido</div>
+        <div style="font-size:16px;font-weight:900;color:#3d2a23;text-align:center;text-transform:uppercase;margin:0 0 12px 0;display:flex;align-items:center;justify-content:center;gap:8px;">
+          <i data-lucide="list" style="width:18px;height:18px;"></i>
+          Resumo do Pedido
+        </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;" id="vItemsHidden">
-          <span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">Galinhada</span>
-          <span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">Vinagrete</span>
         </div>
       </div>
 
@@ -952,21 +1034,33 @@
       }).format(total);
 
       $("inTotal").value = currency;
-      $("vQty").textContent = `${qty.toString().padStart(2,"0")} marmita${qty > 1 ? "s" : ""} - ${currency}`;
+      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porção${qty > 1 ? "s" : ""} - ${currency}`;
 
       // Atualizar hidden
       $("vNameHidden").textContent = name || "—";
       $("vContactHidden").textContent = contact || "—";
       $("vQtyHidden").textContent = $("vQty").textContent;
 
+      const paymentValue = $("inPayment").value === "pago" ? "Pago" : "Aguardando Pagamento";
+      $("vPayment").textContent = paymentValue;
+      $("vPaymentHidden").textContent = paymentValue;
+
       // Itens
       const items = Array.from(document.querySelectorAll(".item-checkbox"))
         .filter(cb => cb.checked)
         .map(cb => cb.dataset.label);
-      
-      $("vItemsHidden").innerHTML = items.map(item => 
-        `<span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">${item}</span>`
-      ).join('');
+
+      const iconByItem = {
+        "Caldos": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path><path d="M4 12h16"></path><path d="M9 4c0 2-2 2-2 4"></path><path d="M13 4c0 2-2 2-2 4"></path><path d="M17 4c0 2-2 2-2 4"></path></svg>`,
+        "Feijão": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path><path d="M4 12h16"></path><path d="M9 11c0-1 .8-2 2-2s2 1 2 2-.8 2-2 2-2-1-2-2Z" stroke-width="1.6"></path><path d="M14.8 10.8c.6-.8 1.8-1.2 2.6-.7.8.5.7 1.7.1 2.5-.6.8-1.8 1.2-2.6.7-.8-.5-.7-1.7-.1-2.5Z" stroke-width="1.6"></path></svg>`,
+        "Costela": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path><path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path><path d="M7.5 7.5l9 9"></path><path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path></svg>`,
+        "Frango": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path><path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path><path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path><path d="M8 16l-2.5 2.5"></path></svg>`
+      };
+
+      $("vItemsHidden").innerHTML = items.map(item => {
+        const icon = iconByItem[item] || "";
+        return `<span style="background:#fff;color:#3d2a23;padding:10px 16px;border-radius:30px;font-weight:800;font-size:15px;border:2px solid #ff6b35;display:inline-flex;align-items:center;gap:8px;">${icon}<span>${item}</span></span>`;
+      }).join('');
 
       lucide.createIcons();
     }
@@ -981,6 +1075,8 @@
       $("inContact").value = formatted;
       updateVoucher();
     });
+
+    $("inPayment").addEventListener("change", updateVoucher);
 
     document.querySelectorAll(".item-checkbox").forEach(cb=>{
       cb.addEventListener("change", updateVoucher);
@@ -1145,8 +1241,8 @@
         try {
           await navigator.share({
             files: [file],
-            title: 'Vale Galinhada',
-            text: `Vale Galinhada - Token: ${currentToken}`
+            title: 'Vale Caldos',
+            text: `Vale Caldos - Token: ${currentToken}`
           });
         } catch(err){
           console.log('Compartilhamento cancelado');
