@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description" content="Validador de Token - Cantina da Rô">
+  <meta name="theme-color" content="#ff6b35">
+  <title>Validador - Cantina da Rô</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+    :root{
+      --bg:#0a0908;
+      --panel:#1a1816;
+      --text:#f5f3f0;
+      --muted:#b8a89a;
+      --accent:#ff6b35;
+      --ok:#4ade80;
+      --pending:#fbbf24;
+      --danger:#ef4444;
+    }
+
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
+      color:var(--text);
+      min-height:100vh;
+      padding:20px;
+      overflow-x:hidden;
+    }
+
+    .container{
+      max-width:500px;
+      margin:0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:900;
+      color:var(--accent);
+      margin:0 0 8px 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .subtitle{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin:0;
+    }
+
+    .back-btn{
+      position:fixed;
+      top:20px;
+      left:20px;
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:linear-gradient(135deg, rgba(26,24,22,.9), rgba(26,24,22,.8));
+      border:2px solid rgba(255,107,53,.4);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:all .3s;
+      z-index:100;
+      box-shadow:0 2px 15px rgba(0,0,0,.3);
+    }
+
+    .back-btn:hover{
+      background:linear-gradient(135deg, var(--accent), var(--accent2));
+      transform:scale(1.1);
+      box-shadow:0 4px 25px rgba(255,107,53,.5);
+    }
+
+    /* STATS */
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:24px;
+    }
+
+    .stat-card{
+      background:rgba(26,24,22,.7);
+      border:2px solid #ff6b35;
+      border-radius:12px;
+      padding:14px 10px;
+      text-align:center;
+      transition:all .3s;
+      box-shadow:0 4px 15px rgba(255,107,53,.2);
+    }
+
+    .stat-card:hover{
+      transform:translateY(-4px);
+      border-color:#f77f00;
+      box-shadow:0 8px 25px rgba(255,107,53,.4);
+    }
+
+    .stat-number{
+      font-size:28px;
+      font-weight:900;
+      color:#ff6b35;
+      margin:0 0 4px 0;
+      text-shadow:0 0 15px rgba(255,107,53,.6);
+    }
+
+    .stat-label{
+      font-size:11px;
+      font-weight:600;
+      color:#a8a29e;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin:0;
+    }
+
+    /* SEARCH */
+    .search-box{
+      background:rgba(26,24,22,.8);
+      border:3px solid #ff6b35;
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:24px;
+      box-shadow:0 8px 32px rgba(255,107,53,.3), 0 0 50px rgba(255,107,53,.2);
+    }
+
+    .search-title{
+      font-size:18px;
+      font-weight:700;
+      margin:0 0 16px 0;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#d1d5db;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
+
+    .search-title i{
+      display:none;
+    }
+
+    .input-wrapper{
+      position:relative;
+      margin-bottom:12px;
+    }
+
+    .input-hint{
+      text-align:center;
+      font-size:13px;
+      color:#78716c;
+      margin:12px 0 0 0;
+      font-weight:500;
+    }
+
+    .token-input{
+      width:100%;
+      padding:20px;
+      font-size:48px;
+      font-weight:700;
+      font-family:'Poppins',sans-serif;
+      letter-spacing:20px;
+      text-align:center;
+      background:#1a1816;
+      border:3px solid #ff6b35;
+      border-radius:12px;
+      color:#f5f3f0;
+      outline:none;
+      transition:all .3s;
+    }
+
+    .token-input:focus{
+      border-color:#f77f00;
+      box-shadow:0 0 20px rgba(255,107,53,.4);
+      background:#1f1c1a;
+    }
+
+    .token-input::placeholder{
+      color:#52525b;
+      opacity:1;
+    }
+
+    .search-btn{
+      width:100%;
+      padding:18px;
+      font-size:18px;
+      font-weight:700;
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg, #ff6b35 0%, #f77f00 100%);
+      border:none;
+      border-radius:12px;
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition:all .3s;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      box-shadow:0 4px 15px rgba(255,107,53,.3);
+    }
+
+    .search-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 25px rgba(255,107,53,.5);
+    }
+
+    .search-btn:active{
+      transform:translateY(0);
+    }
+
+    /* RESULT */
+    .result{
+      background:rgba(26,24,22,.8);
+      border-radius:16px;
+      padding:24px;
+      margin-bottom:24px;
+      display:none;
+      animation:slideIn .3s ease;
+    }
+
+    @keyframes slideIn{
+      from{ transform:translateY(-20px); opacity:0; }
+      to{ transform:translateY(0); opacity:1; }
+    }
+
+    .result.active{ display:block; }
+
+    .result.success{ border:3px solid var(--ok); }
+    .result.warning{ border:3px solid var(--pending); }
+    .result.error{ border:3px solid var(--danger); }
+
+    .result-header{
+      text-align:center;
+      margin-bottom:20px;
+      padding-bottom:20px;
+      border-bottom:2px solid rgba(255,107,53,.2);
+    }
+
+    .result-icon{
+      font-size:64px;
+      margin-bottom:12px;
+      filter:drop-shadow(0 0 20px currentColor);
+      animation:pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse{
+      0%, 100%{ filter:drop-shadow(0 0 20px currentColor); }
+      50%{ filter:drop-shadow(0 0 30px currentColor); }
+    }
+
+    .result-title{
+      font-size:22px;
+      font-weight:900;
+      margin:0 0 8px 0;
+    }
+
+    .result.success .result-title{ color:var(--ok); }
+    .result.warning .result-title{ color:var(--pending); }
+    .result.error .result-title{ color:var(--danger); }
+
+    .result-subtitle{
+      font-size:14px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    /* DETALHES */
+    .details-grid{
+      display:grid;
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .detail-row{
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .detail-icon{
+      width:40px;
+      height:40px;
+      background:linear-gradient(135deg, rgba(255,107,53,.2), rgba(247,127,0,.2));
+      border:2px solid rgba(255,107,53,.3);
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--accent);
+      flex-shrink:0;
+      box-shadow:0 0 15px rgba(255,107,53,.2);
+    }
+
+    .detail-content{
+      flex:1;
+    }
+
+    .detail-label{
+      font-size:11px;
+      font-weight:600;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin:0 0 4px 0;
+    }
+
+    .detail-value{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+      margin:0;
+    }
+
+    /* PAGAMENTO */
+    .payment-status{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:8px;
+      font-size:13px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+
+    .payment-status.paid{
+      background:linear-gradient(135deg, rgba(74,222,128,.2), rgba(34,197,94,.2));
+      border:2px solid var(--ok);
+      color:var(--ok);
+      box-shadow:0 0 15px rgba(74,222,128,.2);
+      font-weight:800;
+    }
+
+    .payment-status.pending{
+      background:linear-gradient(135deg, rgba(251,191,36,.2), rgba(245,158,11,.2));
+      border:2px solid var(--pending);
+      color:var(--pending);
+      box-shadow:0 0 15px rgba(251,191,36,.2);
+      font-weight:800;
+    }
+
+    /* AVISO PAGAMENTO */
+    .payment-warning{
+      background:rgba(251,191,36,.1);
+      border:3px solid var(--pending);
+      border-radius:12px;
+      padding:16px;
+      margin-bottom:16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .payment-warning-icon{
+      font-size:32px;
+    }
+
+    .payment-warning-text{
+      flex:1;
+    }
+
+    .payment-warning-title{
+      font-size:15px;
+      font-weight:700;
+      color:var(--pending);
+      margin:0 0 4px 0;
+    }
+
+    .payment-warning-desc{
+      font-size:13px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    /* ACTION BUTTONS */
+    .action-buttons{
+      display:grid;
+      gap:10px;
+    }
+
+    .action-btn{
+      padding:16px;
+      font-size:15px;
+      font-weight:700;
+      font-family:'Poppins',sans-serif;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transition:all .3s;
+    }
+
+    .btn-confirm{
+      background:linear-gradient(135deg, #4ade80, #22c55e);
+      color:#000;
+      box-shadow:0 4px 20px rgba(74,222,128,.4);
+      font-weight:800;
+    }
+
+    .btn-confirm:hover{
+      box-shadow:0 6px 30px rgba(74,222,128,.6);
+    }
+
+    .btn-payment{
+      background:linear-gradient(135deg, #fbbf24, #f59e0b);
+      color:#000;
+      box-shadow:0 4px 20px rgba(251,191,36,.4);
+      font-weight:800;
+    }
+
+    .btn-payment:hover{
+      box-shadow:0 6px 30px rgba(251,191,36,.6);
+    }
+
+    .btn-new{
+      background:linear-gradient(135deg, rgba(255,107,53,.15), rgba(247,127,0,.15));
+      border:2px solid var(--accent);
+      color:var(--text);
+      box-shadow:0 2px 15px rgba(255,107,53,.2);
+    }
+
+    .btn-new:hover{
+      background:linear-gradient(135deg, rgba(255,107,53,.25), rgba(247,127,0,.25));
+      box-shadow:0 4px 20px rgba(255,107,53,.3);
+    }
+
+    .action-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(0,0,0,.3);
+    }
+
+    .action-btn:active{
+      transform:translateY(0);
+    }
+
+    .action-btn:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+      transform:none !important;
+    }
+
+    /* HISTÓRICO */
+    .history{
+      background:linear-gradient(135deg, rgba(26,24,22,.8), rgba(26,24,22,.6));
+      border:2px solid rgba(255,107,53,.3);
+      border-radius:16px;
+      padding:20px;
+      box-shadow:0 4px 20px rgba(0,0,0,.3);
+    }
+
+    .history-title{
+      font-size:16px;
+      font-weight:700;
+      margin:0 0 16px 0;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color:#ff6b35;
+      text-shadow:0 0 10px rgba(255,107,53,.4);
+    }
+
+    .history-title i{
+      color:#ff6b35;
+      filter:drop-shadow(0 0 8px rgba(255,107,53,.5));
+    }
+
+    .history-list{
+      max-height:300px;
+      overflow-y:auto;
+    }
+
+    .history-item{
+      background:linear-gradient(135deg, rgba(255,107,53,.08), rgba(247,127,0,.08));
+      border-radius:10px;
+      padding:12px;
+      margin-bottom:8px;
+      border-left:4px solid var(--ok);
+      box-shadow:0 2px 10px rgba(255,107,53,.1);
+      transition:all .3s;
+    }
+
+    .history-item:hover{
+      background:linear-gradient(135deg, rgba(255,107,53,.12), rgba(247,127,0,.12));
+      transform:translateX(4px);
+      box-shadow:0 4px 15px rgba(255,107,53,.2);
+    }
+
+    .history-name{
+      font-size:14px;
+      font-weight:700;
+      color:var(--text);
+      margin:0 0 4px 0;
+    }
+
+    .history-details{
+      font-size:11px;
+      color:var(--muted);
+      margin:0;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .empty-history{
+      text-align:center;
+      padding:40px 20px;
+      color:var(--muted);
+    }
+
+    /* TOAST */
+    .toast{
+      position:fixed;
+      bottom:30px;
+      right:30px;
+      min-width:300px;
+      max-width:400px;
+      background:rgba(26,24,22,.95);
+      backdrop-filter:blur(10px);
+      border-radius:12px;
+      padding:16px 20px;
+      box-shadow:0 8px 32px rgba(0,0,0,.4);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      z-index:10000;
+      animation:slideInRight .3s ease;
+      border:2px solid var(--ok);
+    }
+
+    .toast.error{ border-color:var(--danger); }
+
+    @keyframes slideInRight{
+      from{ transform:translateX(400px); opacity:0; }
+      to{ transform:translateX(0); opacity:1; }
+    }
+
+    @media (max-width: 768px){
+      body{ padding:16px; }
+      .stats-grid{ grid-template-columns:repeat(2,1fr); }
+      .token-input{ font-size:28px; letter-spacing:6px; }
+      .back-btn{ top:16px; left:16px; }
+      .toast{ right:16px; left:16px; min-width:auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- BACK BUTTON -->
+    <a href="index.html" class="back-btn" title="Voltar">
+      <i data-lucide="arrow-left"></i>
+    </a>
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1 class="logo">
+        <i data-lucide="scan-line"></i>
+        Validador Rápido
+      </h1>
+      <p class="subtitle">Cantina da Rô</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-number" id="statTotal">0</p>
+        <p class="stat-label">Total</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number" id="statValidated">0</p>
+        <p class="stat-label">Entregues</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number" id="statPending">0</p>
+        <p class="stat-label">Pendentes</p>
+      </div>
+      <div class="stat-card">
+        <p class="stat-number" id="statPaid">0</p>
+        <p class="stat-label">Pagos</p>
+      </div>
+    </div>
+
+    <!-- SEARCH BOX -->
+    <div class="search-box">
+      <h2 class="search-title">
+        <i data-lucide="search"></i>
+        Digite o Token
+      </h2>
+      <div class="input-wrapper">
+        <input 
+          type="text" 
+          class="token-input" 
+          id="tokenInput"
+          placeholder="0000"
+          maxlength="4"
+          autocomplete="off"
+          autofocus
+        >
+        <p class="input-hint">Pressione Enter ou clique em Validar</p>
+      </div>
+      <button class="search-btn" id="searchBtn">
+        <i data-lucide="search"></i>
+        Buscar e Validar
+      </button>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="result">
+      <div class="result-header">
+        <div class="result-icon" id="resultIcon">✓</div>
+        <h3 class="result-title" id="resultTitle">Pedido Encontrado</h3>
+        <p class="result-subtitle" id="resultSubtitle">Detalhes do pedido</p>
+      </div>
+
+      <div class="details-grid" id="detailsGrid">
+        <!-- Detalhes serão inseridos aqui -->
+      </div>
+
+      <div id="paymentWarningBox"></div>
+
+      <div class="action-buttons" id="actionButtons">
+        <!-- Botões serão inseridos aqui -->
+      </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="history">
+      <h3 class="history-title">
+        <i data-lucide="clock"></i>
+        Últimas Validações
+      </h3>
+      <div class="history-list" id="historyList">
+        <div class="empty-history">
+          <i data-lucide="inbox" style="width:48px;height:48px;opacity:.3;margin-bottom:12px;"></i>
+          <p>Nenhuma validação ainda</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "SUA_URL_DO_SUPABASE";
+    const SUPABASE_ANON_KEY = "SUA_CHAVE_ANONIMA_DO_SUPABASE";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    lucide.createIcons();
+
+    let allOrders = [];
+    let currentOrder = null;
+    let validationHistory = JSON.parse(localStorage.getItem('validationHistory') || '[]');
+
+    // Carregar pedidos
+    async function loadOrders(){
+      console.log('Carregando pedidos...');
+      
+      // Mostrar loading
+      document.getElementById('statTotal').textContent = '...';
+      document.getElementById('statValidated').textContent = '...';
+      document.getElementById('statPending').textContent = '...';
+      document.getElementById('statPaid').textContent = '...';
+      
+      try {
+        const { data, error } = await supabase
+          .from('pedidos')
+          .select('*');
+        
+        if(error) throw error;
+        
+        allOrders = data || [];
+        console.log('Pedidos carregados:', allOrders.length);
+        
+        updateStats();
+      } catch(error){
+        console.error('Erro ao carregar pedidos:', error);
+        showToast('Erro ao carregar pedidos. Verifique a conexão.', 'error');
+        
+        // Mostrar 0 nos stats com erro
+        document.getElementById('statTotal').textContent = '0';
+        document.getElementById('statValidated').textContent = '0';
+        document.getElementById('statPending').textContent = '0';
+        document.getElementById('statPaid').textContent = '0';
+      }
+    }
+
+    // Atualizar estatísticas
+    function updateStats(){
+      console.log('Atualizando stats. Total de pedidos:', allOrders.length);
+      
+      // MOSTRAR TODOS OS PEDIDOS (removido filtro de data)
+      const todayOrders = allOrders.filter(o => o.status !== 'cancelado');
+      
+      console.log('Pedidos válidos (não cancelados):', todayOrders.length);
+      
+      const validated = todayOrders.filter(o => o.status === 'entregue').length;
+      const pending = todayOrders.filter(o => o.status === 'pendente').length;
+      const paid = todayOrders.filter(o => o.pagamento === 'pago').length;
+
+      console.log('Stats:', { total: todayOrders.length, validated, pending, paid });
+
+      document.getElementById('statTotal').textContent = todayOrders.length;
+      document.getElementById('statValidated').textContent = validated;
+      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statPaid').textContent = paid;
+    }
+
+    // Buscar e validar token
+    async function searchToken(){
+      const token = document.getElementById('tokenInput').value.trim().toUpperCase();
+      
+      if(!token){
+        showToast('Digite um token válido!', 'error');
+        return;
+      }
+
+      // Buscar pedido
+      const order = allOrders.find(o => o.token.toUpperCase() === token);
+
+      if(!order){
+        showResult('error', '❌', 'Token Não Encontrado', `Token ${token} não existe`);
+        return;
+      }
+
+      currentOrder = order;
+
+      // Verificar se já foi entregue
+      if(order.status === 'entregue'){
+        showResult('warning', '⚠️', 'Já Foi Entregue!', 'Este pedido já foi validado');
+        fillDetails(order, false);
+        return;
+      }
+
+      // Verificar se foi cancelado
+      if(order.status === 'cancelado'){
+        showResult('error', '❌', 'Pedido Cancelado', 'Este pedido foi cancelado');
+        fillDetails(order, false);
+        return;
+      }
+
+      // VERIFICAR PAGAMENTO
+      if(order.pagamento === 'aguardando'){
+        showResult('warning', '⚠️', 'Pagamento Pendente!', 'Cliente precisa pagar antes');
+        fillDetails(order, false, true);
+        return;
+      }
+
+      // TUDO OK - PODE ENTREGAR
+      showResult('success', '✓', 'Pedido Válido!', 'Pronto para entrega');
+      fillDetails(order, true);
+    }
+
+    // Mostrar resultado
+    function showResult(type, icon, title, subtitle){
+      const result = document.getElementById('result');
+      result.className = `result active ${type}`;
+      
+      document.getElementById('resultIcon').textContent = icon;
+      document.getElementById('resultTitle').textContent = title;
+      document.getElementById('resultSubtitle').textContent = subtitle;
+      
+      lucide.createIcons();
+    }
+
+    // Preencher detalhes
+    function fillDetails(order, canDeliver, needsPayment = false){
+      const grid = document.getElementById('detailsGrid');
+      const warningBox = document.getElementById('paymentWarningBox');
+      const actionsBox = document.getElementById('actionButtons');
+
+      // DETALHES
+      grid.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="user"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Cliente</p>
+            <p class="detail-value">${order.nome}</p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="phone"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Contato</p>
+            <p class="detail-value">${order.contato}</p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="shopping-bag"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Quantidade</p>
+            <p class="detail-value">${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="dollar-sign"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Valor</p>
+            <p class="detail-value">${order.valor}</p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="credit-card"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Pagamento</p>
+            <div class="payment-status ${order.pagamento === 'pago' ? 'paid' : 'pending'}">
+              <i data-lucide="${order.pagamento === 'pago' ? 'check-circle' : 'clock'}"></i>
+              ${order.pagamento === 'pago' ? '✓ Pago' : '⏳ Aguardando'}
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-icon">
+            <i data-lucide="package"></i>
+          </div>
+          <div class="detail-content">
+            <p class="detail-label">Itens</p>
+            <p class="detail-value">${order.itens || 'Galinhada, Vinagrete'}</p>
+          </div>
+        </div>
+      `;
+
+      // AVISO DE PAGAMENTO
+      if(needsPayment){
+        warningBox.innerHTML = `
+          <div class="payment-warning">
+            <div class="payment-warning-icon">⚠️</div>
+            <div class="payment-warning-text">
+              <p class="payment-warning-title">Pagamento Pendente</p>
+              <p class="payment-warning-desc">O cliente precisa pagar antes de retirar (${order.valor})</p>
+            </div>
+          </div>
+        `;
+      } else {
+        warningBox.innerHTML = '';
+      }
+
+      // BOTÕES DE AÇÃO
+      if(canDeliver){
+        actionsBox.innerHTML = `
+          <button class="action-btn btn-confirm" onclick="confirmDelivery()">
+            <i data-lucide="check-circle"></i>
+            Confirmar Entrega
+          </button>
+          <button class="action-btn btn-new" onclick="newSearch()">
+            <i data-lucide="rotate-ccw"></i>
+            Nova Busca
+          </button>
+        `;
+      } else if(needsPayment){
+        actionsBox.innerHTML = `
+          <button class="action-btn btn-payment" onclick="confirmPaymentAndDeliver()">
+            <i data-lucide="dollar-sign"></i>
+            Cliente Pagou Agora
+          </button>
+          <button class="action-btn btn-new" onclick="newSearch()">
+            <i data-lucide="x-circle"></i>
+            Cancelar (Cliente Não Pagou)
+          </button>
+        `;
+      } else {
+        actionsBox.innerHTML = `
+          <button class="action-btn btn-new" onclick="newSearch()">
+            <i data-lucide="rotate-ccw"></i>
+            Nova Busca
+          </button>
+        `;
+      }
+
+      lucide.createIcons();
+    }
+
+    // Confirmar entrega (pagamento OK)
+    async function confirmDelivery(){
+      if(!currentOrder) return;
+
+      try {
+        const { error } = await supabase
+          .from('pedidos')
+          .update({ status: 'entregue' })
+          .eq('id', currentOrder.id);
+
+        if(error) throw error;
+
+        addToHistory(currentOrder);
+        showToast(`✓ Pedido de ${currentOrder.nome} entregue!`);
+        
+        setTimeout(() => {
+          newSearch();
+          loadOrders();
+        }, 1500);
+
+      } catch(error){
+        console.error('Erro:', error);
+        showToast('Erro ao confirmar entrega', 'error');
+      }
+    }
+
+    // Confirmar pagamento E entregar
+    async function confirmPaymentAndDeliver(){
+      if(!currentOrder) return;
+
+      try {
+        // 1. Marcar como pago e entregue
+        const { error } = await supabase
+          .from('pedidos')
+          .update({ pagamento: 'pago', status: 'entregue' })
+          .eq('id', currentOrder.id);
+
+        if(error) throw error;
+
+        addToHistory(currentOrder);
+        showToast(`✓ Pagamento recebido! Pedido de ${currentOrder.nome} entregue!`);
+        
+        setTimeout(() => {
+          newSearch();
+          loadOrders();
+        }, 1500);
+
+      } catch(error){
+        console.error('Erro:', error);
+        showToast('Erro ao processar', 'error');
+      }
+    }
+
+    // Nova busca
+    function newSearch(){
+      document.getElementById('result').classList.remove('active');
+      document.getElementById('tokenInput').value = '';
+      document.getElementById('tokenInput').focus();
+      currentOrder = null;
+    }
+
+    // Adicionar ao histórico
+    function addToHistory(order){
+      const item = {
+        nome: order.nome,
+        token: order.token,
+        valor: order.valor,
+        quantidade: order.quantidade,
+        pagamento: order.pagamento,
+        timestamp: new Date().toLocaleTimeString('pt-BR')
+      };
+
+      validationHistory.unshift(item);
+      if(validationHistory.length > 10) validationHistory.pop();
+      
+      localStorage.setItem('validationHistory', JSON.stringify(validationHistory));
+      renderHistory();
+    }
+
+    // Renderizar histórico
+    function renderHistory(){
+      const list = document.getElementById('historyList');
+      
+      if(validationHistory.length === 0){
+        list.innerHTML = `
+          <div class="empty-history">
+            <i data-lucide="inbox" style="width:48px;height:48px;opacity:.3;margin-bottom:12px;"></i>
+            <p>Nenhuma validação ainda</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      list.innerHTML = validationHistory.map(item => `
+        <div class="history-item">
+          <p class="history-name">${item.nome}</p>
+          <p class="history-details">
+            <span>🔑 ${item.token}</span>
+            <span>💰 ${item.valor}</span>
+            <span>${item.quantidade} porção${item.quantidade > 1 ? 's' : ''}</span>
+            <span>${item.pagamento === 'pago' ? '✅ Pago' : '⏳ Pendente'}</span>
+            <span>🕐 ${item.timestamp}</span>
+          </p>
+        </div>
+      `).join('');
+    }
+
+    // Toast notification
+    function showToast(message, type = 'success'){
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+        <span>${message}</span>
+      `;
+      
+      document.body.appendChild(toast);
+      lucide.createIcons();
+      
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Event listeners
+    document.getElementById('searchBtn').addEventListener('click', searchToken);
+    document.getElementById('tokenInput').addEventListener('keypress', (e) => {
+      if(e.key === 'Enter') searchToken();
+    });
+
+    // Auto-focus no input após validação
+    document.getElementById('tokenInput').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+    });
+
+    // Carregar dados
+    loadOrders();
+    renderHistory();
+    setInterval(loadOrders, 30000); // Atualizar a cada 30s
+  </script>
+
+</body>
+</html>

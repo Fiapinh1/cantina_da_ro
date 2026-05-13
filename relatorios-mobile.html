@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description" content="Relatórios e estatísticas - Galinhada da Rô">
+  <meta name="theme-color" content="#ff6b35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
+  <title>Relatórios - Cantina da Rô</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+    :root{
+      --bg:#0a0908;
+      --text:#f5f3f0;
+      --muted:#b8a89a;
+      --accent:#ff6b35;
+      --accent2:#f77f00;
+      --ok:#4ade80;
+      --pending:#fbbf24;
+    }
+
+    *{ 
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body{
+      margin:0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
+      color:var(--text);
+      min-height:100vh;
+      padding-bottom:20px;
+    }
+
+    /* NAVBAR */
+    .navbar{
+      background: rgba(26,24,22,.98);
+      backdrop-filter: blur(10px);
+      border-bottom:2px solid rgba(255,107,53,.3);
+      padding:12px 16px;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    .navbar-brand{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom:12px;
+    }
+
+    .navbar-menu{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+    }
+
+    .nav-btn{
+      flex:1;
+      padding:10px 12px;
+      border-radius:10px;
+      border:2px solid transparent;
+      background:rgba(255,107,53,.1);
+      color:var(--muted);
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      transition: all .3s;
+      font-family: 'Poppins', sans-serif;
+      font-size:11px;
+      max-width:110px;
+    }
+
+    .nav-btn svg{
+      width:20px;
+      height:20px;
+    }
+
+    .nav-btn:active{
+      transform: scale(0.95);
+    }
+
+    .nav-btn.active{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
+
+    .container{
+      padding:16px;
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    @media (min-width: 768px){
+      .container{
+        padding:24px;
+      }
+    }
+
+    .header{
+      text-align:center;
+      margin-bottom:20px;
+      padding:20px 16px;
+      background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(247,127,0,.1));
+      border-radius:16px;
+      border:2px solid rgba(255,107,53,.3);
+    }
+
+    .header h1{
+      font-size:24px;
+      font-weight:900;
+      margin:0 0 6px 0;
+    }
+
+    .header p{
+      font-size:13px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    .cards-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    @media (min-width: 768px){
+      .cards-grid{
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .card{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+    }
+
+    .card-title{
+      font-size:14px;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin:0 0 12px 0;
+    }
+
+    .metric{
+      margin-bottom:14px;
+    }
+
+    .metric:last-child{
+      margin-bottom:0;
+    }
+
+    .metric-label{
+      font-size:11px;
+      font-weight:600;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .metric-value{
+      font-size:26px;
+      font-weight:900;
+      color:var(--accent);
+    }
+
+    .chart-container{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:20px;
+    }
+
+    .chart-title{
+      font-size:16px;
+      font-weight:700;
+      margin:0 0 16px 0;
+    }
+
+    canvas{
+      max-height:250px;
+    }
+
+    .top-items{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+    }
+
+    .item-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px;
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      margin-bottom:10px;
+    }
+
+    .item-row:last-child{
+      margin-bottom:0;
+    }
+
+    .item-name{
+      font-size:15px;
+      font-weight:600;
+    }
+
+    .item-count{
+      font-size:20px;
+      font-weight:900;
+      color:var(--accent);
+    }
+
+    .loading{
+      text-align:center;
+      padding:60px 20px;
+      color:var(--muted);
+    }
+
+    .loading svg{
+      width:48px;
+      height:48px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin{
+      from{ transform:rotate(0deg); }
+      to{ transform:rotate(360deg); }
+    }
+
+    /* LISTA DE PEDIDOS */
+    .order-item{
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:10px;
+      border-left:4px solid var(--accent);
+    }
+
+    .order-header-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:8px;
+    }
+
+    .order-name-row{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .order-status-badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:12px;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .order-status-badge.pendente{
+      background:rgba(251,191,36,.2);
+      color:#fbbf24;
+    }
+
+    .order-status-badge.entregue{
+      background:rgba(74,222,128,.2);
+      color:#4ade80;
+    }
+
+    .order-status-badge.cancelado{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+    }
+
+    .order-details-row{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:6px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .order-detail{
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+
+    /* IMPRESSÃO */
+    @media print{
+      /* ===== CONFIGURAÇÃO GLOBAL ===== */
+      body{
+        background:#fff !important;
+        color:#000 !important;
+        font-size:12px;
+        margin:0;
+        padding:0;
+      }
+      
+      @page{
+        margin:1.5cm;
+        size:A4;
+      }
+      
+      /* ===== ESCONDER ELEMENTOS DE INTERFACE ===== */
+      .navbar, 
+      .header,
+      button,
+      .nav-btn,
+      .quick-filter-btn,
+      #filterDescription,
+      .period-selector,
+      #loadingState{
+        display:none !important;
+      }
+      
+      /* ===== CONTAINER ===== */
+      .container{
+        max-width:100%;
+        padding:0 !important;
+        margin:0 !important;
+      }
+      
+      .container::before{
+        display:none !important;
+      }
+      
+      .container::after{
+        display:none !important;
+      }
+
+      /* ===== CABEÇALHO PROFISSIONAL ===== */
+      #reportContent::before{
+        content: "🥣 CANTINA DA RÔ";
+        display:block;
+        font-size:24px;
+        font-weight:900;
+        color:#ff6b35;
+        letter-spacing:2px;
+        text-align:center;
+        margin-bottom:5px;
+        padding-top:0;
+      }
+      
+      #reportContent::after{
+        content: "Relatório de Vendas - " attr(data-date);
+        display:block;
+        font-size:12px;
+        color:#666;
+        text-align:center;
+        margin-bottom:20px;
+        padding-bottom:15px;
+        border-bottom:3px solid #ff6b35;
+      }
+
+      /* ===== CARDS DE ESTATÍSTICAS ===== */
+      .cards-grid{
+        display:grid !important;
+        grid-template-columns:repeat(2, 1fr);
+        gap:12px;
+        page-break-inside:avoid;
+        margin:0 0 20px 0 !important;
+        padding:0 !important;
+        background:transparent !important;
+        border:none !important;
+      }
+
+      .card{
+        background:#f9f9f9 !important;
+        border:2px solid #e0e0e0 !important;
+        border-radius:8px;
+        padding:12px !important;
+        page-break-inside:avoid;
+        margin:0 !important;
+      }
+      
+      .card-title{
+        font-size:11px !important;
+        font-weight:700 !important;
+        color:#ff6b35 !important;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        margin:0 0 8px 0 !important;
+        border-bottom:1px solid #ddd;
+        padding-bottom:5px;
+      }
+      
+      .metric{
+        margin:6px 0 !important;
+      }
+      
+      .metric-label{
+        font-size:9px !important;
+        color:#666 !important;
+        text-transform:uppercase;
+        font-weight:600;
+        margin:0 !important;
+      }
+      
+      .metric-value{
+        font-size:16px !important;
+        font-weight:900 !important;
+        color:#000 !important;
+        margin:2px 0 0 0 !important;
+      }
+
+      /* ===== GRÁFICO ===== */
+      .chart-container{
+        display:block !important;
+        page-break-inside:avoid;
+        background:#fff !important;
+        border:2px solid #e0e0e0 !important;
+        border-radius:8px;
+        padding:15px;
+        margin:0 0 20px 0 !important;
+        text-align:center;
+      }
+      
+      .chart-container::before{
+        content: "Status dos Pedidos";
+        display:block;
+        font-size:14px;
+        font-weight:700;
+        color:#333;
+        margin-bottom:10px;
+        text-align:center;
+      }
+
+      canvas{
+        max-height:200px !important;
+        margin:0 auto;
+      }
+
+      /* ===== SEÇÃO DE PEDIDOS ===== */
+      .top-items{
+        page-break-inside:avoid;
+        background:#fff !important;
+        border:none !important;
+        padding:0 !important;
+        margin:20px 0 0 0 !important;
+      }
+      
+      .top-items::before{
+        content: "LISTA DE PEDIDOS";
+        display:block;
+        font-size:16px;
+        font-weight:900;
+        color:#fff;
+        background:#ff6b35;
+        text-align:center;
+        padding:12px 0;
+        margin:0 0 15px 0;
+        border-radius:4px;
+      }
+      
+      .top-items-header{
+        display:none !important;
+      }
+
+      /* ===== ITENS DE PEDIDO ===== */
+      #ordersList{
+        display:block !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+      
+      .order-item{
+        background:#fff !important;
+        border:2px solid #e0e0e0 !important;
+        border-left:4px solid #ff6b35 !important;
+        border-radius:6px;
+        page-break-inside:avoid;
+        margin:0 0 10px 0 !important;
+        padding:10px !important;
+      }
+      
+      .order-header-row{
+        display:flex !important;
+        justify-content:space-between;
+        align-items:center;
+        margin:0 0 8px 0 !important;
+        padding:0 0 6px 0 !important;
+        border-bottom:1px solid #e0e0e0 !important;
+      }
+      
+      .order-name-row{
+        font-size:13px !important;
+        font-weight:700 !important;
+        color:#000 !important;
+        margin:0 !important;
+      }
+      
+      .order-status-badge{
+        padding:4px 10px !important;
+        border-radius:4px !important;
+        font-size:9px !important;
+        font-weight:700 !important;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        margin:0 !important;
+      }
+      
+      .order-status-badge.pendente{
+        background:#fff9e6 !important;
+        color:#d97706 !important;
+        border:1px solid #fbbf24 !important;
+      }
+      
+      .order-status-badge.entregue{
+        background:#e6f7ed !important;
+        color:#059669 !important;
+        border:1px solid #10b981 !important;
+      }
+      
+      .order-status-badge.cancelado{
+        background:#fee !important;
+        color:#dc2626 !important;
+        border:1px solid #ef4444 !important;
+      }
+      
+      .order-details-row{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:6px !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+      
+      .order-detail{
+        font-size:10px !important;
+        color:#333 !important;
+        padding:4px 0 !important;
+        display:flex !important;
+        align-items:center !important;
+        gap:4px !important;
+        margin:0 !important;
+      }
+      
+      .order-detail span{
+        background:#22c55e !important;
+        color:#fff !important;
+        padding:3px 8px;
+        border-radius:4px;
+        font-size:9px;
+        font-weight:700;
+      }
+      
+      /* ===== RODAPÉ ===== */
+      body::after{
+        content: "Sistema Cantina da Rô | Relatório gerado em " attr(data-date);
+        display:block;
+        position:fixed;
+        bottom:1cm;
+        left:0;
+        right:0;
+        text-align:center;
+        font-size:9px;
+        color:#999;
+        border-top:1px solid #ddd;
+        padding-top:8px;
+        background:#fff;
+      }
+      
+      /* ===== QUEBRAS DE PÁGINA ===== */
+      .cards-grid,
+      .chart-container,
+      .order-item{
+        page-break-inside:avoid !important;
+      }
+      
+      h1, h2, h3, h4{
+        page-break-after:avoid !important;
+      }
+      
+      /* Garantir que ícones não apareçam quebrados */
+      i, svg{
+        display:inline-block !important;
+        width:12px !important;
+        height:12px !important;
+      }
+      
+      /* Remover todos espaços desnecessários */
+      * {
+        margin-top:0 !important;
+      }
+      
+      .card:first-child,
+      .order-item:first-child{
+        margin-top:0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">
+      🥣 Cantina da Rô
+    </div>
+    <div class="navbar-menu">
+      <button class="nav-btn" onclick="window.location.href='index.html'">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-btn" onclick="window.location.href='novo-pedido-mobile.html'">
+        <i data-lucide="plus-circle"></i>
+        <span>Novo Pedido</span>
+      </button>
+      <button class="nav-btn active">
+        <i data-lucide="bar-chart-3"></i>
+        <span>Relatórios</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="container">
+    
+    <div class="header">
+      <h1><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> Relatórios</h1>
+      <p>Análise das vendas</p>
+      
+      <!-- Filtros Rápidos para Impressão -->
+      <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,.05);border-radius:12px;border:2px solid rgba(255,107,53,.2);">
+        <p style="margin:0 0 10px 0;font-size:12px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:1px;">
+          🎯 Filtros Rápidos
+        </p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;">
+          <button onclick="setQuickFilter('todos')" id="filterTodos" class="quick-filter-btn active" style="
+            padding:10px;
+            border-radius:8px;
+            border:2px solid rgba(255,255,255,.2);
+            background:rgba(255,255,255,.05);
+            color:var(--text);
+            font-weight:600;
+            cursor:pointer;
+            font-family:'Poppins',sans-serif;
+            font-size:12px;
+            transition:all .3s;
+          ">
+            📋 Todos
+          </button>
+          <button onclick="setQuickFilter('pagos')" id="filterPagos" class="quick-filter-btn" style="
+            padding:10px;
+            border-radius:8px;
+            border:2px solid rgba(34,197,94,.3);
+            background:rgba(34,197,94,.1);
+            color:#22c55e;
+            font-weight:600;
+            cursor:pointer;
+            font-family:'Poppins',sans-serif;
+            font-size:12px;
+            transition:all .3s;
+          ">
+            ✅ Pagos
+          </button>
+          <button onclick="setQuickFilter('pendentes-pag')" id="filterPendentesPag" class="quick-filter-btn" style="
+            padding:10px;
+            border-radius:8px;
+            border:2px solid rgba(251,191,36,.3);
+            background:rgba(251,191,36,.1);
+            color:#fbbf24;
+            font-weight:600;
+            cursor:pointer;
+            font-family:'Poppins',sans-serif;
+            font-size:12px;
+            transition:all .3s;
+          ">
+            ⏳ Aguardando
+          </button>
+          <button onclick="setQuickFilter('entregues')" id="filterEntregues" class="quick-filter-btn" style="
+            padding:10px;
+            border-radius:8px;
+            border:2px solid rgba(74,222,128,.3);
+            background:rgba(74,222,128,.1);
+            color:#4ade80;
+            font-weight:600;
+            cursor:pointer;
+            font-family:'Poppins',sans-serif;
+            font-size:12px;
+            transition:all .3s;
+          ">
+            📦 Entregues
+          </button>
+          <button onclick="setQuickFilter('pendentes-ent')" id="filterPendentesEnt" class="quick-filter-btn" style="
+            padding:10px;
+            border-radius:8px;
+            border:2px solid rgba(239,68,68,.3);
+            background:rgba(239,68,68,.1);
+            color:#ef4444;
+            font-weight:600;
+            cursor:pointer;
+            font-family:'Poppins',sans-serif;
+            font-size:12px;
+            transition:all .3s;
+          ">
+            ⏱️ Pendentes
+          </button>
+        </div>
+        <p style="margin:10px 0 0 0;font-size:11px;color:var(--muted);text-align:center;">
+          <span id="filterDescription">Mostrando: Todos os pedidos</span>
+        </p>
+      </div>
+      
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;">
+        <button onclick="printFiltered()" style="
+          padding:12px 24px;
+          border-radius:10px;
+          border:2px solid var(--accent);
+          background:rgba(255,107,53,.15);
+          color:var(--accent);
+          font-weight:700;
+          cursor:pointer;
+          font-family:'Poppins',sans-serif;
+          font-size:14px;
+          display:flex;
+          align-items:center;
+          gap:8px;
+        ">
+          <i data-lucide="printer"></i>
+          Imprimir Relatório
+        </button>
+        
+        <button onclick="exportToExcel()" style="
+          padding:12px 24px;
+          border-radius:10px;
+          border:none;
+          background:linear-gradient(135deg, var(--accent), var(--accent2));
+          color:#fff;
+          font-weight:700;
+          cursor:pointer;
+          font-family:'Poppins',sans-serif;
+          font-size:14px;
+          display:flex;
+          align-items:center;
+          gap:8px;
+        ">
+          <i data-lucide="download"></i>
+          Exportar Lista
+        </button>
+      </div>
+    </div>
+
+    <div id="loadingState" class="loading">
+      <i data-lucide="loader"></i>
+      <p>Carregando...</p>
+    </div>
+
+    <div id="reportContent" style="display:none;">
+      
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-title">🍗 Vendas</div>
+          <div class="metric">
+            <div class="metric-label">Marmitas Vendidas</div>
+            <div class="metric-value" id="totalMarmitas">0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Receita Total</div>
+            <div class="metric-value" id="totalReceita" style="font-size:22px;">R$ 0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i data-lucide="users" style="width:18px;height:18px;"></i> Clientes</div>
+          <div class="metric">
+            <div class="metric-label">Total de Clientes</div>
+            <div class="metric-value" id="totalClientes">0</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Média por Pedido</div>
+            <div class="metric-value" id="mediaPedido" style="font-size:22px;">0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">✅ Entregas</div>
+          <div class="metric">
+            <div class="metric-label">Taxa de Entrega</div>
+            <div class="metric-value" id="taxaEntrega">0%</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Pendentes</div>
+            <div class="metric-value" id="totalPendentes" style="font-size:22px;">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h2 class="chart-title"><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> Status dos Pedidos</h2>
+        <canvas id="statusChart"></canvas>
+      </div>
+
+      <div class="top-items">
+        <h2 class="chart-title"><i data-lucide="trophy" style="width:18px;height:18px;"></i> Itens Mais Pedidos</h2>
+        <div id="topItemsList"></div>
+      </div>
+
+      <!-- LISTA DETALHADA DE PEDIDOS -->
+      <div class="top-items orders-list-print" style="margin-top:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h2 class="chart-title" style="margin:0;"><i data-lucide="clipboard-list" style="width:18px;height:18px;"></i> Lista de Pedidos</h2>
+          <select id="filterStatus" onchange="renderOrdersList()" style="
+            padding:8px 12px;
+            border-radius:8px;
+            border:2px solid rgba(255,107,53,.3);
+            background:rgba(0,0,0,.3);
+            color:var(--text);
+            font-family:'Poppins',sans-serif;
+            font-size:13px;
+            font-weight:600;
+          ">
+            <option value="">Todos</option>
+            <option value="pendente">Pendentes</option>
+            <option value="entregue">Entregues</option>
+            <option value="cancelado">Cancelados</option>
+          </select>
+        </div>
+        <div id="ordersList"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "SUA_URL_DO_SUPABASE";
+    const SUPABASE_ANON_KEY = "SUA_CHAVE_ANONIMA_DO_SUPABASE";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    lucide.createIcons();
+
+    let allOrders = [];
+    let statusChart = null;
+
+    async function loadReports(){
+      try {
+        const { data, error } = await supabase
+          .from('pedidos')
+          .select('*');
+        
+        if(error) throw error;
+        
+        allOrders = data || [];
+        
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('reportContent').style.display = 'block';
+        
+        if(allOrders.length === 0){
+          document.getElementById('reportContent').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--muted);"><h3>Nenhum pedido</h3><p>Crie pedidos para ver relatórios</p></div>';
+          return;
+        }
+        
+        generateReports();
+        renderOrdersList();
+
+      } catch(error){
+        console.error('Erro:', error);
+        document.getElementById('loadingState').innerHTML = '<p style="color:#ef4444;">❌ Erro ao carregar</p>';
+      }
+    }
+
+    function generateReports(){
+      try {
+        // Filtrar apenas pedidos NÃO cancelados
+        const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
+        
+        const totalPorcoes = activeOrders.reduce((sum, o) => sum + parseInt(o.quantidade || 0), 0);
+        const totalReceita = activeOrders.reduce((sum, o) => {
+          const valorStr = (o.valor || 'R$ 0,00').toString();
+          const value = parseFloat(valorStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
+          return sum + (isNaN(value) ? 0 : value);
+        }, 0);
+        
+        const totalClientes = new Set(activeOrders.map(o => o.nome).filter(Boolean)).size;
+        const mediaPedido = activeOrders.length > 0 ? (totalPorcoes / activeOrders.length).toFixed(1) : 0;
+        
+        const entregues = activeOrders.filter(o => o.status === 'entregue').length;
+        const pendentes = activeOrders.filter(o => o.status === 'pendente' || !o.status).length;
+        const taxaEntrega = activeOrders.length > 0 ? ((entregues / activeOrders.length) * 100).toFixed(0) : 0;
+
+        document.getElementById('totalMarmitas').textContent = totalPorcoes;
+        document.getElementById('totalReceita').textContent = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(totalReceita);
+        document.getElementById('totalClientes').textContent = totalClientes;
+        document.getElementById('mediaPedido').textContent = `${mediaPedido} porções`;
+        document.getElementById('taxaEntrega').textContent = `${taxaEntrega}%`;
+        document.getElementById('totalPendentes').textContent = pendentes;
+
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        
+        if(statusChart){
+          statusChart.destroy();
+        }
+        
+        statusChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Entregues', 'Pendentes'],
+            datasets: [{
+              data: [entregues, pendentes],
+              backgroundColor: ['#4ade80', '#fbbf24'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                  color: '#f5f3f0',
+                  font: {
+                    family: 'Poppins',
+                    size: 12,
+                    weight: '600'
+                  },
+                  padding: 16
+                }
+              }
+            }
+          }
+        });
+
+        const itemsCount = {};
+        allOrders.forEach(order => {
+          if(order.itens){
+            const items = order.itens.split(',').map(i => i.trim());
+            items.forEach(item => {
+              if(item){
+                itemsCount[item] = (itemsCount[item] || 0) + 1;
+              }
+            });
+          }
+        });
+
+        const sortedItems = Object.entries(itemsCount).sort((a, b) => b[1] - a[1]);
+        
+        const topItemsList = document.getElementById('topItemsList');
+        topItemsList.innerHTML = '';
+        
+        if(sortedItems.length === 0){
+          topItemsList.innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px;">Nenhum item</p>';
+        } else {
+          sortedItems.forEach(([item, count]) => {
+            const emoji = item.toLowerCase().includes('caldos') ? '🥣' : item.toLowerCase().includes('feijão') ? '🍲' : item.toLowerCase().includes('costela') ? '🥩' : item.toLowerCase().includes('frango') ? '🍗' : '🍽️';
+            const row = document.createElement('div');
+            row.className = 'item-row';
+            row.innerHTML = `
+              <div class="item-name">${emoji} ${item}</div>
+              <div class="item-count">${count}</div>
+            `;
+            topItemsList.appendChild(row);
+          });
+        }
+
+        lucide.createIcons();
+        
+      } catch(error){
+        console.error('Erro:', error);
+        alert('Erro ao processar dados');
+      }
+    }
+
+    // Renderizar lista de pedidos
+    function renderOrdersList(){
+      const filterStatus = document.getElementById('filterStatus').value;
+      const ordersList = document.getElementById('ordersList');
+      
+      let filtered = filterStatus ? allOrders.filter(o => o.status === filterStatus) : allOrders;
+      
+      if(filtered.length === 0){
+        ordersList.innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px;">Nenhum pedido encontrado</p>';
+        return;
+      }
+
+      ordersList.innerHTML = filtered.map(order => {
+        const pagamento = order.pagamento || 'aguardando';
+        const pagamentoBadge = pagamento === 'pago' 
+          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">✅ PAGO</span>'
+          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">⏳ AGUARDANDO</span>';
+        
+        return `
+        <div class="order-item">
+          <div class="order-header-row">
+            <div class="order-name-row">${order.nome}</div>
+            <div class="order-status-badge ${order.status || 'pendente'}">${
+              order.status === 'entregue' ? 'Entregue' : 
+              order.status === 'cancelado' ? 'Cancelado' : 'Pendente'
+            }</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-detail">📱 ${order.contato}</div>
+            <div class="order-detail">🛍️ ${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</div>
+            <div class="order-detail"><i data-lucide="dollar-sign" style="width:18px;height:18px;"></i> ${order.valor}</div>
+            <div class="order-detail">💰 ${pagamentoBadge}</div>
+            <div class="order-detail">🔑 ${order.token}</div>
+          </div>
+        </div>
+      `;
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Exportar para Excel/CSV
+    function exportToExcel(){
+      const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
+      
+      if(activeOrders.length === 0){
+        alert('Nenhum pedido para exportar');
+        return;
+      }
+
+      // Criar CSV com coluna Pagamento
+      let csv = 'Nome,Contato,Quantidade,Valor,Pagamento,Status,Token,Data\n';
+      
+      activeOrders.forEach(order => {
+        const pagamento = order.pagamento || 'aguardando';
+        csv += `"${order.nome}","${order.contato}",${order.quantidade},"${order.valor}","${pagamento}","${order.status || 'pendente'}","${order.token}","${order.timestamp}"\n`;
+      });
+
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `pedidos-galinhada-${new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Mostrar mensagem
+      alert('✅ Relatório exportado com sucesso!\nArquivo: pedidos-galinhada-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.csv');
+    }
+
+    // Variável global para filtro de impressão
+    let currentPrintFilter = 'todos';
+
+    // Definir filtro rápido
+    function setQuickFilter(filter){
+      currentPrintFilter = filter;
+      
+      // Remover active de todos
+      document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+        btn.style.opacity = '0.6';
+        btn.style.transform = 'scale(1)';
+      });
+      
+      // Adicionar active no selecionado
+      const btnMap = {
+        'todos': 'filterTodos',
+        'pagos': 'filterPagos',
+        'pendentes-pag': 'filterPendentesPag',
+        'entregues': 'filterEntregues',
+        'pendentes-ent': 'filterPendentesEnt'
+      };
+      
+      const activeBtn = document.getElementById(btnMap[filter]);
+      if(activeBtn){
+        activeBtn.style.opacity = '1';
+        activeBtn.style.transform = 'scale(1.05)';
+      }
+      
+      // Atualizar descrição
+      const descriptions = {
+        'todos': 'Mostrando: Todos os pedidos',
+        'pagos': 'Mostrando: Apenas pedidos PAGOS',
+        'pendentes-pag': 'Mostrando: Apenas AGUARDANDO pagamento',
+        'entregues': 'Mostrando: Apenas pedidos ENTREGUES',
+        'pendentes-ent': 'Mostrando: Apenas pedidos PENDENTES de entrega'
+      };
+      
+      document.getElementById('filterDescription').textContent = descriptions[filter];
+      
+      // Aplicar filtro visual na lista (temporário)
+      applyVisualFilter(filter);
+    }
+
+    // Aplicar filtro visual
+    function applyVisualFilter(filter){
+      const items = document.querySelectorAll('.order-item');
+      
+      items.forEach(item => {
+        const orderIndex = Array.from(item.parentNode.children).indexOf(item);
+        const order = allOrders.filter(o => o.status !== 'cancelado')[orderIndex];
+        
+        if(!order) return;
+        
+        let show = false;
+        
+        switch(filter){
+          case 'todos':
+            show = true;
+            break;
+          case 'pagos':
+            show = order.pagamento === 'pago';
+            break;
+          case 'pendentes-pag':
+            show = order.pagamento !== 'pago';
+            break;
+          case 'entregues':
+            show = order.status === 'entregue';
+            break;
+          case 'pendentes-ent':
+            show = order.status === 'pendente' || !order.status;
+            break;
+        }
+        
+        item.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    // Imprimir com filtro
+    function printFiltered(){
+      // Salvar lista original
+      const originalList = document.getElementById('ordersList').innerHTML;
+      
+      // Filtrar pedidos conforme seleção
+      let filteredOrders = allOrders.filter(o => o.status !== 'cancelado');
+      
+      switch(currentPrintFilter){
+        case 'pagos':
+          filteredOrders = filteredOrders.filter(o => o.pagamento === 'pago');
+          break;
+        case 'pendentes-pag':
+          filteredOrders = filteredOrders.filter(o => o.pagamento !== 'pago');
+          break;
+        case 'entregues':
+          filteredOrders = filteredOrders.filter(o => o.status === 'entregue');
+          break;
+        case 'pendentes-ent':
+          filteredOrders = filteredOrders.filter(o => o.status === 'pendente' || !o.status);
+          break;
+      }
+      
+      // Renderizar lista filtrada
+      const ordersList = document.getElementById('ordersList');
+      ordersList.innerHTML = filteredOrders.map(order => {
+        const pagamento = order.pagamento || 'aguardando';
+        const pagamentoBadge = pagamento === 'pago' 
+          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">✅ PAGO</span>'
+          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">⏳ AGUARDANDO</span>';
+        
+        return `
+        <div class="order-item">
+          <div class="order-header-row">
+            <div class="order-name-row">${order.nome}</div>
+            <div class="order-status-badge ${order.status || 'pendente'}">${
+              order.status === 'entregue' ? 'Entregue' : 
+              order.status === 'cancelado' ? 'Cancelado' : 'Pendente'
+            }</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-detail">📱 ${order.contato}</div>
+            <div class="order-detail">🛍️ ${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</div>
+            <div class="order-detail"><i data-lucide="dollar-sign" style="width:18px;height:18px;"></i> ${order.valor}</div>
+            <div class="order-detail">💰 ${pagamentoBadge}</div>
+            <div class="order-detail">🔑 ${order.token}</div>
+          </div>
+        </div>
+      `;
+      }).join('');
+      
+      // Imprimir
+      setTimeout(() => {
+        window.print();
+        
+        // Restaurar lista original após impressão
+        setTimeout(() => {
+          ordersList.innerHTML = originalList;
+          lucide.createIcons();
+        }, 500);
+      }, 100);
+    }
+
+    loadReports();
+  </script>
+</body>
+</html>

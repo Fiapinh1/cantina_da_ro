@@ -1,0 +1,9 @@
+# Arquivos temporários
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+
+# Configurações locais (não envie suas chaves!)
+# *Nota*: Se quiser versionar as configurações, remova essas linhas,
+# mas tome cuidado para não enviar chaves públicas para repositórios públicos!

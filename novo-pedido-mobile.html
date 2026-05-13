@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="description" content="Criar novo pedido - Cantina da Rô">
+  <meta name="theme-color" content="#ff6b35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
+  
+  <title>Novo Pedido - Mobile</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+    :root{
+      --bg:#0a0908;
+      --panel:#1a1816;
+      --text:#f5f3f0;
+      --muted:#b8a89a;
+      --accent:#ff6b35;
+      --accent2:#f77f00;
+      --dark:#3d2a23;
+      --ok:#4ade80;
+      --paper:#e8d5c4;
+      --paper2:#d9b99a;
+    }
+
+    *{ 
+      box-sizing:border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body{
+      margin:0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
+      color:var(--text);
+      min-height:100vh;
+      padding-bottom:80px;
+    }
+
+    /* NAVBAR MOBILE */
+    .navbar{
+      background: rgba(26,24,22,.98);
+      backdrop-filter: blur(10px);
+      border-bottom:2px solid rgba(255,107,53,.3);
+      padding:12px 16px;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+
+    .navbar-brand{
+      text-align:center;
+      font-size:22px;
+      font-weight:900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom:12px;
+    }
+
+    .navbar-menu{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+    }
+
+    .nav-btn{
+      flex:1;
+      padding:10px 12px;
+      border-radius:10px;
+      border:2px solid transparent;
+      background:rgba(255,107,53,.1);
+      color:var(--muted);
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      transition: all .3s;
+      font-family: 'Poppins', sans-serif;
+      font-size:11px;
+      max-width:110px;
+    }
+
+    .nav-btn svg{
+      width:20px;
+      height:20px;
+    }
+
+    .nav-btn:active{
+      transform: scale(0.95);
+    }
+
+    .nav-btn.active{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+    }
+
+    /* CONTAINER */
+    .container{
+      padding:16px;
+      max-width:600px;
+      margin:0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      text-align:center;
+      margin-bottom:20px;
+      padding:20px 16px;
+      background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(247,127,0,.1));
+      border-radius:16px;
+      border:2px solid rgba(255,107,53,.3);
+    }
+
+    .header h1{
+      font-size:26px;
+      font-weight:900;
+      margin:0 0 6px 0;
+      color:var(--accent);
+      text-transform:uppercase;
+    }
+
+    .header p{
+      font-size:13px;
+      color:var(--muted);
+      margin:0;
+    }
+
+    /* FORM */
+    .form-section{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .form-group{
+      margin-bottom:20px;
+    }
+
+    .form-group:last-child{
+      margin-bottom:0;
+    }
+
+    label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--text);
+      margin:0 0 10px 0;
+    }
+
+    label svg{
+      width:18px;
+      height:18px;
+      color:var(--accent);
+    }
+
+    input, select{
+      width:100%;
+      padding:16px;
+      border-radius:12px;
+      border:2px solid rgba(255,107,53,.3);
+      background:rgba(0,0,0,.4);
+      color:var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-size:16px;
+      font-weight:500;
+      outline:none;
+      transition: all .3s;
+    }
+
+    input:focus, select:focus{
+      border-color:var(--accent);
+      background:rgba(0,0,0,.6);
+      box-shadow: 0 0 0 4px rgba(255,107,53,.1);
+    }
+
+    input[readonly]{
+      background:rgba(0,0,0,.2);
+      color:var(--muted);
+    }
+
+    input[type="number"]{
+      font-size:20px;
+      font-weight:700;
+      text-align:center;
+    }
+
+    input[type="tel"]{
+      font-size:18px;
+      letter-spacing:1px;
+    }
+
+    .row-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+
+    /* ITEMS */
+    .items-section{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+    }
+
+    .items-title{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin:0 0 14px 0;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .check-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      background:rgba(255,107,53,.08);
+      border-radius:12px;
+      margin-bottom:10px;
+      cursor:pointer;
+      transition: all .2s;
+      border:2px solid transparent;
+    }
+
+    .check-item:active{
+      transform: scale(0.98);
+    }
+
+    .check-item.checked{
+      background:rgba(255,107,53,.15);
+      border-color:var(--accent);
+    }
+
+    .check-item input[type="checkbox"]{
+      width:24px;
+      height:24px;
+      cursor:pointer;
+      accent-color:var(--accent);
+    }
+
+    .check-item label{
+      margin:0;
+      flex:1;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .check-item input:disabled{
+      opacity:.5;
+    }
+
+    /* TOKEN */
+    .token-section{
+      background: rgba(26,24,22,.6);
+      border:2px solid rgba(255,107,53,.2);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      text-align:center;
+    }
+
+    .token-display{
+      padding:20px;
+      background:rgba(255,107,53,.1);
+      border-radius:12px;
+      border:2px dashed var(--accent);
+      margin:12px 0;
+    }
+
+    .token-label{
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin:0 0 8px 0;
+    }
+
+    .token-value{
+      font-size:32px;
+      font-weight:900;
+      color:var(--accent);
+      font-family: 'Courier New', monospace;
+      letter-spacing:3px;
+      margin:0;
+    }
+
+    .token-value.empty{
+      font-size:16px;
+      color:var(--muted);
+    }
+
+    /* BUTTONS */
+    .btn{
+      width:100%;
+      padding:18px;
+      border-radius:12px;
+      border:none;
+      font-weight:700;
+      cursor:pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size:16px;
+      transition: all .3s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .btn:active{
+      transform: scale(0.98);
+    }
+
+    .btn-primary{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+      box-shadow: 0 4px 16px rgba(255,107,53,.3);
+    }
+
+    .btn-secondary{
+      background:rgba(255,107,53,.15);
+      color:var(--accent);
+      border:2px solid var(--accent);
+    }
+
+    .btn-success{
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color:#fff;
+      box-shadow: 0 4px 16px rgba(74,222,128,.3);
+    }
+
+    .btn-group{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .success-msg{
+      display:none;
+      padding:24px;
+      background:linear-gradient(135deg, rgba(74,222,128,.2), rgba(34,197,94,.2));
+      border:3px solid #4ade80;
+      border-radius:16px;
+      color:#fff;
+      font-size:15px;
+      font-weight:700;
+      text-align:center;
+      margin-bottom:16px;
+      animation: slideIn .4s ease;
+      flex-direction:column;
+      gap:16px;
+      box-shadow:0 8px 25px rgba(74,222,128,.3);
+    }
+
+    .success-msg.show{
+      display:flex;
+    }
+
+    .success-header{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-size:16px;
+      color:#4ade80;
+    }
+
+    .success-header i{
+      width:24px;
+      height:24px;
+    }
+
+    /* Timer circular */
+    .countdown-timer{
+      position:relative;
+      width:80px;
+      height:80px;
+      margin:0 auto;
+    }
+
+    .countdown-circle{
+      width:80px;
+      height:80px;
+      transform:rotate(-90deg);
+    }
+
+    .countdown-circle-bg{
+      fill:none;
+      stroke:rgba(255,255,255,.2);
+      stroke-width:6;
+    }
+
+    .countdown-circle-progress{
+      fill:none;
+      stroke:#4ade80;
+      stroke-width:6;
+      stroke-linecap:round;
+      stroke-dasharray:226;
+      stroke-dashoffset:0;
+      transition:stroke-dashoffset 0.1s linear;
+    }
+
+    .countdown-number{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      font-size:28px;
+      font-weight:900;
+      color:#4ade80;
+    }
+
+    .countdown-actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .countdown-btn{
+      padding:12px 20px;
+      border-radius:10px;
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      border:none;
+      font-family:'Poppins',sans-serif;
+      transition:all .3s;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .countdown-btn.cancel{
+      background:rgba(239,68,68,.2);
+      color:#ef4444;
+      border:2px solid #ef4444;
+    }
+
+    .countdown-btn.new{
+      background:linear-gradient(135deg, #ff6b35, #f77f00);
+      color:#fff;
+      border:2px solid transparent;
+    }
+
+    .countdown-btn:active{
+      transform:scale(0.95);
+    }
+
+    @keyframes slideIn{
+      from{
+        opacity:0;
+        transform:translateY(-10px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.6;
+      padding:14px;
+      background:rgba(255,107,53,.05);
+      border-radius:10px;
+      border:1px solid rgba(255,107,53,.2);
+      margin-top:12px;
+    }
+
+    .btn-new-order{
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color:#fff;
+      box-shadow: 0 6px 20px rgba(74,222,128,.3);
+      margin-top:12px;
+    }
+
+    .btn-new-order:active{
+      transform: scale(0.97);
+      box-shadow: 0 3px 10px rgba(74,222,128,.4);
+    }
+
+    /* PREVIEW COMPACTO */
+    .preview-compact{
+      background: linear-gradient(135deg, var(--paper), var(--paper2));
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    }
+
+    .preview-header{
+      text-align:center;
+      margin-bottom:16px;
+      padding-bottom:16px;
+      border-bottom:2px dashed rgba(61,42,35,.3);
+    }
+
+    .preview-title{
+      font-size:20px;
+      font-weight:900;
+      color:var(--dark);
+      text-transform:uppercase;
+      margin:0 0 8px 0;
+    }
+
+    .preview-brand{
+      display:inline-block;
+      font-size:28px;
+      font-weight:900;
+      padding:6px 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#fff;
+      border-radius:10px;
+    }
+
+    .preview-info{
+      display:grid;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .preview-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      background:rgba(255,255,255,.6);
+      border-radius:8px;
+    }
+
+    .preview-row svg{
+      width:18px;
+      height:18px;
+      color:var(--accent);
+      flex-shrink:0;
+    }
+
+    .preview-row strong{
+      font-size:11px;
+      color:var(--muted);
+      min-width:70px;
+    }
+
+    .preview-row span{
+      font-size:13px;
+      font-weight:700;
+      color:var(--dark);
+      flex:1;
+    }
+
+    .loading{
+      opacity:.6;
+      pointer-events:none;
+    }
+
+    /* BOTTOM NAV FIXO */
+    .bottom-nav{
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:rgba(26,24,22,.98);
+      backdrop-filter:blur(10px);
+      border-top:2px solid rgba(255,107,53,.3);
+      padding:12px 16px;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.4);
+      z-index:99;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <i data-lucide="utensils" style="width:20px;height:20px;"></i> Cantina da Rô
+    </div>
+    <div class="navbar-menu">
+      <button class="nav-btn" onclick="window.location.href='index.html'">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-btn active">
+        <i data-lucide="plus-circle"></i>
+        <span>Novo Pedido</span>
+      </button>
+      <button class="nav-btn" onclick="window.location.href='relatorios-mobile.html'">
+        <i data-lucide="bar-chart-3"></i>
+        <span>Relatórios</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTAINER -->
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <h1><i data-lucide="chef-hat" style="width:24px;height:24px;vertical-align:middle;"></i> Vale Caldos</h1>
+      <p>Preencha os dados do pedido</p>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-section">
+      <div class="form-group">
+        <label>
+          <i data-lucide="user"></i>
+          Nome do cliente
+        </label>
+        <input type="text" id="inName" placeholder="Ex: Ronair Costa" autocomplete="name" />
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i data-lucide="phone"></i>
+          Telefone
+        </label>
+        <input type="tel" id="inContact" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" autocomplete="tel" />
+      </div>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label>
+            <i data-lucide="shopping-bag"></i>
+            Quantidade
+          </label>
+          <input type="number" id="inQty" min="1" value="1" inputmode="numeric" />
+        </div>
+
+        <div class="form-group">
+          <label>
+            <i data-lucide="dollar-sign"></i>
+            Valor
+          </label>
+          <input type="text" id="inTotal" value="R$ 20,00" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>
+          <i data-lucide="credit-card"></i>
+          Status de Pagamento
+        </label>
+        <select id="inPayment" style="padding:14px 16px;font-size:15px;font-weight:600;font-family:'Poppins',sans-serif;background:rgba(255,107,53,.05);border:2px solid rgba(255,107,53,.3);border-radius:12px;color:var(--text);width:100%;outline:none;cursor:pointer;transition:all .3s;">
+          <option value="aguardando">⏳ Aguardando Pagamento</option>
+          <option value="pago">✓ Pago</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div class="items-section">
+      <div class="items-title">
+        🍽️ Itens do Pedido
+      </div>
+      
+      <div class="check-item checked">
+        <input type="checkbox" class="item-checkbox" data-label="Caldos" checked disabled id="check1" />
+        <label for="check1">🥣 Caldos (obrigatório)</label>
+      </div>
+
+      <div class="check-item checked" onclick="toggleCheck(this, 'check2')">
+        <input type="checkbox" class="item-checkbox" data-label="Feijão" checked id="check2" />
+        <label for="check2">🍲 Feijão</label>
+      </div>
+
+      <div class="check-item" onclick="toggleCheck(this, 'check3')">
+        <input type="checkbox" class="item-checkbox" data-label="Costela" id="check3" />
+        <label for="check3">🥩 Costela</label>
+      </div>
+
+      <div class="check-item" onclick="toggleCheck(this, 'check4')">
+        <input type="checkbox" class="item-checkbox" data-label="Frango" id="check4" />
+        <label for="check4">🍗 Frango</label>
+      </div>
+    </div>
+
+    <!-- PREVIEW COMPACTO -->
+    <div class="preview-compact">
+      <div class="preview-header">
+        <div class="preview-title">Vale Caldos</div>
+        <div class="preview-brand">DA RÔ</div>
+      </div>
+
+      <div class="preview-info">
+        <div class="preview-row">
+          <i data-lucide="user"></i>
+          <strong>Cliente:</strong>
+          <span id="vName">—</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="phone"></i>
+          <strong>Contato:</strong>
+          <span id="vContact">—</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="shopping-bag"></i>
+          <strong>Quantidade:</strong>
+          <span id="vQty">01 marmita - R$ 20,00</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="calendar"></i>
+          <strong>Retirada:</strong>
+          <span>07/03/2026</span>
+        </div>
+
+        <div class="preview-row">
+          <i data-lucide="map-pin"></i>
+          <strong>Endereço:</strong>
+          <span>R. Yolanda Motta Leite, 1439</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOKEN -->
+    <div class="token-section">
+      <h3 style="margin:0 0 12px 0;font-size:16px;font-weight:700;">
+        <i data-lucide="key" style="width:16px;height:16px;vertical-align:middle;"></i> Token de Retirada
+      </h3>
+      
+      <div class="token-display">
+        <p class="token-label">Código</p>
+        <p class="token-value empty" id="vToken">Clique para gerar</p>
+      </div>
+
+      <button class="btn btn-secondary" id="btnGenerateToken">
+        <i data-lucide="key"></i>
+        Gerar Token
+      </button>
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    <div id="successMsg" class="success-msg">
+      <div class="success-header">
+        <i data-lucide="check-circle"></i>
+        <span>Pedido salvo com sucesso!</span>
+      </div>
+      
+      <div class="countdown-timer">
+        <svg class="countdown-circle" viewBox="0 0 80 80">
+          <circle class="countdown-circle-bg" cx="40" cy="40" r="36"></circle>
+          <circle class="countdown-circle-progress" cx="40" cy="40" r="36" id="countdownProgress"></circle>
+        </svg>
+        <div class="countdown-number" id="countdownNumber">5</div>
+      </div>
+      
+      <div class="countdown-actions">
+        <button class="countdown-btn cancel" onclick="cancelCountdown()">
+          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
+          Cancelar
+        </button>
+        <button class="countdown-btn new" onclick="createNewOrderNow()">
+          <i data-lucide="plus-circle" style="width:16px;height:16px;"></i>
+          Novo Pedido
+        </button>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <button class="btn btn-success" id="btnSave">
+      <i data-lucide="save"></i>
+      Salvar Pedido
+    </button>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" id="btnPNG">
+        <i data-lucide="download"></i>
+        Baixar
+      </button>
+      <button class="btn btn-secondary" id="btnShare">
+        <i data-lucide="share-2"></i>
+        Compartilhar
+      </button>
+    </div>
+
+    <div class="hint">
+      💡 <b>Dicas:</b> Preencha os dados, gere o token e salve. O vale é atualizado automaticamente!
+    </div>
+
+    <button class="btn btn-new-order" id="btnNewOrder">
+      <i data-lucide="plus-circle"></i>
+      Novo Pedido
+    </button>
+  </div>
+
+  <!-- VALE OCULTO (para gerar PNG) -->
+  <div id="voucherHidden" style="position:fixed;left:-9999px;top:0;">
+    <div style="width:600px;background:linear-gradient(135deg,#e8d5c4,#d9b99a);padding:32px;border-radius:24px;">
+      <div style="text-align:center;padding:20px;background:rgba(255,107,53,.2);border-radius:20px;border:3px dashed rgba(61,42,35,.4);margin-bottom:20px;">
+        <div style="font-size:36px;font-weight:900;color:#3d2a23;text-transform:uppercase;margin-bottom:12px;">Vale Caldos</div>
+        <div style="display:inline-block;font-size:52px;font-weight:900;padding:12px 28px;background:linear-gradient(135deg,#ff6b35,#f77f00);color:#fff;border-radius:16px;">DA RÔ</div>
+        <div style="position:absolute;top:16px;right:16px;background:#fff;padding:10px 18px;border-radius:12px;border:2px solid #ff6b35;">
+          <div style="font-size:11px;font-weight:700;color:#ff6b35;margin:0;">RETIRADA</div>
+          <div style="font-size:22px;font-weight:900;color:#3d2a23;margin:0;">07/03</div>
+        </div>
+      </div>
+
+      <div style="background:#fff;padding:24px;border-radius:20px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;">👤</div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Cliente</div>
+            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vNameHidden">—</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Contato</div>
+            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vContactHidden">—</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="shopping-bag" style="width:16px;height:16px;vertical-align:middle;"></i></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
+            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 marmita - R$ 20,00</div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
+          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="map-pin" style="width:16px;height:16px;vertical-align:middle;"></i></div>
+          <div style="flex:1;">
+            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Endereço de Retirada</div>
+            <div style="font-size:15px;font-weight:700;color:#3d2a23;margin:0;">R. Yolanda Motta Leite, 1439</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,107,53,.15);padding:18px;border-radius:20px;border:2px solid rgba(61,42,35,.2);margin-bottom:16px;">
+        <div style="font-size:16px;font-weight:900;color:#3d2a23;text-align:center;text-transform:uppercase;margin:0 0 12px 0;">📋 Resumo do Pedido</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;" id="vItemsHidden">
+          <span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">Galinhada</span>
+          <span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">Vinagrete</span>
+        </div>
+      </div>
+
+      <div style="background:#fff;padding:16px;border-radius:16px;text-align:center;border:2px dashed #ff6b35;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 6px 0;"><i data-lucide="key" style="width:16px;height:16px;vertical-align:middle;"></i> Token de Retirada</div>
+        <div style="font-size:28px;font-weight:900;color:#ff6b35;font-family:'Courier New',monospace;letter-spacing:3px;margin:0;" id="vTokenHidden">----</div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#4ade80,#22c55e);padding:16px 20px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:700;font-size:14px;text-align:center;">
+        <span style="font-size:24px;">✓</span>
+        <span>Apresente este vale no dia da retirada</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "SUA_URL_DO_SUPABASE";
+    const SUPABASE_ANON_KEY = "SUA_CHAVE_ANONIMA_DO_SUPABASE";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    lucide.createIcons();
+
+    const $ = (id) => document.getElementById(id);
+    let currentToken = "";
+
+    // Toggle checkbox com toque
+    function toggleCheck(element, checkId){
+      const checkbox = document.getElementById(checkId);
+      if(!checkbox.disabled){
+        checkbox.checked = !checkbox.checked;
+        if(checkbox.checked){
+          element.classList.add('checked');
+        } else {
+          element.classList.remove('checked');
+        }
+        updateVoucher();
+      }
+    }
+
+    // Formatar telefone
+    function formatPhone(value){
+      const digits = (value ?? "").toString().replace(/\D/g, "").slice(0, 11);
+      if(!digits) return "";
+      if(digits.length <= 2) return `(${digits}`;
+      const ddd = digits.slice(0,2);
+      const first = digits.slice(2,7);
+      const last = digits.slice(7);
+      if(!last) return `(${ddd}) ${first}`;
+      return `(${ddd}) ${first}-${last}`;
+    }
+
+    // Gerar token simples
+    function generateToken(){
+      const contact = $("inContact").value || "";
+      
+      const digits = contact.replace(/\D/g, '');
+      const last4 = digits.slice(-4) || '0000';
+      
+      // Garantir que sempre tenha 4 dígitos (adiciona zeros à esquerda se necessário)
+      return last4.padStart(4, '0');
+    }
+
+    function safeText(v){ return (v ?? "").toString().trim(); }
+
+    // Atualizar preview
+    function updateVoucher(){
+      const name = safeText($("inName").value);
+      const qtyRaw = parseInt($("inQty").value || "1", 10);
+      const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
+      const contact = formatPhone($("inContact").value);
+
+      $("vName").textContent = name || "—";
+      $("vContact").textContent = contact || "—";
+
+      const unitPrice = 20;
+      const total = qty * unitPrice;
+      const currency = new Intl.NumberFormat("pt-BR", { 
+        style:"currency", 
+        currency:"BRL" 
+      }).format(total);
+
+      $("inTotal").value = currency;
+      $("vQty").textContent = `${qty.toString().padStart(2,"0")} marmita${qty > 1 ? "s" : ""} - ${currency}`;
+
+      // Atualizar hidden
+      $("vNameHidden").textContent = name || "—";
+      $("vContactHidden").textContent = contact || "—";
+      $("vQtyHidden").textContent = $("vQty").textContent;
+
+      // Itens
+      const items = Array.from(document.querySelectorAll(".item-checkbox"))
+        .filter(cb => cb.checked)
+        .map(cb => cb.dataset.label);
+      
+      $("vItemsHidden").innerHTML = items.map(item => 
+        `<span style="background:#fff;color:#3d2a23;padding:10px 20px;border-radius:30px;font-weight:700;font-size:15px;border:2px solid #ff6b35;">${item}</span>`
+      ).join('');
+
+      lucide.createIcons();
+    }
+
+    // Eventos
+    ["inName","inQty"].forEach(id => {
+      $(id).addEventListener("input", updateVoucher);
+    });
+
+    $("inContact").addEventListener("input", ()=>{
+      const formatted = formatPhone($("inContact").value);
+      $("inContact").value = formatted;
+      updateVoucher();
+    });
+
+    document.querySelectorAll(".item-checkbox").forEach(cb=>{
+      cb.addEventListener("change", updateVoucher);
+    });
+
+    // Gerar Token
+    $("btnGenerateToken").addEventListener("click", ()=>{
+      const name = safeText($("inName").value);
+      const contact = safeText($("inContact").value);
+
+      if(!name || !contact){
+        alert("⚠️ Preencha nome e telefone primeiro!");
+        return;
+      }
+
+      currentToken = generateToken();
+      const tokenEl = $("vToken");
+      tokenEl.textContent = currentToken;
+      tokenEl.classList.remove("empty");
+      
+      $("vTokenHidden").textContent = currentToken;
+      
+      tokenEl.style.transform = "scale(1.1)";
+      setTimeout(()=>{ tokenEl.style.transform = "scale(1)"; }, 300);
+    });
+
+    // Salvar
+    // Variáveis de controle
+    let isSaving = false;
+    let countdownInterval = null;
+    let countdownSeconds = 5;
+
+    $("btnSave").addEventListener("click", async ()=>{
+      // Prevenir duplo clique
+      if(isSaving){
+        console.log('Já está salvando, ignorando clique duplo');
+        return;
+      }
+
+      const name = safeText($("inName").value);
+      const contact = safeText($("inContact").value);
+
+      if(!name || !contact){
+        alert("⚠️ Preencha Nome e Telefone!");
+        return;
+      }
+
+      if(!currentToken){
+        alert("⚠️ Clique em 'Gerar Token' primeiro!");
+        return;
+      }
+
+      const qty = parseInt($("inQty").value || "1", 10);
+      const unitPrice = 20;
+      const total = qty * unitPrice;
+      const selectedItems = Array.from(document.querySelectorAll(".item-checkbox"))
+        .filter(cb => cb.checked)
+        .map(cb => cb.dataset.label)
+        .join(", ");
+
+      const data = {
+        timestamp: new Date().toISOString(),
+        nome: name,
+        contato: contact,
+        quantidade: qty,
+        valor: `R$ ${total.toFixed(2).replace(".", ",")}`,
+        data_retirada: "07/03/2026",
+        itens: selectedItems,
+        token: currentToken,
+        endereco: "R. Yolanda Motta Leite, 1439",
+        pagamento: $("inPayment").value || "aguardando",
+        status: "pendente"
+      };
+
+      const btn = $("btnSave");
+      const originalContent = btn.innerHTML;
+      
+      // Marcar como salvando
+      isSaving = true;
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader"></i> Salvando...';
+      btn.classList.add("loading");
+      lucide.createIcons();
+
+      try {
+        console.log('Enviando pedido para Supabase:', data);
+        
+        const { error } = await supabase
+          .from('pedidos')
+          .insert([data]);
+
+        if(error) throw error;
+        
+        console.log('Pedido salvo com sucesso!');
+
+        // Mostrar mensagem de sucesso com countdown
+        $("successMsg").classList.add("show");
+        lucide.createIcons();
+        
+        // Iniciar countdown
+        startCountdown();
+
+      } catch (error) {
+        console.error("Erro ao salvar:", error);
+        alert("❌ Erro ao salvar! Verifique o console.");
+        isSaving = false;
+        btn.disabled = false;
+      } finally {
+        btn.innerHTML = originalContent;
+        btn.classList.remove("loading");
+        lucide.createIcons();
+      }
+    });
+
+    // Download PNG
+    $("btnPNG").addEventListener("click", async ()=>{
+      if(!currentToken){
+        alert("⚠️ Gere o token primeiro!");
+        return;
+      }
+
+      const node = $("voucherHidden").children[0];
+      lucide.createIcons();
+
+      const canvas = await html2canvas(node, {
+        backgroundColor: null,
+        scale: 2.5,
+        useCORS: true
+      });
+
+      const dataURL = canvas.toDataURL("image/png", 1.0);
+      const a = document.createElement("a");
+      a.href = dataURL;
+      a.download = `vale-galinhada-${currentToken}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    // Compartilhar (Web Share API)
+    $("btnShare").addEventListener("click", async ()=>{
+      if(!currentToken){
+        alert("⚠️ Gere o token primeiro!");
+        return;
+      }
+
+      if(!navigator.share){
+        alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento não suportado neste navegador. Use "Baixar" e envie manualmente.');
+        return;
+      }
+
+      const node = $("voucherHidden").children[0];
+      const canvas = await html2canvas(node, {
+        backgroundColor: null,
+        scale: 2.5,
+        useCORS: true
+      });
+
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], `vale-${currentToken}.png`, { type: 'image/png' });
+        
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Vale Galinhada',
+            text: `Vale Galinhada - Token: ${currentToken}`
+          });
+        } catch(err){
+          console.log('Compartilhamento cancelado');
+        }
+      });
+    });
+
+    updateVoucher();
+
+    // Botão Novo Pedido
+    $("btnNewOrder").addEventListener("click", ()=>{
+      // Limpar campos
+      $("inName").value = "";
+      $("inContact").value = "";
+      $("inQty").value = "1";
+      $("inPayment").value = "aguardando";
+      
+      // Desmarcar checkboxes (exceto Galinhada que é obrigatório)
+      document.querySelectorAll(".item-checkbox").forEach(cb => {
+        if(!cb.disabled){
+          cb.checked = false;
+          cb.parentElement.classList.remove('checked');
+        }
+      });
+
+      // Limpar token
+      currentToken = "";
+      $("vToken").textContent = "----";
+      $("vToken").classList.add("empty");
+      $("vTokenHidden").textContent = "----";
+
+      // Atualizar preview
+      updateVoucher();
+
+      // Scroll para o topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      lucide.createIcons();
+    });
+
+    // Função de countdown
+    function startCountdown(){
+      countdownSeconds = 5;
+      const numberEl = $("countdownNumber");
+      const progressEl = $("countdownProgress");
+      const circumference = 2 * Math.PI * 36; // 226
+      
+      // Reset
+      numberEl.textContent = countdownSeconds;
+      progressEl.style.strokeDashoffset = 0;
+      
+      countdownInterval = setInterval(() => {
+        countdownSeconds--;
+        numberEl.textContent = countdownSeconds;
+        
+        // Atualizar círculo (preenchendo progressivamente)
+        const offset = circumference - (circumference * (5 - countdownSeconds) / 5);
+        progressEl.style.strokeDashoffset = offset;
+        
+        if(countdownSeconds <= 0){
+          clearInterval(countdownInterval);
+          // Limpar formulário automaticamente
+          createNewOrderNow();
+        }
+      }, 1000);
+    }
+
+    // Cancelar countdown
+    function cancelCountdown(){
+      if(countdownInterval){
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      $("successMsg").classList.remove("show");
+      // Resetar flag para permitir novo salvamento
+      isSaving = false;
+      $("btnSave").disabled = false;
+    }
+
+    // Criar novo pedido imediatamente
+    function createNewOrderNow(){
+      if(countdownInterval){
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+      }
+      
+      // Limpar campos
+      $("inName").value = '';
+      $("inContact").value = '';
+      $("inQty").value = '1';
+      $("inTotal").value = 'R$ 20,00';
+      $("inPayment").value = 'aguardando';
+      
+      // Desmarcar checkboxes opcionais
+      document.querySelectorAll('.item-checkbox').forEach(cb => {
+        if(!cb.disabled) cb.checked = false;
+      });
+      
+      // Limpar token
+      currentToken = null;
+      $("vToken").textContent = '----';
+      $("vTokenHidden").textContent = '----';
+      
+      // Esconder mensagem de sucesso
+      $("successMsg").classList.remove('show');
+      
+      // Resetar flag
+      isSaving = false;
+      $("btnSave").disabled = false;
+      
+      // Atualizar voucher
+      updateVoucher();
+      
+      // Focar no primeiro campo
+      $("inName").focus();
+      
+      // Scroll para o topo
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Recriar ícones
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
