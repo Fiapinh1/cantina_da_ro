@@ -1089,7 +1089,7 @@
       listEl.innerHTML = '';
 
       try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
           .from('pedidos')
           .select('*')
           .order('timestamp', { ascending: false });
@@ -1400,7 +1400,7 @@
       if(!order) return;
 
       try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .delete()
           .eq('id', id);
@@ -1485,7 +1485,7 @@
 
       // PAGAMENTO OK - ENTREGAR NORMALMENTE
       try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ status: 'entregue' })
           .eq('id', currentOrder.id);
@@ -1512,7 +1512,7 @@
     async function confirmarPagamentoEEntregar(){
       try {
         // 1. Atualizar pagamento para "pago" e status para "entregue"
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ pagamento: 'pago', status: 'entregue' })
           .eq('id', currentOrder.id);
@@ -1543,7 +1543,7 @@
       const newStatus = document.getElementById('newStatusSelect').value;
 
       try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ status: newStatus })
           .eq('id', currentOrder.id);
@@ -1589,7 +1589,7 @@
       }
 
       try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ 
             nome: nome, 

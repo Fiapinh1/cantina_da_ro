@@ -1068,7 +1068,7 @@
       try {
         console.log('Enviando pedido para Supabase:', data);
         
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .insert([data]);
 

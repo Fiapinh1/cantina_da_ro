@@ -692,7 +692,7 @@
       document.getElementById('statPaid').textContent = '...';
       
       try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
           .from('pedidos')
           .select('*');
         
@@ -919,7 +919,7 @@
       if(!currentOrder) return;
 
       try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ status: 'entregue' })
           .eq('id', currentOrder.id);
@@ -946,7 +946,7 @@
 
       try {
         // 1. Marcar como pago e entregue
-        const { error } = await supabase
+        const { error } = await supabaseClient
           .from('pedidos')
           .update({ pagamento: 'pago', status: 'entregue' })
           .eq('id', currentOrder.id);
