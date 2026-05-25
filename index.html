@@ -16,7 +16,7 @@
   <link rel="manifest" href="manifest.json">
   
   <!-- Ícones Apple -->
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="icon-192.png">
@@ -51,7 +51,7 @@
       background: linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
       color:var(--text);
       min-height:100vh;
-      padding-bottom:20px;
+      padding-bottom:110px;
     }
 
     /* NAVBAR */
@@ -75,6 +75,18 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .brand-logo{
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      object-fit:cover;
+      -webkit-text-fill-color: initial;
     }
 
     .navbar-menu{
@@ -118,7 +130,7 @@
 
     /* CONTAINER */
     .container{
-      padding:16px;
+      padding:16px 16px 96px;
       max-width:1200px;
       margin:0 auto;
     }
@@ -174,6 +186,16 @@
       text-align:center;
     }
 
+    .stat-card.paid{
+      background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(22,163,74,.1));
+      border-color:#22c55e;
+    }
+
+    .stat-card.payment-pending{
+      background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(220,38,38,.1));
+      border-color:#ef4444;
+    }
+
     .stat-icon{
       width:48px;
       height:48px;
@@ -196,6 +218,14 @@
       background: linear-gradient(135deg, #fbbf24, #f59e0b);
     }
 
+    .stat-icon.solid-green{
+      background:#22c55e;
+    }
+
+    .stat-icon.solid-red{
+      background:#ef4444;
+    }
+
     .stat-icon svg{
       width:24px;
       height:24px;
@@ -216,6 +246,55 @@
       font-weight:900;
       color:var(--text);
       margin:0;
+    }
+
+    .stat-value.success{
+      color:#22c55e;
+    }
+
+    .stat-value.danger{
+      color:#ef4444;
+    }
+
+    @media (max-width: 767px){
+      .header{
+        margin-bottom:12px;
+        padding:16px 14px;
+      }
+
+      .header h1{
+        font-size:22px;
+      }
+
+      .stats-grid{
+        gap:10px;
+        margin-bottom:16px;
+      }
+
+      .stat-card{
+        border-radius:12px;
+        padding:12px 10px;
+      }
+
+      .stat-card.mobile-secondary{
+        display:none;
+      }
+
+      .stat-icon{
+        width:40px;
+        height:40px;
+        border-radius:10px;
+        margin-bottom:10px;
+      }
+
+      .stat-icon svg{
+        width:21px;
+        height:21px;
+      }
+
+      .stat-value{
+        font-size:21px;
+      }
     }
 
     /* FILTERS */
@@ -466,6 +545,12 @@
       border:1px solid #ef4444;
     }
 
+    .action-btn.danger.subtle{
+      background:rgba(239,68,68,.08);
+      color:#f87171;
+      border:1px solid rgba(239,68,68,.45);
+    }
+
     .action-btn.success{
       background: linear-gradient(135deg, #4ade80, #22c55e);
       color:#fff;
@@ -648,11 +733,12 @@
     /* BOTÃO FLUTUANTE VALIDADOR */
     .fab-validador{
       position:fixed;
-      bottom:24px;
-      right:24px;
-      width:64px;
-      height:64px;
-      border-radius:50%;
+      bottom:18px;
+      right:18px;
+      min-width:64px;
+      height:56px;
+      padding:0 18px;
+      border-radius:999px;
       background: linear-gradient(135deg, #4ade80, #22c55e);
       color:#fff;
       border:none;
@@ -661,9 +747,12 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      gap:8px;
       transition: all .3s;
       z-index:1000;
       text-decoration:none;
+      font-size:13px;
+      font-weight:800;
     }
 
     .fab-validador:hover{
@@ -676,20 +765,29 @@
     }
 
     .fab-validador svg{
-      width:32px;
-      height:32px;
+      width:26px;
+      height:26px;
+      flex-shrink:0;
+    }
+
+    .fab-validador span{
+      white-space:nowrap;
     }
 
     @media (max-width: 768px){
       .fab-validador{
-        bottom:20px;
-        right:20px;
-        width:56px;
-        height:56px;
+        bottom:14px;
+        right:14px;
+        height:52px;
+        min-width:52px;
+        padding:0 14px;
       }
       .fab-validador svg{
-        width:28px;
-        height:28px;
+        width:24px;
+        height:24px;
+      }
+      .fab-validador span{
+        display:none;
       }
     }
 
@@ -801,8 +899,8 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-brand">
-      <i data-lucide="utensils" style="width:20px;height:20px;"></i>
-      Cantina da Rô
+      <img src="logo.png" alt="Logo Cantina da Rô" class="brand-logo">
+      <span>Cantina da Rô</span>
     </div>
     <div class="navbar-menu">
       <button class="nav-btn active">
@@ -831,7 +929,7 @@
 
     <!-- STATS -->
     <div class="stats-grid">
-      <div class="stat-card">
+      <div class="stat-card mobile-secondary">
         <div class="stat-icon orange">
           <i data-lucide="shopping-bag"></i>
         </div>
@@ -855,7 +953,7 @@
         <p class="stat-value" id="statDelivered">0</p>
       </div>
 
-      <div class="stat-card">
+      <div class="stat-card mobile-secondary">
         <div class="stat-icon orange">
           <i data-lucide="dollar-sign"></i>
         </div>
@@ -864,20 +962,20 @@
       </div>
       
       <!-- NOVOS CARDS DE PAGAMENTO -->
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(22,163,74,.1));border:2px solid #22c55e;">
-        <div class="stat-icon" style="background:#22c55e;">
+      <div class="stat-card paid">
+        <div class="stat-icon solid-green">
           <i data-lucide="check-circle-2"></i>
         </div>
-        <p class="stat-label">💰 Recebido</p>
-        <p class="stat-value" id="statPaid" style="color:#22c55e;">R$ 0</p>
+        <p class="stat-label">Recebido</p>
+        <p class="stat-value success" id="statPaid">R$ 0</p>
       </div>
       
-      <div class="stat-card" style="background:linear-gradient(135deg,rgba(239,68,68,.1),rgba(220,38,38,.1));border:2px solid #ef4444;">
-        <div class="stat-icon" style="background:#ef4444;">
+      <div class="stat-card payment-pending">
+        <div class="stat-icon solid-red">
           <i data-lucide="alert-circle"></i>
         </div>
-        <p class="stat-label">⏳ A Receber</p>
-        <p class="stat-value" id="statPendingPayment" style="color:#ef4444;">R$ 0</p>
+        <p class="stat-label">A Receber</p>
+        <p class="stat-value danger" id="statPendingPayment">R$ 0</p>
       </div>
     </div>
 
@@ -1198,7 +1296,7 @@
             <button class="action-btn" onclick="reprintVoucher(${order.id})" style="background:rgba(168,85,247,.15);color:#a855f7;border:2px solid #a855f7;grid-column:span 2;">
               <i data-lucide="printer"></i> Reimprimir Vale
             </button>
-            <button class="action-btn danger" onclick="confirmDelete(${order.id})" style="grid-column:span 2;">
+            <button class="action-btn danger subtle" onclick="openDeleteModal(${order.id})" style="grid-column:span 2;">
               <i data-lucide="trash-2"></i> Excluir Pedido
             </button>
           </div>
@@ -1394,20 +1492,28 @@
       }
     }
 
-    // Excluir pedido direto (sem modal)
-    async function confirmDelete(id){
-      const order = allOrders.find(o => o.id === id);
-      if(!order) return;
+    function openDeleteModal(id){
+      currentOrder = allOrders.find(o => o.id === id);
+      if(!currentOrder) return;
+
+      document.getElementById('modalDeleteClientName').textContent = currentOrder.nome;
+      document.getElementById('deleteModal').classList.add('active');
+      lucide.createIcons();
+    }
+
+    async function confirmDelete(){
+      if(!currentOrder) return;
 
       try {
         const { error } = await supabaseClient
           .from('pedidos')
           .delete()
-          .eq('id', id);
+          .eq('id', currentOrder.id);
 
         if(error) throw error;
 
-        showToast(`Pedido de ${order.nome} excluído com sucesso!`);
+        showToast(`Pedido de ${currentOrder.nome} excluído com sucesso!`);
+        closeModal();
         loadOrders();
 
       } catch(error){
@@ -1787,6 +1893,7 @@
 
   <a href="validador.html" class="fab-validador" title="Validador Rápido">
     <i data-lucide="scan-line"></i>
+    <span>Validador</span>
   </a>
 
 </body>

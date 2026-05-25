@@ -8,7 +8,8 @@
   <title>Validador - Cantina da Rô</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
   
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
@@ -58,6 +59,14 @@
       align-items:center;
       justify-content:center;
       gap:10px;
+    }
+
+    .header-logo{
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      object-fit:cover;
+      box-shadow:0 6px 18px rgba(255,107,53,.24);
     }
 
     .subtitle{
@@ -584,7 +593,7 @@
     <!-- HEADER -->
     <div class="header">
       <h1 class="logo">
-        <i data-lucide="scan-line"></i>
+        <img src="logo.png" alt="Logo Cantina da Rô" class="header-logo">
         Validador Rápido
       </h1>
       <p class="subtitle">Cantina da Rô</p>

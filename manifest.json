@@ -2,12 +2,19 @@
   "name": "Cantina da Rô",
   "short_name": "Cantina da Rô",
   "description": "Sistema de gerenciamento de pedidos da Cantina da Rô - Vendas de Caldos",
-  "start_url": "/",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0a0908",
   "theme_color": "#ff6b35",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "icon-192.png",
       "sizes": "192x192",

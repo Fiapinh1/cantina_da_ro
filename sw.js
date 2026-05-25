@@ -1,9 +1,15 @@
-const CACHE_NAME = 'galinhada-da-ro-v1';
+const CACHE_NAME = 'cantina-da-ro-v2';
 const urlsToCache = [
   '/cantina_da_ro/',
   '/cantina_da_ro/index.html',
   '/cantina_da_ro/novo-pedido-mobile.html',
   '/cantina_da_ro/relatorios-mobile.html',
+  '/cantina_da_ro/validador.html',
+  '/cantina_da_ro/manifest.json',
+  '/cantina_da_ro/logo.png',
+  '/cantina_da_ro/icon-180.png',
+  '/cantina_da_ro/icon-192.png',
+  '/cantina_da_ro/icon-512.png',
   'https://unpkg.com/lucide@latest',
   'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
   'https://cdn.jsdelivr.net/npm/chart.js',

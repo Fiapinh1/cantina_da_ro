@@ -12,7 +12,7 @@
   <title>Relatórios - Cantina da Rô</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" type="image/png" href="icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -66,6 +66,18 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .brand-logo{
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      object-fit:cover;
+      -webkit-text-fill-color: initial;
     }
 
     .navbar-menu{
@@ -315,6 +327,39 @@
       display:flex;
       align-items:center;
       gap:4px;
+    }
+
+    .print-only{
+      display:none;
+    }
+
+    .print-summary{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:10px;
+      margin:14px 0 18px;
+    }
+
+    .print-summary-item{
+      border:1px solid #e5e7eb;
+      border-radius:8px;
+      padding:10px;
+      background:#fafafa;
+    }
+
+    .print-summary-label{
+      font-size:9px;
+      font-weight:800;
+      color:#6b7280;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+      margin-bottom:4px;
+    }
+
+    .print-summary-value{
+      font-size:16px;
+      font-weight:900;
+      color:#111827;
     }
 
     /* IMPRESSÃO */
@@ -620,12 +665,198 @@
         margin-top:0 !important;
       }
     }
+
+    @media print{
+      @page{
+        margin:1.2cm;
+        size:A4;
+      }
+
+      body{
+        background:#fff !important;
+        color:#111827 !important;
+        font-family:'Poppins', Arial, sans-serif !important;
+        padding:0 !important;
+      }
+
+      .navbar,
+      .header,
+      .cards-grid,
+      .chart-container,
+      #reportContent > .top-items:not(.orders-list-print),
+      .top-items-header,
+      #filterStatus,
+      button,
+      canvas,
+      #loadingState,
+      #reportContent::before,
+      #reportContent::after,
+      body::after{
+        display:none !important;
+        content:none !important;
+      }
+
+      .container,
+      #reportContent,
+      .orders-list-print{
+        display:block !important;
+        max-width:none !important;
+        width:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+        border:none !important;
+        box-shadow:none !important;
+      }
+
+      .orders-list-print::before{
+        display:none !important;
+        content:none !important;
+      }
+
+      .print-only{
+        display:block !important;
+      }
+
+      .print-header{
+        border-bottom:3px solid #ff6b35;
+        padding-bottom:14px;
+        margin-bottom:16px;
+      }
+
+      .print-brand-row{
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:20px;
+      }
+
+      .print-brand{
+        font-size:24px;
+        font-weight:900;
+        color:#ff6b35;
+        line-height:1;
+      }
+
+      .print-title{
+        font-size:16px;
+        font-weight:900;
+        color:#111827;
+        margin-top:6px;
+        text-transform:uppercase;
+      }
+
+      .print-date{
+        font-size:10px;
+        font-weight:700;
+        color:#6b7280;
+        text-align:right;
+      }
+
+      .print-summary{
+        display:grid !important;
+        grid-template-columns:repeat(4, 1fr) !important;
+        gap:8px !important;
+        margin:14px 0 0 !important;
+      }
+
+      .print-summary-item{
+        border:1px solid #e5e7eb !important;
+        border-radius:8px !important;
+        padding:9px !important;
+        background:#fafafa !important;
+        page-break-inside:avoid;
+      }
+
+      .print-summary-label{
+        font-size:8px !important;
+        font-weight:800 !important;
+        color:#6b7280 !important;
+        text-transform:uppercase;
+        letter-spacing:.5px;
+        margin:0 0 4px !important;
+      }
+
+      .print-summary-value{
+        font-size:14px !important;
+        font-weight:900 !important;
+        color:#111827 !important;
+      }
+
+      #ordersList{
+        display:block !important;
+      }
+
+      .order-item{
+        display:block !important;
+        border:1px solid #e5e7eb !important;
+        border-left:5px solid #ff6b35 !important;
+        border-radius:8px !important;
+        padding:10px 12px !important;
+        margin:0 0 8px !important;
+        background:#fff !important;
+        page-break-inside:avoid !important;
+      }
+
+      .order-header-row{
+        border-bottom:1px solid #f0f0f0 !important;
+        padding-bottom:6px !important;
+        margin-bottom:8px !important;
+      }
+
+      .order-name-row{
+        font-size:13px !important;
+        color:#111827 !important;
+      }
+
+      .order-status-badge{
+        font-size:8px !important;
+        border-radius:999px !important;
+        padding:3px 8px !important;
+      }
+
+      .order-details-row{
+        display:grid !important;
+        grid-template-columns:1.2fr .8fr .8fr .9fr .7fr !important;
+        gap:8px !important;
+        align-items:center !important;
+      }
+
+      .order-detail{
+        display:block !important;
+        font-size:9px !important;
+        color:#374151 !important;
+        padding:0 !important;
+      }
+
+      .order-detail-label{
+        display:block !important;
+        font-size:7px !important;
+        color:#9ca3af !important;
+        font-weight:800 !important;
+        text-transform:uppercase;
+        background:transparent !important;
+        padding:0 !important;
+        border-radius:0 !important;
+        margin-bottom:2px !important;
+      }
+
+      .order-detail-value{
+        display:block !important;
+        font-size:10px !important;
+        color:#111827 !important;
+        font-weight:800 !important;
+        background:transparent !important;
+        padding:0 !important;
+      }
+    }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <div class="navbar-brand">
-      🥣 Cantina da Rô
+      <img src="logo.png" alt="Logo Cantina da Rô" class="brand-logo">
+      <span>Cantina da Rô</span>
     </div>
     <div class="navbar-menu">
       <button class="nav-btn" onclick="window.location.href='index.html'">
@@ -827,6 +1058,33 @@
 
       <!-- LISTA DETALHADA DE PEDIDOS -->
       <div class="top-items orders-list-print" style="margin-top:20px;">
+        <div class="print-header print-only">
+          <div class="print-brand-row">
+            <div>
+              <div class="print-brand">Cantina da Rô</div>
+              <div class="print-title" id="printFilterTitle">Lista de Pedidos</div>
+            </div>
+            <div class="print-date" id="printDate">Gerado em --</div>
+          </div>
+          <div class="print-summary">
+            <div class="print-summary-item">
+              <div class="print-summary-label">Pedidos</div>
+              <div class="print-summary-value" id="printTotalOrders">0</div>
+            </div>
+            <div class="print-summary-item">
+              <div class="print-summary-label">Porções</div>
+              <div class="print-summary-value" id="printTotalQty">0</div>
+            </div>
+            <div class="print-summary-item">
+              <div class="print-summary-label">Total</div>
+              <div class="print-summary-value" id="printTotalValue">R$ 0,00</div>
+            </div>
+            <div class="print-summary-item">
+              <div class="print-summary-label">A Receber</div>
+              <div class="print-summary-value" id="printPendingValue">R$ 0,00</div>
+            </div>
+          </div>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
           <h2 class="chart-title" style="margin:0;"><i data-lucide="clipboard-list" style="width:18px;height:18px;"></i> Lista de Pedidos</h2>
           <select id="filterStatus" onchange="renderOrdersList()" style="
@@ -1148,10 +1406,139 @@
       });
     }
 
+    function parseOrderValue(order){
+      const valorStr = (order.valor || 'R$ 0,00').toString();
+      const value = parseFloat(valorStr.replace('R$', '').replace('.', '').replace(',', '.').trim());
+      return isNaN(value) ? 0 : value;
+    }
+
+    function formatCurrency(value){
+      return new Intl.NumberFormat('pt-BR', {
+        style:'currency',
+        currency:'BRL'
+      }).format(value || 0);
+    }
+
+    function getFilteredOrdersForPrint(){
+      let filteredOrders = allOrders.filter(o => o.status !== 'cancelado');
+
+      switch(currentPrintFilter){
+        case 'pagos':
+          filteredOrders = filteredOrders.filter(o => o.pagamento === 'pago');
+          break;
+        case 'pendentes-pag':
+          filteredOrders = filteredOrders.filter(o => o.pagamento !== 'pago');
+          break;
+        case 'entregues':
+          filteredOrders = filteredOrders.filter(o => o.status === 'entregue');
+          break;
+        case 'pendentes-ent':
+          filteredOrders = filteredOrders.filter(o => o.status === 'pendente' || !o.status);
+          break;
+      }
+
+      return filteredOrders;
+    }
+
+    function getPrintFilterLabel(){
+      const labels = {
+        todos: 'Lista de Pedidos - Todos',
+        pagos: 'Lista de Pedidos - Pagos',
+        'pendentes-pag': 'Lista de Pedidos - Aguardando Pagamento',
+        entregues: 'Lista de Pedidos - Entregues',
+        'pendentes-ent': 'Lista de Pedidos - Pendentes de Entrega'
+      };
+
+      return labels[currentPrintFilter] || labels.todos;
+    }
+
+    function renderPrintableOrders(orders){
+      if(orders.length === 0){
+        return '<p style="text-align:center;color:#6b7280;padding:24px;">Nenhum pedido encontrado para este filtro.</p>';
+      }
+
+      return orders.map(order => {
+        const status = order.status || 'pendente';
+        const statusText = status === 'entregue' ? 'Entregue' : status === 'cancelado' ? 'Cancelado' : 'Pendente';
+        const pagamento = order.pagamento === 'pago' ? 'Pago' : 'Aguardando';
+        const date = order.timestamp ? new Date(order.timestamp).toLocaleString('pt-BR') : '-';
+
+        return `
+        <div class="order-item">
+          <div class="order-header-row">
+            <div class="order-name-row">${order.nome || '-'}</div>
+            <div class="order-status-badge ${status}">${statusText}</div>
+          </div>
+          <div class="order-details-row">
+            <div class="order-detail">
+              <span class="order-detail-label">Contato</span>
+              <span class="order-detail-value">${order.contato || '-'}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Pedido</span>
+              <span class="order-detail-value">${order.quantidade || 0} porção${Number(order.quantidade) > 1 ? 's' : ''}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Valor</span>
+              <span class="order-detail-value">${order.valor || 'R$ 0,00'}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Pagamento</span>
+              <span class="order-detail-value">${pagamento}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Token</span>
+              <span class="order-detail-value">${order.token || '-'}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Itens</span>
+              <span class="order-detail-value">${order.itens || '-'}</span>
+            </div>
+            <div class="order-detail">
+              <span class="order-detail-label">Data</span>
+              <span class="order-detail-value">${date}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      }).join('');
+    }
+
+    function updatePrintHeader(orders){
+      const totalQty = orders.reduce((sum, order) => sum + parseInt(order.quantidade || 0), 0);
+      const totalValue = orders.reduce((sum, order) => sum + parseOrderValue(order), 0);
+      const pendingValue = orders
+        .filter(order => order.pagamento !== 'pago')
+        .reduce((sum, order) => sum + parseOrderValue(order), 0);
+
+      document.getElementById('printFilterTitle').textContent = getPrintFilterLabel();
+      document.getElementById('printDate').textContent = `Gerado em ${new Date().toLocaleString('pt-BR')}`;
+      document.getElementById('printTotalOrders').textContent = orders.length;
+      document.getElementById('printTotalQty').textContent = totalQty;
+      document.getElementById('printTotalValue').textContent = formatCurrency(totalValue);
+      document.getElementById('printPendingValue').textContent = formatCurrency(pendingValue);
+    }
+
     // Imprimir com filtro
     function printFiltered(){
       // Salvar lista original
       const originalList = document.getElementById('ordersList').innerHTML;
+      const ordersList = document.getElementById('ordersList');
+      const printableOrders = getFilteredOrdersForPrint();
+
+      updatePrintHeader(printableOrders);
+      ordersList.innerHTML = renderPrintableOrders(printableOrders);
+
+      setTimeout(() => {
+        window.print();
+
+        setTimeout(() => {
+          ordersList.innerHTML = originalList;
+          lucide.createIcons();
+        }, 500);
+      }, 100);
+
+      return;
       
       // Filtrar pedidos conforme seleção
       let filteredOrders = allOrders.filter(o => o.status !== 'cancelado');
@@ -1172,8 +1559,8 @@
       }
       
       // Renderizar lista filtrada
-      const ordersList = document.getElementById('ordersList');
-      ordersList.innerHTML = filteredOrders.map(order => {
+      const legacyOrdersList = document.getElementById('ordersList');
+      legacyOrdersList.innerHTML = filteredOrders.map(order => {
         const pagamento = order.pagamento || 'aguardando';
         const pagamentoBadge = pagamento === 'pago' 
           ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">✅ PAGO</span>'

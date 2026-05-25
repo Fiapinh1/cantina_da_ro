@@ -13,7 +13,7 @@
   <title>Novo Pedido - Mobile</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" type="image/png" href="icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -33,6 +33,8 @@
       --ok:#4ade80;
       --paper:#e8d5c4;
       --paper2:#d9b99a;
+      --pickup-address:"Maria Carlota da Costa, 127";
+      --pix-key:"vittorialaisa@gmail.com";
     }
 
     *{ 
@@ -70,6 +72,18 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+
+    .brand-logo{
+      width:30px;
+      height:30px;
+      border-radius:8px;
+      object-fit:cover;
+      -webkit-text-fill-color: initial;
     }
 
     .navbar-menu{
@@ -271,17 +285,38 @@
       gap:8px;
     }
 
+    .items-subtitle{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+      margin:-6px 0 14px 0;
+    }
+
+    .items-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+
+    @media (min-width:520px){
+      .items-grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
     .check-item{
+      position:relative;
       display:flex;
       align-items:center;
       gap:12px;
+      min-height:92px;
       padding:14px;
-      background:rgba(255,107,53,.08);
+      background:linear-gradient(135deg,rgba(255,107,53,.07),rgba(61,42,35,.42));
       border-radius:12px;
-      margin-bottom:10px;
       cursor:pointer;
       transition: all .2s;
       border:2px solid transparent;
+      overflow:hidden;
     }
 
     .check-item:active{
@@ -291,6 +326,7 @@
     .check-item.checked{
       background:rgba(255,107,53,.15);
       border-color:var(--accent);
+      box-shadow:0 10px 24px rgba(255,107,53,.16);
     }
 
     .check-item input[type="checkbox"]{
@@ -298,18 +334,79 @@
       height:24px;
       cursor:pointer;
       accent-color:var(--accent);
+      flex:0 0 auto;
     }
 
     .check-item label{
       margin:0;
       flex:1;
-      font-size:15px;
-      font-weight:600;
+      font-size:16px;
+      font-weight:800;
       cursor:pointer;
+      position:relative;
+      z-index:1;
     }
 
     .check-item input:disabled{
       opacity:.5;
+    }
+
+    .product-card{
+      align-items:flex-end;
+      isolation:isolate;
+    }
+
+    .product-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg,rgba(10,9,8,.92),rgba(10,9,8,.55));
+      z-index:0;
+    }
+
+    .product-card.costela{
+      background-image:url("caldo_costela.png");
+      background-size:cover;
+      background-position:center;
+    }
+
+    .product-card.frango{
+      background-image:url("caldo_frango.png");
+      background-size:cover;
+      background-position:center;
+    }
+
+    .product-card input,
+    .product-card label{
+      position:relative;
+      z-index:1;
+      pointer-events:none;
+    }
+
+    .product-card .product-meta{
+      display:block;
+      font-size:11px;
+      font-weight:700;
+      color:var(--muted);
+      margin-top:2px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .selection-error{
+      display:none;
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:rgba(239,68,68,.12);
+      border:1px solid rgba(239,68,68,.5);
+      color:#fca5a5;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .selection-error.show{
+      display:block;
     }
 
     /* TOKEN */
@@ -547,51 +644,89 @@
 
     /* PREVIEW COMPACTO */
     .preview-compact{
-      background: linear-gradient(135deg, var(--paper), var(--paper2));
-      border-radius:16px;
-      padding:20px;
+      position:relative;
+      background:
+        radial-gradient(circle at top left, rgba(255,107,53,.24), transparent 34%),
+        linear-gradient(135deg, #f4e4d3, #d9b99a);
+      border-radius:18px;
+      padding:18px;
       margin-bottom:16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.3);
+      box-shadow: 0 12px 32px rgba(0,0,0,.34);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.38);
     }
 
     .preview-header{
-      text-align:center;
-      margin-bottom:16px;
-      padding-bottom:16px;
-      border-bottom:2px dashed rgba(61,42,35,.3);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+      padding:14px;
+      background:rgba(61,42,35,.92);
+      border-radius:14px;
+      color:#fff;
     }
 
     .preview-title{
-      font-size:20px;
+      font-size:18px;
       font-weight:900;
-      color:var(--dark);
+      color:#fff;
       text-transform:uppercase;
-      margin:0 0 8px 0;
+      margin:0;
     }
 
     .preview-brand{
       display:inline-block;
-      font-size:28px;
+      font-size:20px;
       font-weight:900;
-      padding:6px 16px;
+      padding:8px 12px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       color:#fff;
-      border-radius:10px;
+      border-radius:12px;
+      line-height:1;
     }
 
     .preview-info{
       display:grid;
-      gap:10px;
+      gap:8px;
       margin-bottom:14px;
+    }
+
+    .preview-selected-items{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:4px;
+    }
+
+    .preview-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(255,107,53,.14);
+      color:var(--dark);
+      border:1px solid rgba(255,107,53,.45);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .preview-chip.empty{
+      background:rgba(61,42,35,.08);
+      border-color:rgba(61,42,35,.18);
+      color:rgba(61,42,35,.65);
     }
 
     .preview-row{
       display:flex;
       align-items:center;
       gap:10px;
-      padding:10px;
-      background:rgba(255,255,255,.6);
-      border-radius:8px;
+      padding:11px 12px;
+      background:rgba(255,255,255,.72);
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.52);
     }
 
     .preview-row svg{
@@ -603,7 +738,7 @@
 
     .preview-row strong{
       font-size:11px;
-      color:var(--muted);
+      color:#9c7a62;
       min-width:70px;
     }
 
@@ -612,6 +747,32 @@
       font-weight:700;
       color:var(--dark);
       flex:1;
+    }
+
+    .preview-payment-box{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,107,53,.12);
+      border:1px solid rgba(255,107,53,.32);
+      color:var(--dark);
+    }
+
+    .preview-payment-box strong{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      text-transform:uppercase;
+      color:#8a4a25;
+      margin-bottom:6px;
+    }
+
+    .preview-payment-box span{
+      display:block;
+      font-size:15px;
+      font-weight:900;
+      word-break:break-all;
     }
 
     .loading{
@@ -638,7 +799,8 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-brand">
-      <i data-lucide="utensils" style="width:20px;height:20px;"></i> Cantina da Rô
+      <img src="logo.png" alt="Logo Cantina da Rô" class="brand-logo">
+      <span>Cantina da Rô</span>
     </div>
     <div class="navbar-menu">
       <button class="nav-btn" onclick="window.location.href='index.html'">
@@ -719,59 +881,39 @@
         <i data-lucide="utensils"></i>
         Itens do Pedido
       </div>
-      
-      <div class="check-item checked">
-        <input type="checkbox" class="item-checkbox" data-label="Caldos" checked disabled id="check1" />
-        <label for="check1">
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path>
-            <path d="M4 12h16"></path>
-            <path d="M9 4c0 2-2 2-2 4"></path>
-            <path d="M13 4c0 2-2 2-2 4"></path>
-            <path d="M17 4c0 2-2 2-2 4"></path>
-          </svg>
-          Caldos (obrigatório)
-        </label>
+      <p class="items-subtitle">Escolha o sabor do caldo. Nenhum sabor fica selecionado automaticamente.</p>
+
+      <div class="items-grid">
+        <div class="check-item product-card costela" onclick="toggleCheck(this, 'check3')">
+          <input type="checkbox" class="item-checkbox" data-label="Costela" id="check3" />
+          <label for="check3">
+            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path>
+              <path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path>
+              <path d="M7.5 7.5l9 9"></path>
+              <path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path>
+            </svg>
+            Caldo de Costela
+            <span class="product-meta">Produto disponível</span>
+          </label>
+        </div>
+
+        <div class="check-item product-card frango" onclick="toggleCheck(this, 'check4')">
+          <input type="checkbox" class="item-checkbox" data-label="Frango" id="check4" />
+          <label for="check4">
+            <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path>
+              <path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path>
+              <path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path>
+              <path d="M8 16l-2.5 2.5"></path>
+            </svg>
+            Caldo de Frango
+            <span class="product-meta">Produto disponível</span>
+          </label>
+        </div>
       </div>
 
-      <div class="check-item checked" onclick="toggleCheck(this, 'check2')">
-        <input type="checkbox" class="item-checkbox" data-label="Feijão" checked id="check2" />
-        <label for="check2">
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path>
-            <path d="M4 12h16"></path>
-            <path d="M9 11c0-1 .8-2 2-2s2 1 2 2-.8 2-2 2-2-1-2-2Z" stroke-width="1.6"></path>
-            <path d="M14.8 10.8c.6-.8 1.8-1.2 2.6-.7.8.5.7 1.7.1 2.5-.6.8-1.8 1.2-2.6.7-.8-.5-.7-1.7-.1-2.5Z" stroke-width="1.6"></path>
-          </svg>
-          Feijão
-        </label>
-      </div>
-
-      <div class="check-item" onclick="toggleCheck(this, 'check3')">
-        <input type="checkbox" class="item-checkbox" data-label="Costela" id="check3" />
-        <label for="check3">
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path>
-            <path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path>
-            <path d="M7.5 7.5l9 9"></path>
-            <path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path>
-          </svg>
-          Costela
-        </label>
-      </div>
-
-      <div class="check-item" onclick="toggleCheck(this, 'check4')">
-        <input type="checkbox" class="item-checkbox" data-label="Frango" id="check4" />
-        <label for="check4">
-          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path>
-            <path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path>
-            <path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path>
-            <path d="M8 16l-2.5 2.5"></path>
-          </svg>
-          Frango
-        </label>
-      </div>
+      <div class="selection-error" id="itemsError">Selecione pelo menos um sabor de caldo.</div>
     </div>
 
     <!-- PREVIEW COMPACTO -->
@@ -801,6 +943,16 @@
         </div>
 
         <div class="preview-row">
+          <i data-lucide="utensils"></i>
+          <strong>Caldo:</strong>
+          <span>
+            <span class="preview-selected-items" id="vItems">
+              <span class="preview-chip empty">Escolha o sabor</span>
+            </span>
+          </span>
+        </div>
+
+        <div class="preview-row">
           <i data-lucide="credit-card"></i>
           <strong>Pagamento:</strong>
           <span id="vPayment">Aguardando Pagamento</span>
@@ -815,8 +967,13 @@
         <div class="preview-row">
           <i data-lucide="map-pin"></i>
           <strong>Endereço:</strong>
-          <span>R. Yolanda Motta Leite, 1439</span>
+          <span>Maria Carlota da Costa, 127</span>
         </div>
+      </div>
+
+      <div class="preview-payment-box">
+        <strong><i data-lucide="qr-code"></i> Pix para pagamento</strong>
+        <span>vittorialaisa@gmail.com</span>
       </div>
     </div>
 
@@ -893,56 +1050,47 @@
 
   <!-- VALE OCULTO (para gerar PNG) -->
   <div id="voucherHidden" style="position:fixed;left:-9999px;top:0;">
-    <div style="width:600px;background:linear-gradient(135deg,#e8d5c4,#d9b99a);padding:32px;border-radius:24px;">
-      <div style="text-align:center;padding:20px;background:rgba(255,107,53,.2);border-radius:20px;border:3px dashed rgba(61,42,35,.4);margin-bottom:20px;">
-        <div style="font-size:36px;font-weight:900;color:#3d2a23;text-transform:uppercase;margin-bottom:12px;">Vale Caldos</div>
-        <div style="display:inline-block;font-size:52px;font-weight:900;padding:12px 28px;background:linear-gradient(135deg,#ff6b35,#f77f00);color:#fff;border-radius:16px;">DA RÔ</div>
-        <div style="position:absolute;top:16px;right:16px;background:#fff;padding:10px 18px;border-radius:12px;border:2px solid #ff6b35;">
-          <div style="font-size:11px;font-weight:700;color:#ff6b35;margin:0;">RETIRADA</div>
-          <div style="font-size:22px;font-weight:900;color:#3d2a23;margin:0;">07/03</div>
+    <div style="width:600px;background:radial-gradient(circle at top left,rgba(255,107,53,.28),transparent 34%),linear-gradient(135deg,#f4e4d3,#d9b99a);padding:28px;border-radius:28px;color:#3d2a23;font-family:'Poppins',sans-serif;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;background:#3d2a23;color:#fff;padding:22px;border-radius:22px;margin-bottom:18px;">
+        <div>
+          <div style="font-size:16px;font-weight:800;color:#ffb38f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Vale Caldos</div>
+          <div style="font-size:44px;font-weight:900;line-height:1;">DA RÔ</div>
+        </div>
+        <div style="background:linear-gradient(135deg,#ff6b35,#f77f00);padding:12px 18px;border-radius:16px;text-align:center;">
+          <div style="font-size:11px;font-weight:800;margin:0;text-transform:uppercase;">Retirada</div>
+          <div style="font-size:24px;font-weight:900;margin:0;">07/03</div>
         </div>
       </div>
 
-      <div style="background:#fff;padding:24px;border-radius:20px;margin-bottom:16px;">
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="user" style="width:16px;height:16px;vertical-align:middle;"></i></div>
-          <div style="flex:1;">
-            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Cliente</div>
-            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vNameHidden">—</div>
+      <div style="background:rgba(255,255,255,.72);padding:16px;border-radius:20px;margin-bottom:16px;border:1px solid rgba(255,255,255,.56);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:#fff;padding:14px;border-radius:14px;">
+            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Cliente</div>
+            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vNameHidden">—</div>
+          </div>
+          <div style="background:#fff;padding:14px;border-radius:14px;">
+            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Contato</div>
+            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vContactHidden">—</div>
+          </div>
+          <div style="background:#fff;padding:14px;border-radius:14px;">
+            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Quantidade & Valor</div>
+            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vQtyHidden">01 porção - R$ 20,00</div>
+          </div>
+          <div style="background:#fff;padding:14px;border-radius:14px;">
+            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Pagamento</div>
+            <div style="font-size:16px;font-weight:900;color:#3d2a23;" id="vPaymentHidden">Aguardando Pagamento</div>
           </div>
         </div>
 
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:2px solid rgba(61,42,35,.1);">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i></div>
-          <div style="flex:1;">
-            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Contato</div>
-            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vContactHidden">—</div>
-          </div>
+        <div style="background:#fff;padding:14px;border-radius:14px;margin-top:12px;">
+          <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Endereço de Retirada</div>
+          <div style="font-size:16px;font-weight:800;color:#3d2a23;">Maria Carlota da Costa, 127</div>
         </div>
+      </div>
 
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="shopping-bag" style="width:16px;height:16px;vertical-align:middle;"></i></div>
-          <div style="flex:1;">
-            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Quantidade & Valor</div>
-            <div style="font-size:16px;font-weight:700;color:#3d2a23;margin:0;" id="vQtyHidden">01 porção - R$ 20,00</div>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-top:2px solid rgba(61,42,35,.1);">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="credit-card" style="width:16px;height:16px;vertical-align:middle;"></i></div>
-          <div style="flex:1;">
-            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Pagamento</div>
-            <div style="font-size:16px;font-weight:800;color:#3d2a23;margin:0;" id="vPaymentHidden">Aguardando Pagamento</div>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:center;gap:12px;padding:12px 0;">
-          <div style="width:40px;height:40px;background:linear-gradient(135deg,#ff6b35,#f77f00);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;"><i data-lucide="map-pin" style="width:16px;height:16px;vertical-align:middle;"></i></div>
-          <div style="flex:1;">
-            <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 2px 0;">Endereço de Retirada</div>
-            <div style="font-size:15px;font-weight:700;color:#3d2a23;margin:0;">R. Yolanda Motta Leite, 1439</div>
-          </div>
-        </div>
+      <div style="background:rgba(255,107,53,.12);padding:16px;border-radius:18px;border:2px solid rgba(255,107,53,.28);margin-bottom:16px;">
+        <div style="font-size:12px;font-weight:900;color:#8a4a25;text-transform:uppercase;margin-bottom:6px;">Pix para pagamento</div>
+        <div style="font-size:22px;font-weight:900;color:#3d2a23;word-break:break-all;">vittorialaisa@gmail.com</div>
       </div>
 
       <div style="background:rgba(255,107,53,.15);padding:18px;border-radius:20px;border:2px solid rgba(61,42,35,.2);margin-bottom:16px;">
@@ -984,11 +1132,25 @@
         checkbox.checked = !checkbox.checked;
         if(checkbox.checked){
           element.classList.add('checked');
+          $("itemsError").classList.remove("show");
         } else {
           element.classList.remove('checked');
         }
         updateVoucher();
       }
+    }
+
+    function getSelectedItems(){
+      return Array.from(document.querySelectorAll(".item-checkbox"))
+        .filter(cb => cb.checked && !cb.disabled)
+        .map(cb => cb.dataset.label);
+    }
+
+    function requireSelectedItem(){
+      if(getSelectedItems().length > 0) return true;
+      $("itemsError").classList.add("show");
+      document.querySelector(".items-section").scrollIntoView({ behavior:"smooth", block:"center" });
+      return false;
     }
 
     // Formatar telefone
@@ -1046,16 +1208,16 @@
       $("vPaymentHidden").textContent = paymentValue;
 
       // Itens
-      const items = Array.from(document.querySelectorAll(".item-checkbox"))
-        .filter(cb => cb.checked)
-        .map(cb => cb.dataset.label);
+      const items = getSelectedItems();
 
       const iconByItem = {
-        "Caldos": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path><path d="M4 12h16"></path><path d="M9 4c0 2-2 2-2 4"></path><path d="M13 4c0 2-2 2-2 4"></path><path d="M17 4c0 2-2 2-2 4"></path></svg>`,
-        "Feijão": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c0 5 3 8 7 8s7-3 7-8"></path><path d="M4 12h16"></path><path d="M9 11c0-1 .8-2 2-2s2 1 2 2-.8 2-2 2-2-1-2-2Z" stroke-width="1.6"></path><path d="M14.8 10.8c.6-.8 1.8-1.2 2.6-.7.8.5.7 1.7.1 2.5-.6.8-1.8 1.2-2.6.7-.8-.5-.7-1.7-.1-2.5Z" stroke-width="1.6"></path></svg>`,
         "Costela": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path><path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path><path d="M7.5 7.5l9 9"></path><path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path></svg>`,
         "Frango": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path><path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path><path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path><path d="M8 16l-2.5 2.5"></path></svg>`
       };
+
+      $("vItems").innerHTML = items.length
+        ? items.map(item => `<span class="preview-chip">${iconByItem[item] || ""}<span>${item}</span></span>`).join('')
+        : '<span class="preview-chip empty">Escolha o sabor</span>';
 
       $("vItemsHidden").innerHTML = items.map(item => {
         const icon = iconByItem[item] || "";
@@ -1129,13 +1291,13 @@
         return;
       }
 
+      if(!requireSelectedItem()) return;
+      const items = getSelectedItems();
+
       const qty = parseInt($("inQty").value || "1", 10);
       const unitPrice = 20;
       const total = qty * unitPrice;
-      const selectedItems = Array.from(document.querySelectorAll(".item-checkbox"))
-        .filter(cb => cb.checked)
-        .map(cb => cb.dataset.label)
-        .join(", ");
+      const selectedItems = items.join(", ");
 
       const data = {
         timestamp: new Date().toISOString(),
@@ -1146,7 +1308,7 @@
         data_retirada: "07/03/2026",
         itens: selectedItems,
         token: currentToken,
-        endereco: "R. Yolanda Motta Leite, 1439",
+        endereco: "Maria Carlota da Costa, 127",
         pagamento: $("inPayment").value || "aguardando",
         status: "pendente"
       };
@@ -1197,6 +1359,7 @@
         alert("⚠️ Gere o token primeiro!");
         return;
       }
+      if(!requireSelectedItem()) return;
 
       const node = $("voucherHidden").children[0];
       lucide.createIcons();
@@ -1222,6 +1385,7 @@
         alert("⚠️ Gere o token primeiro!");
         return;
       }
+      if(!requireSelectedItem()) return;
 
       if(!navigator.share){
         alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento não suportado neste navegador. Use "Baixar" e envie manualmente.');
@@ -1267,6 +1431,7 @@
           cb.parentElement.classList.remove('checked');
         }
       });
+      $("itemsError").classList.remove("show");
 
       // Limpar token
       currentToken = "";
@@ -1338,8 +1503,12 @@
       
       // Desmarcar checkboxes opcionais
       document.querySelectorAll('.item-checkbox').forEach(cb => {
-        if(!cb.disabled) cb.checked = false;
+        if(!cb.disabled){
+          cb.checked = false;
+          cb.parentElement.classList.remove('checked');
+        }
       });
+      $("itemsError").classList.remove("show");
       
       // Limpar token
       currentToken = null;
