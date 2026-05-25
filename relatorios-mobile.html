@@ -1220,7 +1220,10 @@
             const items = order.itens.split(',').map(i => i.trim());
             items.forEach(item => {
               if(item){
-                itemsCount[item] = (itemsCount[item] || 0) + 1;
+                const match = item.match(/^(\d+)x\s+(.+)$/i);
+                const qty = match ? parseInt(match[1], 10) : 1;
+                const label = match ? match[2].trim() : item;
+                itemsCount[label] = (itemsCount[label] || 0) + (isNaN(qty) ? 1 : qty);
               }
             });
           }

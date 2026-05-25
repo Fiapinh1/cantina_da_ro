@@ -352,8 +352,10 @@
     }
 
     .product-card{
-      align-items:flex-end;
+      align-items:stretch;
+      flex-direction:column;
       isolation:isolate;
+      min-height:132px;
     }
 
     .product-card::after{
@@ -380,7 +382,6 @@
     .product-card label{
       position:relative;
       z-index:1;
-      pointer-events:none;
     }
 
     .product-card .product-meta{
@@ -391,6 +392,60 @@
       margin-top:2px;
       text-transform:uppercase;
       letter-spacing:.4px;
+    }
+
+    .product-card label{
+      color:#fff;
+      flex:1;
+    }
+
+    .product-qty-control{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:44px 1fr 44px;
+      align-items:center;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .qty-btn{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      border:2px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.12);
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+      cursor:pointer;
+      font-family:'Poppins',sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .qty-btn:active{
+      transform:scale(.96);
+    }
+
+    .product-qty{
+      height:44px;
+      padding:0;
+      border-radius:12px;
+      border:2px solid rgba(255,255,255,.45);
+      background:rgba(0,0,0,.4);
+      color:#fff;
+      font-size:22px;
+      font-weight:900;
+      text-align:center;
+      appearance:textfield;
+    }
+
+    .product-qty::-webkit-outer-spin-button,
+    .product-qty::-webkit-inner-spin-button{
+      -webkit-appearance:none;
+      margin:0;
     }
 
     .selection-error{
@@ -821,12 +876,6 @@
   <!-- CONTAINER -->
   <div class="container">
     
-    <!-- HEADER -->
-    <div class="header">
-      <h1><i data-lucide="chef-hat" style="width:24px;height:24px;vertical-align:middle;"></i> Vale Caldos</h1>
-      <p>Preencha os dados do pedido</p>
-    </div>
-
     <!-- FORM -->
     <div class="form-section">
       <div class="form-group">
@@ -845,22 +894,12 @@
         <input type="tel" id="inContact" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" autocomplete="tel" />
       </div>
 
-      <div class="row-2">
-        <div class="form-group">
-          <label>
-            <i data-lucide="shopping-bag"></i>
-            Quantidade
-          </label>
-          <input type="number" id="inQty" min="1" value="1" inputmode="numeric" />
-        </div>
-
-        <div class="form-group">
-          <label>
-            <i data-lucide="dollar-sign"></i>
-            Valor
-          </label>
-          <input type="text" id="inTotal" value="R$ 20,00" readonly />
-        </div>
+      <div class="form-group">
+        <label>
+          <i data-lucide="dollar-sign"></i>
+          Valor total
+        </label>
+        <input type="text" id="inTotal" value="R$ 0,00" readonly />
       </div>
 
       <div class="form-group">
@@ -879,14 +918,13 @@
     <div class="items-section">
       <div class="items-title">
         <i data-lucide="utensils"></i>
-        Itens do Pedido
+        Produtos do Pedido
       </div>
-      <p class="items-subtitle">Escolha o sabor do caldo. Nenhum sabor fica selecionado automaticamente.</p>
+      <p class="items-subtitle">Informe a quantidade de cada sabor. Deixe em zero o que o cliente não quiser.</p>
 
       <div class="items-grid">
-        <div class="check-item product-card costela" onclick="toggleCheck(this, 'check3')">
-          <input type="checkbox" class="item-checkbox" data-label="Costela" id="check3" />
-          <label for="check3">
+        <div class="check-item product-card costela" id="cardCostela">
+          <label for="qtyCostela">
             <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path>
               <path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path>
@@ -894,13 +932,17 @@
               <path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path>
             </svg>
             Caldo de Costela
-            <span class="product-meta">Produto disponível</span>
+            <span class="product-meta">R$ 20,00 cada</span>
           </label>
+          <div class="product-qty-control">
+            <button type="button" class="qty-btn" onclick="adjustProductQty('qtyCostela', -1)">-</button>
+            <input type="number" id="qtyCostela" class="product-qty product-qty-input" min="0" value="0" inputmode="numeric" data-label="Costela" />
+            <button type="button" class="qty-btn" onclick="adjustProductQty('qtyCostela', 1)">+</button>
+          </div>
         </div>
 
-        <div class="check-item product-card frango" onclick="toggleCheck(this, 'check4')">
-          <input type="checkbox" class="item-checkbox" data-label="Frango" id="check4" />
-          <label for="check4">
+        <div class="check-item product-card frango" id="cardFrango">
+          <label for="qtyFrango">
             <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path>
               <path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path>
@@ -908,18 +950,23 @@
               <path d="M8 16l-2.5 2.5"></path>
             </svg>
             Caldo de Frango
-            <span class="product-meta">Produto disponível</span>
+            <span class="product-meta">R$ 20,00 cada</span>
           </label>
+          <div class="product-qty-control">
+            <button type="button" class="qty-btn" onclick="adjustProductQty('qtyFrango', -1)">-</button>
+            <input type="number" id="qtyFrango" class="product-qty product-qty-input" min="0" value="0" inputmode="numeric" data-label="Frango" />
+            <button type="button" class="qty-btn" onclick="adjustProductQty('qtyFrango', 1)">+</button>
+          </div>
         </div>
       </div>
 
-      <div class="selection-error" id="itemsError">Selecione pelo menos um sabor de caldo.</div>
+      <div class="selection-error" id="itemsError">Informe pelo menos uma unidade de caldo.</div>
     </div>
 
     <!-- PREVIEW COMPACTO -->
     <div class="preview-compact">
       <div class="preview-header">
-        <div class="preview-title">Vale Caldos</div>
+        <div class="preview-title">Resumo</div>
         <div class="preview-brand">DA RÔ</div>
       </div>
 
@@ -944,7 +991,7 @@
 
         <div class="preview-row">
           <i data-lucide="utensils"></i>
-          <strong>Caldo:</strong>
+          <strong>Produtos:</strong>
           <span>
             <span class="preview-selected-items" id="vItems">
               <span class="preview-chip empty">Escolha o sabor</span>
@@ -1050,66 +1097,100 @@
 
   <!-- VALE OCULTO (para gerar PNG) -->
   <div id="voucherHidden" style="position:fixed;left:-9999px;top:0;">
-    <div style="width:600px;background:radial-gradient(circle at top left,rgba(255,107,53,.28),transparent 34%),linear-gradient(135deg,#f4e4d3,#d9b99a);padding:28px;border-radius:28px;color:#3d2a23;font-family:'Poppins',sans-serif;">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;background:#3d2a23;color:#fff;padding:22px;border-radius:22px;margin-bottom:18px;">
-        <div>
-          <div style="font-size:16px;font-weight:800;color:#ffb38f;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Vale Caldos</div>
-          <div style="font-size:44px;font-weight:900;line-height:1;">DA RÔ</div>
-        </div>
-        <div style="background:linear-gradient(135deg,#ff6b35,#f77f00);padding:12px 18px;border-radius:16px;text-align:center;">
-          <div style="font-size:11px;font-weight:800;margin:0;text-transform:uppercase;">Retirada</div>
-          <div style="font-size:24px;font-weight:900;margin:0;">07/03</div>
+    <div style="width:720px;background:#ffffff;color:#2f241f;font-family:'Poppins',Arial,sans-serif;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.18);">
+      <div style="background:linear-gradient(135deg,#ff6b35 0%,#f77f00 100%);padding:34px 42px 30px;color:#fff;text-align:center;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;">
+          <img src="logo.png" alt="Cantina da Rô" style="width:72px;height:72px;border-radius:18px;object-fit:cover;background:#fff;padding:4px;">
+          <div style="text-align:left;">
+            <div style="font-size:42px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.3px;">Cantina da Rô</div>
+            <div style="font-size:15px;font-weight:800;letter-spacing:4px;text-transform:uppercase;opacity:.9;margin-top:8px;">Pedido de Caldos</div>
+          </div>
         </div>
       </div>
 
-      <div style="background:rgba(255,255,255,.72);padding:16px;border-radius:20px;margin-bottom:16px;border:1px solid rgba(255,255,255,.56);">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div style="background:#fff;padding:14px;border-radius:14px;">
-            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Cliente</div>
-            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vNameHidden">—</div>
-          </div>
-          <div style="background:#fff;padding:14px;border-radius:14px;">
-            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Contato</div>
-            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vContactHidden">—</div>
-          </div>
-          <div style="background:#fff;padding:14px;border-radius:14px;">
-            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Quantidade & Valor</div>
-            <div style="font-size:16px;font-weight:800;color:#3d2a23;" id="vQtyHidden">01 porção - R$ 20,00</div>
-          </div>
-          <div style="background:#fff;padding:14px;border-radius:14px;">
-            <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Pagamento</div>
-            <div style="font-size:16px;font-weight:900;color:#3d2a23;" id="vPaymentHidden">Aguardando Pagamento</div>
-          </div>
-        </div>
+      <div style="background:#f7f2ed;padding:22px 42px;text-align:center;border-bottom:2px dashed #d9b99a;">
+        <div style="font-size:13px;font-weight:900;color:#9c7a62;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Data de retirada</div>
+        <div style="font-size:40px;font-weight:900;color:#2f241f;line-height:1;">07/03</div>
+      </div>
 
-        <div style="background:#fff;padding:14px;border-radius:14px;margin-top:12px;">
-          <div style="font-size:11px;font-weight:800;color:#9c7a62;text-transform:uppercase;margin-bottom:4px;">Endereço de Retirada</div>
-          <div style="font-size:16px;font-weight:800;color:#3d2a23;">Maria Carlota da Costa, 127</div>
+      <div style="padding:34px 42px 26px;background:#fff;">
+        <div style="display:grid;gap:18px;">
+          <div style="display:flex;align-items:center;gap:18px;padding-bottom:16px;border-bottom:2px solid #f0ebe6;">
+            <div style="width:56px;height:56px;border-radius:16px;background:#fff1e9;color:#ff6b35;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+              <i data-lucide="user" style="width:26px;height:26px;"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Cliente</div>
+              <div style="font-size:24px;font-weight:900;color:#2f241f;line-height:1.2;" id="vNameHidden">—</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:18px;padding-bottom:16px;border-bottom:2px solid #f0ebe6;">
+            <div style="width:56px;height:56px;border-radius:16px;background:#fff1e9;color:#ff6b35;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+              <i data-lucide="phone" style="width:26px;height:26px;"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Contato</div>
+              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vContactHidden">—</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:18px;padding-bottom:16px;border-bottom:2px solid #f0ebe6;">
+            <div style="width:56px;height:56px;border-radius:16px;background:#fff1e9;color:#ff6b35;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+              <i data-lucide="shopping-bag" style="width:26px;height:26px;"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Quantidade & Valor</div>
+              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vQtyHidden">01 porção - R$ 20,00</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:18px;padding-bottom:16px;border-bottom:2px solid #f0ebe6;">
+            <div style="width:56px;height:56px;border-radius:16px;background:#fff1e9;color:#ff6b35;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+              <i data-lucide="credit-card" style="width:26px;height:26px;"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Pagamento</div>
+              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vPaymentHidden">Aguardando Pagamento</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:18px;">
+            <div style="width:56px;height:56px;border-radius:16px;background:#fff1e9;color:#ff6b35;display:flex;align-items:center;justify-content:center;flex:0 0 auto;">
+              <i data-lucide="map-pin" style="width:26px;height:26px;"></i>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Endereço de Retirada</div>
+              <div style="font-size:21px;font-weight:900;color:#2f241f;line-height:1.2;">Maria Carlota da Costa, 127</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div style="background:rgba(255,107,53,.12);padding:16px;border-radius:18px;border:2px solid rgba(255,107,53,.28);margin-bottom:16px;">
-        <div style="font-size:12px;font-weight:900;color:#8a4a25;text-transform:uppercase;margin-bottom:6px;">Pix para pagamento</div>
-        <div style="font-size:22px;font-weight:900;color:#3d2a23;word-break:break-all;">vittorialaisa@gmail.com</div>
-      </div>
-
-      <div style="background:rgba(255,107,53,.15);padding:18px;border-radius:20px;border:2px solid rgba(61,42,35,.2);margin-bottom:16px;">
-        <div style="font-size:16px;font-weight:900;color:#3d2a23;text-align:center;text-transform:uppercase;margin:0 0 12px 0;display:flex;align-items:center;justify-content:center;gap:8px;">
-          <i data-lucide="list" style="width:18px;height:18px;"></i>
+      <div style="background:#fff3ec;padding:26px 42px;text-align:center;border-top:1px solid #ffe0cf;border-bottom:1px solid #ffe0cf;">
+        <div style="font-size:18px;font-weight:900;color:#2f241f;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px;">
+          <i data-lucide="clipboard-list" style="width:22px;height:22px;color:#ff6b35;"></i>
           Resumo do Pedido
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;" id="vItemsHidden">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;" id="vItemsHidden"></div>
+      </div>
+
+      <div style="padding:28px 42px 24px;background:#fff;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div style="border:3px dashed #ff6b35;border-radius:22px;padding:22px;text-align:center;background:#fffaf7;">
+            <div style="font-size:13px;font-weight:900;color:#9c7a62;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Token de Retirada</div>
+            <div style="font-size:40px;font-weight:900;color:#ff6b35;font-family:'Courier New',monospace;letter-spacing:8px;line-height:1;" id="vTokenHidden">----</div>
+          </div>
+          <div style="border:2px solid #ffe0cf;border-radius:22px;padding:22px;background:#fff3ec;">
+            <div style="font-size:13px;font-weight:900;color:#9c7a62;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Pix para pagamento</div>
+            <div style="font-size:20px;font-weight:900;color:#2f241f;line-height:1.25;word-break:break-all;">vittorialaisa@gmail.com</div>
+          </div>
         </div>
       </div>
 
-      <div style="background:#fff;padding:16px;border-radius:16px;text-align:center;border:2px dashed #ff6b35;margin-bottom:16px;">
-        <div style="font-size:11px;font-weight:700;color:#b8a89a;text-transform:uppercase;margin:0 0 6px 0;"><i data-lucide="key" style="width:16px;height:16px;vertical-align:middle;"></i> Token de Retirada</div>
-        <div style="font-size:28px;font-weight:900;color:#ff6b35;font-family:'Courier New',monospace;letter-spacing:3px;margin:0;" id="vTokenHidden">----</div>
-      </div>
-
-      <div style="background:linear-gradient(135deg,#4ade80,#22c55e);padding:16px 20px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;font-weight:700;font-size:14px;text-align:center;">
-        <span style="font-size:24px;">✓</span>
-        <span>Apresente este vale no dia da retirada</span>
+      <div style="background:linear-gradient(135deg,#22c55e,#16a34a);padding:22px 42px;color:#fff;font-size:18px;font-weight:900;text-align:center;display:flex;align-items:center;justify-content:center;gap:12px;">
+        <i data-lucide="check-circle" style="width:26px;height:26px;"></i>
+        Apresente este vale no dia da retirada
       </div>
     </div>
   </div>
@@ -1140,10 +1221,18 @@
       }
     }
 
+    function getProductQuantities(){
+      return [
+        { label:'Costela', qty: parseInt($("qtyCostela").value || "0", 10) || 0 },
+        { label:'Frango', qty: parseInt($("qtyFrango").value || "0", 10) || 0 }
+      ].map(item => ({
+        ...item,
+        qty: Math.max(0, item.qty)
+      }));
+    }
+
     function getSelectedItems(){
-      return Array.from(document.querySelectorAll(".item-checkbox"))
-        .filter(cb => cb.checked && !cb.disabled)
-        .map(cb => cb.dataset.label);
+      return getProductQuantities().filter(item => item.qty > 0);
     }
 
     function requireSelectedItem(){
@@ -1151,6 +1240,25 @@
       $("itemsError").classList.add("show");
       document.querySelector(".items-section").scrollIntoView({ behavior:"smooth", block:"center" });
       return false;
+    }
+
+    function updateProductCards(){
+      const quantities = getProductQuantities();
+      const costela = quantities.find(item => item.label === 'Costela');
+      const frango = quantities.find(item => item.label === 'Frango');
+
+      document.getElementById('cardCostela').classList.toggle('checked', costela.qty > 0);
+      document.getElementById('cardFrango').classList.toggle('checked', frango.qty > 0);
+      if(costela.qty > 0 || frango.qty > 0){
+        $("itemsError").classList.remove("show");
+      }
+    }
+
+    function adjustProductQty(inputId, delta){
+      const input = $(inputId);
+      const current = parseInt(input.value || "0", 10) || 0;
+      input.value = Math.max(0, current + delta);
+      updateVoucher();
     }
 
     // Formatar telefone
@@ -1181,22 +1289,22 @@
     // Atualizar preview
     function updateVoucher(){
       const name = safeText($("inName").value);
-      const qtyRaw = parseInt($("inQty").value || "1", 10);
-      const qty = Number.isFinite(qtyRaw) && qtyRaw > 0 ? qtyRaw : 1;
       const contact = formatPhone($("inContact").value);
+      const unitPrice = 20;
+      const items = getSelectedItems();
+      const qty = items.reduce((sum, item) => sum + item.qty, 0);
+      const total = qty * unitPrice;
 
       $("vName").textContent = name || "—";
       $("vContact").textContent = contact || "—";
 
-      const unitPrice = 20;
-      const total = qty * unitPrice;
       const currency = new Intl.NumberFormat("pt-BR", { 
         style:"currency", 
         currency:"BRL" 
       }).format(total);
 
       $("inTotal").value = currency;
-      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porção${qty > 1 ? "s" : ""} - ${currency}`;
+      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porção${qty !== 1 ? "s" : ""} - ${currency}`;
 
       // Atualizar hidden
       $("vNameHidden").textContent = name || "—";
@@ -1207,29 +1315,34 @@
       $("vPayment").textContent = paymentValue;
       $("vPaymentHidden").textContent = paymentValue;
 
-      // Itens
-      const items = getSelectedItems();
-
       const iconByItem = {
         "Costela": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path><path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path><path d="M7.5 7.5l9 9"></path><path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path></svg>`,
         "Frango": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path><path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path><path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path><path d="M8 16l-2.5 2.5"></path></svg>`
       };
 
       $("vItems").innerHTML = items.length
-        ? items.map(item => `<span class="preview-chip">${iconByItem[item] || ""}<span>${item}</span></span>`).join('')
-        : '<span class="preview-chip empty">Escolha o sabor</span>';
+        ? items.map(item => `<span class="preview-chip">${iconByItem[item.label] || ""}<span>${item.qty}x ${item.label}</span></span>`).join('')
+        : '<span class="preview-chip empty">Informe as quantidades</span>';
 
       $("vItemsHidden").innerHTML = items.map(item => {
-        const icon = iconByItem[item] || "";
-        return `<span style="background:#fff;color:#3d2a23;padding:10px 16px;border-radius:30px;font-weight:800;font-size:15px;border:2px solid #ff6b35;display:inline-flex;align-items:center;gap:8px;">${icon}<span>${item}</span></span>`;
+        const icon = iconByItem[item.label] || "";
+        return `<span style="background:#fff;color:#2f241f;padding:14px 24px;border-radius:999px;font-weight:900;font-size:20px;border:3px solid #ff6b35;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 18px rgba(255,107,53,.12);">${icon}<span>${item.qty}x ${item.label}</span></span>`;
       }).join('');
 
+      updateProductCards();
       lucide.createIcons();
     }
 
     // Eventos
-    ["inName","inQty"].forEach(id => {
+    ["inName"].forEach(id => {
       $(id).addEventListener("input", updateVoucher);
+    });
+
+    document.querySelectorAll(".product-qty-input").forEach(input => {
+      input.addEventListener("input", () => {
+        input.value = Math.max(0, parseInt(input.value || "0", 10) || 0);
+        updateVoucher();
+      });
     });
 
     $("inContact").addEventListener("input", ()=>{
@@ -1239,10 +1352,6 @@
     });
 
     $("inPayment").addEventListener("change", updateVoucher);
-
-    document.querySelectorAll(".item-checkbox").forEach(cb=>{
-      cb.addEventListener("change", updateVoucher);
-    });
 
     // Gerar Token
     $("btnGenerateToken").addEventListener("click", ()=>{
@@ -1294,10 +1403,10 @@
       if(!requireSelectedItem()) return;
       const items = getSelectedItems();
 
-      const qty = parseInt($("inQty").value || "1", 10);
       const unitPrice = 20;
+      const qty = items.reduce((sum, item) => sum + item.qty, 0);
       const total = qty * unitPrice;
-      const selectedItems = items.join(", ");
+      const selectedItems = items.map(item => `${item.qty}x ${item.label}`).join(", ");
 
       const data = {
         timestamp: new Date().toISOString(),
@@ -1365,7 +1474,7 @@
       lucide.createIcons();
 
       const canvas = await html2canvas(node, {
-        backgroundColor: null,
+        backgroundColor: '#ffffff',
         scale: 2.5,
         useCORS: true
       });
@@ -1373,7 +1482,7 @@
       const dataURL = canvas.toDataURL("image/png", 1.0);
       const a = document.createElement("a");
       a.href = dataURL;
-      a.download = `vale-galinhada-${currentToken}.png`;
+      a.download = `vale-caldos-${currentToken}.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -1394,7 +1503,7 @@
 
       const node = $("voucherHidden").children[0];
       const canvas = await html2canvas(node, {
-        backgroundColor: null,
+        backgroundColor: '#ffffff',
         scale: 2.5,
         useCORS: true
       });
@@ -1405,8 +1514,8 @@
         try {
           await navigator.share({
             files: [file],
-            title: 'Vale Caldos',
-            text: `Vale Caldos - Token: ${currentToken}`
+            title: 'Pedido Cantina da Rô',
+            text: `Pedido Cantina da Rô - Token: ${currentToken}`
           });
         } catch(err){
           console.log('Compartilhamento cancelado');
@@ -1421,16 +1530,9 @@
       // Limpar campos
       $("inName").value = "";
       $("inContact").value = "";
-      $("inQty").value = "1";
+      $("qtyCostela").value = "0";
+      $("qtyFrango").value = "0";
       $("inPayment").value = "aguardando";
-      
-      // Desmarcar checkboxes (exceto Galinhada que é obrigatório)
-      document.querySelectorAll(".item-checkbox").forEach(cb => {
-        if(!cb.disabled){
-          cb.checked = false;
-          cb.parentElement.classList.remove('checked');
-        }
-      });
       $("itemsError").classList.remove("show");
 
       // Limpar token
@@ -1497,17 +1599,10 @@
       // Limpar campos
       $("inName").value = '';
       $("inContact").value = '';
-      $("inQty").value = '1';
-      $("inTotal").value = 'R$ 20,00';
+      $("qtyCostela").value = '0';
+      $("qtyFrango").value = '0';
+      $("inTotal").value = 'R$ 0,00';
       $("inPayment").value = 'aguardando';
-      
-      // Desmarcar checkboxes opcionais
-      document.querySelectorAll('.item-checkbox').forEach(cb => {
-        if(!cb.disabled){
-          cb.checked = false;
-          cb.parentElement.classList.remove('checked');
-        }
-      });
       $("itemsError").classList.remove("show");
       
       // Limpar token
