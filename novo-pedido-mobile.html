@@ -1,861 +1,31 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="description" content="Criar novo pedido - Cantina da Rô">
+  <meta name="description" content="Criar novo pedido - Cantina da RÃ´">
   <meta name="theme-color" content="#ff6b35">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
+  <meta name="apple-mobile-web-app-title" content="Cantina da RÃ´">
   
   <title>Novo Pedido - Mobile</title>
 
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-180.png">
-  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
-
-    :root{
-      --bg:#0a0908;
-      --panel:#1a1816;
-      --text:#f5f3f0;
-      --muted:#b8a89a;
-      --accent:#ff6b35;
-      --accent2:#f77f00;
-      --dark:#3d2a23;
-      --ok:#4ade80;
-      --paper:#e8d5c4;
-      --paper2:#d9b99a;
-      --pickup-address:"Maria Carlota da Costa, 127";
-      --pix-key:"vittorialaisa@gmail.com";
-    }
-
-    *{ 
-      box-sizing:border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    
-    body{
-      margin:0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1a1816 0%, #0a0908 100%);
-      color:var(--text);
-      min-height:100vh;
-      padding-bottom:80px;
-    }
-
-    /* NAVBAR MOBILE */
-    .navbar{
-      background: rgba(26,24,22,.98);
-      backdrop-filter: blur(10px);
-      border-bottom:2px solid rgba(255,107,53,.3);
-      padding:12px 16px;
-      position:sticky;
-      top:0;
-      z-index:100;
-      box-shadow: 0 4px 20px rgba(0,0,0,.4);
-    }
-
-    .navbar-brand{
-      text-align:center;
-      font-size:22px;
-      font-weight:900;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-    }
-
-    .brand-logo{
-      width:30px;
-      height:30px;
-      border-radius:8px;
-      object-fit:cover;
-      -webkit-text-fill-color: initial;
-    }
-
-    .navbar-menu{
-      display:flex;
-      gap:8px;
-      justify-content:center;
-    }
-
-    .nav-btn{
-      flex:1;
-      padding:10px 12px;
-      border-radius:10px;
-      border:2px solid transparent;
-      background:rgba(255,107,53,.1);
-      color:var(--muted);
-      font-weight:600;
-      cursor:pointer;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:4px;
-      transition: all .3s;
-      font-family: 'Poppins', sans-serif;
-      font-size:11px;
-      max-width:110px;
-    }
-
-    .nav-btn svg{
-      width:20px;
-      height:20px;
-    }
-
-    .nav-btn:active{
-      transform: scale(0.95);
-    }
-
-    .nav-btn.active{
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:#fff;
-    }
-
-    /* CONTAINER */
-    .container{
-      padding:16px;
-      max-width:600px;
-      margin:0 auto;
-    }
-
-    /* HEADER */
-    .header{
-      text-align:center;
-      margin-bottom:20px;
-      padding:20px 16px;
-      background: linear-gradient(135deg, rgba(255,107,53,.15), rgba(247,127,0,.1));
-      border-radius:16px;
-      border:2px solid rgba(255,107,53,.3);
-    }
-
-    .header h1{
-      font-size:26px;
-      font-weight:900;
-      margin:0 0 6px 0;
-      color:var(--accent);
-      text-transform:uppercase;
-    }
-
-    .header p{
-      font-size:13px;
-      color:var(--muted);
-      margin:0;
-    }
-
-    /* FORM */
-    .form-section{
-      background: rgba(26,24,22,.6);
-      border:2px solid rgba(255,107,53,.2);
-      border-radius:16px;
-      padding:20px;
-      margin-bottom:16px;
-    }
-
-    .form-group{
-      margin-bottom:20px;
-    }
-
-    .form-group:last-child{
-      margin-bottom:0;
-    }
-
-    label{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:14px;
-      font-weight:700;
-      color:var(--text);
-      margin:0 0 10px 0;
-    }
-
-    label svg{
-      width:18px;
-      height:18px;
-      color:var(--accent);
-    }
-
-    input, select{
-      width:100%;
-      padding:16px;
-      border-radius:12px;
-      border:2px solid rgba(255,107,53,.3);
-      background:rgba(0,0,0,.4);
-      color:var(--text);
-      font-family: 'Poppins', sans-serif;
-      font-size:16px;
-      font-weight:500;
-      outline:none;
-      transition: all .3s;
-    }
-
-    input:focus, select:focus{
-      border-color:var(--accent);
-      background:rgba(0,0,0,.6);
-      box-shadow: 0 0 0 4px rgba(255,107,53,.1);
-    }
-
-    select{
-      background:#141210;
-      color:var(--text);
-      color-scheme: dark;
-    }
-
-    select option{
-      background:#141210;
-      color:var(--text);
-    }
-
-    .payment-select{
-      padding:14px 16px;
-      font-size:15px;
-      font-weight:600;
-      background:#141210;
-      border:2px solid rgba(255,107,53,.3);
-    }
-
-    .icon-inline{
-      width:18px;
-      height:18px;
-      color:var(--accent);
-      flex:0 0 auto;
-    }
-
-    .chip-icon{
-      width:16px;
-      height:16px;
-      color:#ff6b35;
-      flex:0 0 auto;
-    }
-
-    input[readonly]{
-      background:rgba(0,0,0,.2);
-      color:var(--muted);
-    }
-
-    input[type="number"]{
-      font-size:20px;
-      font-weight:700;
-      text-align:center;
-    }
-
-    input[type="tel"]{
-      font-size:18px;
-      letter-spacing:1px;
-    }
-
-    .row-2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-
-    /* ITEMS */
-    .items-section{
-      background: rgba(26,24,22,.6);
-      border:2px solid rgba(255,107,53,.2);
-      border-radius:16px;
-      padding:20px;
-      margin-bottom:16px;
-    }
-
-    .items-title{
-      font-size:15px;
-      font-weight:700;
-      color:var(--text);
-      text-transform:uppercase;
-      letter-spacing:.5px;
-      margin:0 0 14px 0;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .items-subtitle{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.5;
-      margin:-6px 0 14px 0;
-    }
-
-    .items-grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-
-    @media (min-width:520px){
-      .items-grid{
-        grid-template-columns:1fr 1fr;
-      }
-    }
-
-    .check-item{
-      position:relative;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-height:92px;
-      padding:14px;
-      background:linear-gradient(135deg,rgba(255,107,53,.07),rgba(61,42,35,.42));
-      border-radius:12px;
-      cursor:pointer;
-      transition: all .2s;
-      border:2px solid transparent;
-      overflow:hidden;
-    }
-
-    .check-item:active{
-      transform: scale(0.98);
-    }
-
-    .check-item.checked{
-      background:rgba(255,107,53,.15);
-      border-color:var(--accent);
-      box-shadow:0 10px 24px rgba(255,107,53,.16);
-    }
-
-    .check-item input[type="checkbox"]{
-      width:24px;
-      height:24px;
-      cursor:pointer;
-      accent-color:var(--accent);
-      flex:0 0 auto;
-    }
-
-    .check-item label{
-      margin:0;
-      flex:1;
-      font-size:16px;
-      font-weight:800;
-      cursor:pointer;
-      position:relative;
-      z-index:1;
-    }
-
-    .check-item input:disabled{
-      opacity:.5;
-    }
-
-    .product-card{
-      align-items:stretch;
-      flex-direction:column;
-      isolation:isolate;
-      min-height:132px;
-    }
-
-    .product-card::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(90deg,rgba(10,9,8,.92),rgba(10,9,8,.55));
-      z-index:0;
-    }
-
-    .product-card.costela{
-      background-image:url("caldo_costela.png");
-      background-size:cover;
-      background-position:center;
-    }
-
-    .product-card.frango{
-      background-image:url("caldo_frango.png");
-      background-size:cover;
-      background-position:center;
-    }
-
-    .product-card input,
-    .product-card label{
-      position:relative;
-      z-index:1;
-    }
-
-    .product-card .product-meta{
-      display:block;
-      font-size:11px;
-      font-weight:700;
-      color:var(--muted);
-      margin-top:2px;
-      text-transform:uppercase;
-      letter-spacing:.4px;
-    }
-
-    .product-card label{
-      color:#fff;
-      flex:1;
-    }
-
-    .product-qty-control{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:44px 1fr 44px;
-      align-items:center;
-      gap:8px;
-      margin-top:14px;
-    }
-
-    .qty-btn{
-      width:44px;
-      height:44px;
-      border-radius:12px;
-      border:2px solid rgba(255,255,255,.35);
-      background:rgba(255,255,255,.12);
-      color:#fff;
-      font-size:22px;
-      font-weight:900;
-      cursor:pointer;
-      font-family:'Poppins',sans-serif;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .qty-btn:active{
-      transform:scale(.96);
-    }
-
-    .product-qty{
-      height:44px;
-      padding:0;
-      border-radius:12px;
-      border:2px solid rgba(255,255,255,.45);
-      background:rgba(0,0,0,.4);
-      color:#fff;
-      font-size:22px;
-      font-weight:900;
-      text-align:center;
-      appearance:textfield;
-    }
-
-    .product-qty::-webkit-outer-spin-button,
-    .product-qty::-webkit-inner-spin-button{
-      -webkit-appearance:none;
-      margin:0;
-    }
-
-    .selection-error{
-      display:none;
-      margin-top:12px;
-      padding:10px 12px;
-      border-radius:10px;
-      background:rgba(239,68,68,.12);
-      border:1px solid rgba(239,68,68,.5);
-      color:#fca5a5;
-      font-size:12px;
-      font-weight:700;
-    }
-
-    .selection-error.show{
-      display:block;
-    }
-
-    /* TOKEN */
-    .token-section{
-      background: rgba(26,24,22,.6);
-      border:2px solid rgba(255,107,53,.2);
-      border-radius:16px;
-      padding:20px;
-      margin-bottom:16px;
-      text-align:center;
-    }
-
-    .token-display{
-      padding:20px;
-      background:rgba(255,107,53,.1);
-      border-radius:12px;
-      border:2px dashed var(--accent);
-      margin:12px 0;
-    }
-
-    .token-label{
-      font-size:12px;
-      font-weight:700;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.5px;
-      margin:0 0 8px 0;
-    }
-
-    .token-value{
-      font-size:32px;
-      font-weight:900;
-      color:var(--accent);
-      font-family: 'Courier New', monospace;
-      letter-spacing:3px;
-      margin:0;
-    }
-
-    .token-value.empty{
-      font-size:16px;
-      color:var(--muted);
-    }
-
-    /* BUTTONS */
-    .btn{
-      width:100%;
-      padding:18px;
-      border-radius:12px;
-      border:none;
-      font-weight:700;
-      cursor:pointer;
-      font-family: 'Poppins', sans-serif;
-      font-size:16px;
-      transition: all .3s;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-    .btn:active{
-      transform: scale(0.98);
-    }
-
-    .btn-primary{
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:#fff;
-      box-shadow: 0 4px 16px rgba(255,107,53,.3);
-    }
-
-    .btn-secondary{
-      background:rgba(255,107,53,.15);
-      color:var(--accent);
-      border:2px solid var(--accent);
-    }
-
-    .btn-success{
-      background: linear-gradient(135deg, #4ade80, #22c55e);
-      color:#fff;
-      box-shadow: 0 4px 16px rgba(74,222,128,.3);
-    }
-
-    .btn-group{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .success-msg{
-      display:none;
-      padding:24px;
-      background:linear-gradient(135deg, rgba(74,222,128,.2), rgba(34,197,94,.2));
-      border:3px solid #4ade80;
-      border-radius:16px;
-      color:#fff;
-      font-size:15px;
-      font-weight:700;
-      text-align:center;
-      margin-bottom:16px;
-      animation: slideIn .4s ease;
-      flex-direction:column;
-      gap:16px;
-      box-shadow:0 8px 25px rgba(74,222,128,.3);
-    }
-
-    .success-msg.show{
-      display:flex;
-    }
-
-    .success-header{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      font-size:16px;
-      color:#4ade80;
-    }
-
-    .success-header i{
-      width:24px;
-      height:24px;
-    }
-
-    /* Timer circular */
-    .countdown-timer{
-      position:relative;
-      width:80px;
-      height:80px;
-      margin:0 auto;
-    }
-
-    .countdown-circle{
-      width:80px;
-      height:80px;
-      transform:rotate(-90deg);
-    }
-
-    .countdown-circle-bg{
-      fill:none;
-      stroke:rgba(255,255,255,.2);
-      stroke-width:6;
-    }
-
-    .countdown-circle-progress{
-      fill:none;
-      stroke:#4ade80;
-      stroke-width:6;
-      stroke-linecap:round;
-      stroke-dasharray:226;
-      stroke-dashoffset:0;
-      transition:stroke-dashoffset 0.1s linear;
-    }
-
-    .countdown-number{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%, -50%);
-      font-size:28px;
-      font-weight:900;
-      color:#4ade80;
-    }
-
-    .countdown-actions{
-      display:flex;
-      gap:10px;
-      justify-content:center;
-    }
-
-    .countdown-btn{
-      padding:12px 20px;
-      border-radius:10px;
-      font-weight:700;
-      font-size:14px;
-      cursor:pointer;
-      border:none;
-      font-family:'Poppins',sans-serif;
-      transition:all .3s;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-
-    .countdown-btn.cancel{
-      background:rgba(239,68,68,.2);
-      color:#ef4444;
-      border:2px solid #ef4444;
-    }
-
-    .countdown-btn.new{
-      background:linear-gradient(135deg, #ff6b35, #f77f00);
-      color:#fff;
-      border:2px solid transparent;
-    }
-
-    .countdown-btn:active{
-      transform:scale(0.95);
-    }
-
-    @keyframes slideIn{
-      from{
-        opacity:0;
-        transform:translateY(-10px);
-      }
-      to{
-        opacity:1;
-        transform:translateY(0);
-      }
-    }
-
-    .hint{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.6;
-      padding:14px;
-      background:rgba(255,107,53,.05);
-      border-radius:10px;
-      border:1px solid rgba(255,107,53,.2);
-      margin-top:12px;
-    }
-
-    .btn-new-order{
-      background: linear-gradient(135deg, #4ade80, #22c55e);
-      color:#fff;
-      box-shadow: 0 6px 20px rgba(74,222,128,.3);
-      margin-top:12px;
-    }
-
-    .btn-new-order:active{
-      transform: scale(0.97);
-      box-shadow: 0 3px 10px rgba(74,222,128,.4);
-    }
-
-    /* PREVIEW COMPACTO */
-    .preview-compact{
-      position:relative;
-      background:
-        radial-gradient(circle at top left, rgba(255,107,53,.24), transparent 34%),
-        linear-gradient(135deg, #f4e4d3, #d9b99a);
-      border-radius:18px;
-      padding:18px;
-      margin-bottom:16px;
-      box-shadow: 0 12px 32px rgba(0,0,0,.34);
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.38);
-    }
-
-    .preview-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-      padding:14px;
-      background:rgba(61,42,35,.92);
-      border-radius:14px;
-      color:#fff;
-    }
-
-    .preview-title{
-      font-size:18px;
-      font-weight:900;
-      color:#fff;
-      text-transform:uppercase;
-      margin:0;
-    }
-
-    .preview-brand{
-      display:inline-block;
-      font-size:20px;
-      font-weight:900;
-      padding:8px 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color:#fff;
-      border-radius:12px;
-      line-height:1;
-    }
-
-    .preview-info{
-      display:grid;
-      gap:8px;
-      margin-bottom:14px;
-    }
-
-    .preview-selected-items{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:4px;
-    }
-
-    .preview-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 10px;
-      border-radius:999px;
-      background:rgba(255,107,53,.14);
-      color:var(--dark);
-      border:1px solid rgba(255,107,53,.45);
-      font-size:12px;
-      font-weight:800;
-    }
-
-    .preview-chip.empty{
-      background:rgba(61,42,35,.08);
-      border-color:rgba(61,42,35,.18);
-      color:rgba(61,42,35,.65);
-    }
-
-    .preview-row{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:11px 12px;
-      background:rgba(255,255,255,.72);
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.52);
-    }
-
-    .preview-row svg{
-      width:18px;
-      height:18px;
-      color:var(--accent);
-      flex-shrink:0;
-    }
-
-    .preview-row strong{
-      font-size:11px;
-      color:#9c7a62;
-      min-width:70px;
-    }
-
-    .preview-row span{
-      font-size:13px;
-      font-weight:700;
-      color:var(--dark);
-      flex:1;
-    }
-
-    .preview-payment-box{
-      margin-top:10px;
-      padding:12px;
-      border-radius:14px;
-      background:rgba(255,107,53,.12);
-      border:1px solid rgba(255,107,53,.32);
-      color:var(--dark);
-    }
-
-    .preview-payment-box strong{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      font-size:12px;
-      text-transform:uppercase;
-      color:#8a4a25;
-      margin-bottom:6px;
-    }
-
-    .preview-payment-box span{
-      display:block;
-      font-size:15px;
-      font-weight:900;
-      word-break:break-all;
-    }
-
-    .loading{
-      opacity:.6;
-      pointer-events:none;
-    }
-
-    /* BOTTOM NAV FIXO */
-    .bottom-nav{
-      position:fixed;
-      bottom:0;
-      left:0;
-      right:0;
-      background:rgba(26,24,22,.98);
-      backdrop-filter:blur(10px);
-      border-top:2px solid rgba(255,107,53,.3);
-      padding:12px 16px;
-      box-shadow: 0 -4px 20px rgba(0,0,0,.4);
-      z-index:99;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/novo-pedido-mobile.css">
 </head>
 <body>
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="navbar-brand">
-      <img src="logo.png" alt="Logo Cantina da Rô" class="brand-logo">
-      <span>Cantina da Rô</span>
+      <img src="assets/img/logo.png" alt="Logo Cantina da RÃ´" class="brand-logo">
+      <span>Cantina da RÃ´</span>
     </div>
     <div class="navbar-menu">
       <button class="nav-btn" onclick="window.location.href='index.html'">
@@ -868,7 +38,7 @@
       </button>
       <button class="nav-btn" onclick="window.location.href='relatorios-mobile.html'">
         <i data-lucide="bar-chart-3"></i>
-        <span>Relatórios</span>
+        <span>RelatÃ³rios</span>
       </button>
     </div>
   </nav>
@@ -920,7 +90,7 @@
         <i data-lucide="utensils"></i>
         Produtos do Pedido
       </div>
-      <p class="items-subtitle">Informe a quantidade de cada sabor. Deixe em zero o que o cliente não quiser.</p>
+      <p class="items-subtitle">Informe a quantidade de cada sabor. Deixe em zero o que o cliente nÃ£o quiser.</p>
 
       <div class="items-grid">
         <div class="check-item product-card costela" id="cardCostela">
@@ -967,26 +137,26 @@
     <div class="preview-compact">
       <div class="preview-header">
         <div class="preview-title">Resumo</div>
-        <div class="preview-brand">DA RÔ</div>
+        <div class="preview-brand">DA RÃ”</div>
       </div>
 
       <div class="preview-info">
         <div class="preview-row">
           <i data-lucide="user"></i>
           <strong>Cliente:</strong>
-          <span id="vName">—</span>
+          <span id="vName">â€”</span>
         </div>
 
         <div class="preview-row">
           <i data-lucide="phone"></i>
           <strong>Contato:</strong>
-          <span id="vContact">—</span>
+          <span id="vContact">â€”</span>
         </div>
 
         <div class="preview-row">
           <i data-lucide="shopping-bag"></i>
           <strong>Quantidade:</strong>
-          <span id="vQty">01 porção - R$ 20,00</span>
+          <span id="vQty">01 porÃ§Ã£o - R$ 20,00</span>
         </div>
 
         <div class="preview-row">
@@ -1008,12 +178,12 @@
         <div class="preview-row">
           <i data-lucide="calendar"></i>
           <strong>Retirada:</strong>
-          <span>07/03/2026</span>
+          <span>06/06/2026</span>
         </div>
 
         <div class="preview-row">
           <i data-lucide="map-pin"></i>
-          <strong>Endereço:</strong>
+          <strong>EndereÃ§o:</strong>
           <span>Maria Carlota da Costa, 127</span>
         </div>
       </div>
@@ -1031,7 +201,7 @@
       </h3>
       
       <div class="token-display">
-        <p class="token-label">Código</p>
+        <p class="token-label">CÃ³digo</p>
         <p class="token-value empty" id="vToken">Clique para gerar</p>
       </div>
 
@@ -1047,21 +217,15 @@
         <i data-lucide="check-circle"></i>
         <span>Pedido salvo com sucesso!</span>
       </div>
+
+      <p class="success-subtitle">O pedido ficou na tela para vocÃª compartilhar o ticket antes de iniciar outro.</p>
       
-      <div class="countdown-timer">
-        <svg class="countdown-circle" viewBox="0 0 80 80">
-          <circle class="countdown-circle-bg" cx="40" cy="40" r="36"></circle>
-          <circle class="countdown-circle-progress" cx="40" cy="40" r="36" id="countdownProgress"></circle>
-        </svg>
-        <div class="countdown-number" id="countdownNumber">5</div>
-      </div>
-      
-      <div class="countdown-actions">
-        <button class="countdown-btn cancel" onclick="cancelCountdown()">
-          <i data-lucide="x-circle" style="width:16px;height:16px;"></i>
-          Cancelar
+      <div class="success-actions">
+        <button class="success-action-btn share" onclick="document.getElementById('btnShare').click()">
+          <i data-lucide="share-2" style="width:16px;height:16px;"></i>
+          Compartilhar
         </button>
-        <button class="countdown-btn new" onclick="createNewOrderNow()">
+        <button class="success-action-btn new" onclick="createNewOrderNow()">
           <i data-lucide="plus-circle" style="width:16px;height:16px;"></i>
           Novo Pedido
         </button>
@@ -1069,12 +233,12 @@
     </div>
 
     <!-- ACTIONS -->
-    <button class="btn btn-success" id="btnSave">
+    <button class="btn btn-success order-actions-after-save" id="btnSave">
       <i data-lucide="save"></i>
       Salvar Pedido
     </button>
 
-    <div class="btn-group">
+    <div class="btn-group order-actions-after-save">
       <button class="btn btn-primary" id="btnPNG">
         <i data-lucide="download"></i>
         Baixar
@@ -1085,11 +249,11 @@
       </button>
     </div>
 
-    <div class="hint">
-      <i data-lucide="lightbulb" style="width:16px;height:16px;vertical-align:middle;"></i> <b>Dicas:</b> Preencha os dados, gere o token e salve. O vale é atualizado automaticamente!
+    <div class="hint order-actions-after-save">
+      <i data-lucide="lightbulb" style="width:16px;height:16px;vertical-align:middle;"></i> <b>Dicas:</b> Preencha os dados, gere o token e salve. O vale Ã© atualizado automaticamente!
     </div>
 
-    <button class="btn btn-new-order" id="btnNewOrder">
+    <button class="btn btn-new-order order-actions-after-save" id="btnNewOrder">
       <i data-lucide="plus-circle"></i>
       Novo Pedido
     </button>
@@ -1100,9 +264,9 @@
     <div style="width:720px;background:#ffffff;color:#2f241f;font-family:'Poppins',Arial,sans-serif;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.18);">
       <div style="background:linear-gradient(135deg,#ff6b35 0%,#f77f00 100%);padding:34px 42px 30px;color:#fff;text-align:center;">
         <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;">
-          <img src="logo.png" alt="Cantina da Rô" style="width:72px;height:72px;border-radius:18px;object-fit:cover;background:#fff;padding:4px;">
+          <img src="assets/img/logo.png" alt="Cantina da RÃ´" style="width:72px;height:72px;border-radius:18px;object-fit:cover;background:#fff;padding:4px;">
           <div style="text-align:left;">
-            <div style="font-size:42px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.3px;">Cantina da Rô</div>
+            <div style="font-size:42px;font-weight:900;line-height:1;text-transform:uppercase;letter-spacing:.3px;">Cantina da RÃ´</div>
             <div style="font-size:15px;font-weight:800;letter-spacing:4px;text-transform:uppercase;opacity:.9;margin-top:8px;">Pedido de Caldos</div>
           </div>
         </div>
@@ -1110,7 +274,7 @@
 
       <div style="background:#f7f2ed;padding:22px 42px;text-align:center;border-bottom:2px dashed #d9b99a;">
         <div style="font-size:13px;font-weight:900;color:#9c7a62;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Data de retirada</div>
-        <div style="font-size:40px;font-weight:900;color:#2f241f;line-height:1;">07/03</div>
+        <div style="font-size:40px;font-weight:900;color:#2f241f;line-height:1;">06/06</div>
       </div>
 
       <div style="padding:34px 42px 26px;background:#fff;">
@@ -1121,7 +285,7 @@
             </div>
             <div style="min-width:0;">
               <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Cliente</div>
-              <div style="font-size:24px;font-weight:900;color:#2f241f;line-height:1.2;" id="vNameHidden">—</div>
+              <div style="font-size:24px;font-weight:900;color:#2f241f;line-height:1.2;" id="vNameHidden">â€”</div>
             </div>
           </div>
 
@@ -1131,7 +295,7 @@
             </div>
             <div style="min-width:0;">
               <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Contato</div>
-              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vContactHidden">—</div>
+              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vContactHidden">â€”</div>
             </div>
           </div>
 
@@ -1141,7 +305,7 @@
             </div>
             <div style="min-width:0;">
               <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Quantidade & Valor</div>
-              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vQtyHidden">01 porção - R$ 20,00</div>
+              <div style="font-size:22px;font-weight:900;color:#2f241f;line-height:1.2;" id="vQtyHidden">01 porÃ§Ã£o - R$ 20,00</div>
             </div>
           </div>
 
@@ -1160,7 +324,7 @@
               <i data-lucide="map-pin" style="width:26px;height:26px;"></i>
             </div>
             <div style="min-width:0;">
-              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Endereço de Retirada</div>
+              <div style="font-size:13px;font-weight:900;color:#b8a89a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">EndereÃ§o de Retirada</div>
               <div style="font-size:21px;font-weight:900;color:#2f241f;line-height:1.2;">Maria Carlota da Costa, 127</div>
             </div>
           </div>
@@ -1196,439 +360,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cWNlamtvcW1pdmxxZmZqcXpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzkwNDksImV4cCI6MjA5NDI1NTA0OX0.oHXgXmjJuM8SqH2nwIOzsJH5HEQnM9ApbRom2SqTwLA";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    lucide.createIcons();
-
-    const $ = (id) => document.getElementById(id);
-    let currentToken = "";
-
-    // Toggle checkbox com toque
-    function toggleCheck(element, checkId){
-      const checkbox = document.getElementById(checkId);
-      if(!checkbox.disabled){
-        checkbox.checked = !checkbox.checked;
-        if(checkbox.checked){
-          element.classList.add('checked');
-          $("itemsError").classList.remove("show");
-        } else {
-          element.classList.remove('checked');
-        }
-        updateVoucher();
-      }
-    }
-
-    function getProductQuantities(){
-      return [
-        { label:'Costela', qty: parseInt($("qtyCostela").value || "0", 10) || 0 },
-        { label:'Frango', qty: parseInt($("qtyFrango").value || "0", 10) || 0 }
-      ].map(item => ({
-        ...item,
-        qty: Math.max(0, item.qty)
-      }));
-    }
-
-    function getSelectedItems(){
-      return getProductQuantities().filter(item => item.qty > 0);
-    }
-
-    function requireSelectedItem(){
-      if(getSelectedItems().length > 0) return true;
-      $("itemsError").classList.add("show");
-      document.querySelector(".items-section").scrollIntoView({ behavior:"smooth", block:"center" });
-      return false;
-    }
-
-    function updateProductCards(){
-      const quantities = getProductQuantities();
-      const costela = quantities.find(item => item.label === 'Costela');
-      const frango = quantities.find(item => item.label === 'Frango');
-
-      document.getElementById('cardCostela').classList.toggle('checked', costela.qty > 0);
-      document.getElementById('cardFrango').classList.toggle('checked', frango.qty > 0);
-      if(costela.qty > 0 || frango.qty > 0){
-        $("itemsError").classList.remove("show");
-      }
-    }
-
-    function adjustProductQty(inputId, delta){
-      const input = $(inputId);
-      const current = parseInt(input.value || "0", 10) || 0;
-      input.value = Math.max(0, current + delta);
-      updateVoucher();
-    }
-
-    // Formatar telefone
-    function formatPhone(value){
-      const digits = (value ?? "").toString().replace(/\D/g, "").slice(0, 11);
-      if(!digits) return "";
-      if(digits.length <= 2) return `(${digits}`;
-      const ddd = digits.slice(0,2);
-      const first = digits.slice(2,7);
-      const last = digits.slice(7);
-      if(!last) return `(${ddd}) ${first}`;
-      return `(${ddd}) ${first}-${last}`;
-    }
-
-    // Gerar token simples
-    function generateToken(){
-      const contact = $("inContact").value || "";
-      
-      const digits = contact.replace(/\D/g, '');
-      const last4 = digits.slice(-4) || '0000';
-      
-      // Garantir que sempre tenha 4 dígitos (adiciona zeros à esquerda se necessário)
-      return last4.padStart(4, '0');
-    }
-
-    function safeText(v){ return (v ?? "").toString().trim(); }
-
-    // Atualizar preview
-    function updateVoucher(){
-      const name = safeText($("inName").value);
-      const contact = formatPhone($("inContact").value);
-      const unitPrice = 20;
-      const items = getSelectedItems();
-      const qty = items.reduce((sum, item) => sum + item.qty, 0);
-      const total = qty * unitPrice;
-
-      $("vName").textContent = name || "—";
-      $("vContact").textContent = contact || "—";
-
-      const currency = new Intl.NumberFormat("pt-BR", { 
-        style:"currency", 
-        currency:"BRL" 
-      }).format(total);
-
-      $("inTotal").value = currency;
-      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porção${qty !== 1 ? "s" : ""} - ${currency}`;
-
-      // Atualizar hidden
-      $("vNameHidden").textContent = name || "—";
-      $("vContactHidden").textContent = contact || "—";
-      $("vQtyHidden").textContent = $("vQty").textContent;
-
-      const paymentValue = $("inPayment").value === "pago" ? "Pago" : "Aguardando Pagamento";
-      $("vPayment").textContent = paymentValue;
-      $("vPaymentHidden").textContent = paymentValue;
-
-      const iconByItem = {
-        "Costela": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8.5c-1.6-1.6-3.6-.6-4 1.2-.4 1.8 1 3.2 2.6 3.2"></path><path d="M17.5 15.5c1.6 1.6 3.6.6 4-1.2.4-1.8-1-3.2-2.6-3.2"></path><path d="M7.5 7.5l9 9"></path><path d="M9.2 5.8c1.6-1.6 4.2-1.6 5.7 0l3.3 3.3c1.6 1.6 1.6 4.2 0 5.7-1.6 1.6-4.2 1.6-5.7 0L9.2 12.5c-1.6-1.6-1.6-4.2 0-5.7Z" stroke-width="1.6"></path></svg>`,
-        "Frango": `<svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14c1.5 1.5 4.5 1.5 6 0 2.5-2.5 2-6.5-1-8.5-3-2-7-1-9.5 1.5"></path><path d="M6 18c-1.2 1.2-3 .8-3.6-.6-.6-1.4.4-3.1 1.9-3.1"></path><path d="M18 6c1.2-1.2 3-.8 3.6.6.6 1.4-.4 3.1-1.9 3.1"></path><path d="M8 16l-2.5 2.5"></path></svg>`
-      };
-
-      $("vItems").innerHTML = items.length
-        ? items.map(item => `<span class="preview-chip">${iconByItem[item.label] || ""}<span>${item.qty}x ${item.label}</span></span>`).join('')
-        : '<span class="preview-chip empty">Informe as quantidades</span>';
-
-      $("vItemsHidden").innerHTML = items.map(item => {
-        const icon = iconByItem[item.label] || "";
-        return `<span style="background:#fff;color:#2f241f;padding:14px 24px;border-radius:999px;font-weight:900;font-size:20px;border:3px solid #ff6b35;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 18px rgba(255,107,53,.12);">${icon}<span>${item.qty}x ${item.label}</span></span>`;
-      }).join('');
-
-      updateProductCards();
-      lucide.createIcons();
-    }
-
-    // Eventos
-    ["inName"].forEach(id => {
-      $(id).addEventListener("input", updateVoucher);
-    });
-
-    document.querySelectorAll(".product-qty-input").forEach(input => {
-      input.addEventListener("input", () => {
-        input.value = Math.max(0, parseInt(input.value || "0", 10) || 0);
-        updateVoucher();
-      });
-    });
-
-    $("inContact").addEventListener("input", ()=>{
-      const formatted = formatPhone($("inContact").value);
-      $("inContact").value = formatted;
-      updateVoucher();
-    });
-
-    $("inPayment").addEventListener("change", updateVoucher);
-
-    // Gerar Token
-    $("btnGenerateToken").addEventListener("click", ()=>{
-      const name = safeText($("inName").value);
-      const contact = safeText($("inContact").value);
-
-      if(!name || !contact){
-        alert("⚠️ Preencha nome e telefone primeiro!");
-        return;
-      }
-
-      currentToken = generateToken();
-      const tokenEl = $("vToken");
-      tokenEl.textContent = currentToken;
-      tokenEl.classList.remove("empty");
-      
-      $("vTokenHidden").textContent = currentToken;
-      
-      tokenEl.style.transform = "scale(1.1)";
-      setTimeout(()=>{ tokenEl.style.transform = "scale(1)"; }, 300);
-    });
-
-    // Salvar
-    // Variáveis de controle
-    let isSaving = false;
-    let countdownInterval = null;
-    let countdownSeconds = 5;
-
-    $("btnSave").addEventListener("click", async ()=>{
-      // Prevenir duplo clique
-      if(isSaving){
-        console.log('Já está salvando, ignorando clique duplo');
-        return;
-      }
-
-      const name = safeText($("inName").value);
-      const contact = safeText($("inContact").value);
-
-      if(!name || !contact){
-        alert("⚠️ Preencha Nome e Telefone!");
-        return;
-      }
-
-      if(!currentToken){
-        alert("⚠️ Clique em 'Gerar Token' primeiro!");
-        return;
-      }
-
-      if(!requireSelectedItem()) return;
-      const items = getSelectedItems();
-
-      const unitPrice = 20;
-      const qty = items.reduce((sum, item) => sum + item.qty, 0);
-      const total = qty * unitPrice;
-      const selectedItems = items.map(item => `${item.qty}x ${item.label}`).join(", ");
-
-      const data = {
-        timestamp: new Date().toISOString(),
-        nome: name,
-        contato: contact,
-        quantidade: qty,
-        valor: `R$ ${total.toFixed(2).replace(".", ",")}`,
-        data_retirada: "07/03/2026",
-        itens: selectedItems,
-        token: currentToken,
-        endereco: "Maria Carlota da Costa, 127",
-        pagamento: $("inPayment").value || "aguardando",
-        status: "pendente"
-      };
-
-      const btn = $("btnSave");
-      const originalContent = btn.innerHTML;
-      
-      // Marcar como salvando
-      isSaving = true;
-      btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader"></i> Salvando...';
-      btn.classList.add("loading");
-      lucide.createIcons();
-
-      try {
-        console.log('Enviando pedido para Supabase:', data);
-        
-        const { error } = await supabaseClient
-          .from('pedidos')
-          .insert([data]);
-
-        if(error) throw error;
-        
-        console.log('Pedido salvo com sucesso!');
-
-        // Mostrar mensagem de sucesso com countdown
-        $("successMsg").classList.add("show");
-        lucide.createIcons();
-        
-        // Iniciar countdown
-        startCountdown();
-
-      } catch (error) {
-        console.error("Erro ao salvar:", error);
-        alert("❌ Erro ao salvar! Verifique o console.");
-        isSaving = false;
-        btn.disabled = false;
-      } finally {
-        btn.innerHTML = originalContent;
-        btn.classList.remove("loading");
-        lucide.createIcons();
-      }
-    });
-
-    // Download PNG
-    $("btnPNG").addEventListener("click", async ()=>{
-      if(!currentToken){
-        alert("⚠️ Gere o token primeiro!");
-        return;
-      }
-      if(!requireSelectedItem()) return;
-
-      const node = $("voucherHidden").children[0];
-      lucide.createIcons();
-
-      const canvas = await html2canvas(node, {
-        backgroundColor: '#ffffff',
-        scale: 2.5,
-        useCORS: true
-      });
-
-      const dataURL = canvas.toDataURL("image/png", 1.0);
-      const a = document.createElement("a");
-      a.href = dataURL;
-      a.download = `vale-caldos-${currentToken}.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    });
-
-    // Compartilhar (Web Share API)
-    $("btnShare").addEventListener("click", async ()=>{
-      if(!currentToken){
-        alert("⚠️ Gere o token primeiro!");
-        return;
-      }
-      if(!requireSelectedItem()) return;
-
-      if(!navigator.share){
-        alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento não suportado neste navegador. Use "Baixar" e envie manualmente.');
-        return;
-      }
-
-      const node = $("voucherHidden").children[0];
-      const canvas = await html2canvas(node, {
-        backgroundColor: '#ffffff',
-        scale: 2.5,
-        useCORS: true
-      });
-
-      canvas.toBlob(async (blob) => {
-        const file = new File([blob], `vale-${currentToken}.png`, { type: 'image/png' });
-        
-        try {
-          await navigator.share({
-            files: [file],
-            title: 'Pedido Cantina da Rô',
-            text: `Pedido Cantina da Rô - Token: ${currentToken}`
-          });
-        } catch(err){
-          console.log('Compartilhamento cancelado');
-        }
-      });
-    });
-
-    updateVoucher();
-
-    // Botão Novo Pedido
-    $("btnNewOrder").addEventListener("click", ()=>{
-      // Limpar campos
-      $("inName").value = "";
-      $("inContact").value = "";
-      $("qtyCostela").value = "0";
-      $("qtyFrango").value = "0";
-      $("inPayment").value = "aguardando";
-      $("itemsError").classList.remove("show");
-
-      // Limpar token
-      currentToken = "";
-      $("vToken").textContent = "----";
-      $("vToken").classList.add("empty");
-      $("vTokenHidden").textContent = "----";
-
-      // Atualizar preview
-      updateVoucher();
-
-      // Scroll para o topo
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      lucide.createIcons();
-    });
-
-    // Função de countdown
-    function startCountdown(){
-      countdownSeconds = 5;
-      const numberEl = $("countdownNumber");
-      const progressEl = $("countdownProgress");
-      const circumference = 2 * Math.PI * 36; // 226
-      
-      // Reset
-      numberEl.textContent = countdownSeconds;
-      progressEl.style.strokeDashoffset = 0;
-      
-      countdownInterval = setInterval(() => {
-        countdownSeconds--;
-        numberEl.textContent = countdownSeconds;
-        
-        // Atualizar círculo (preenchendo progressivamente)
-        const offset = circumference - (circumference * (5 - countdownSeconds) / 5);
-        progressEl.style.strokeDashoffset = offset;
-        
-        if(countdownSeconds <= 0){
-          clearInterval(countdownInterval);
-          // Limpar formulário automaticamente
-          createNewOrderNow();
-        }
-      }, 1000);
-    }
-
-    // Cancelar countdown
-    function cancelCountdown(){
-      if(countdownInterval){
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-      }
-      $("successMsg").classList.remove("show");
-      // Resetar flag para permitir novo salvamento
-      isSaving = false;
-      $("btnSave").disabled = false;
-    }
-
-    // Criar novo pedido imediatamente
-    function createNewOrderNow(){
-      if(countdownInterval){
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-      }
-      
-      // Limpar campos
-      $("inName").value = '';
-      $("inContact").value = '';
-      $("qtyCostela").value = '0';
-      $("qtyFrango").value = '0';
-      $("inTotal").value = 'R$ 0,00';
-      $("inPayment").value = 'aguardando';
-      $("itemsError").classList.remove("show");
-      
-      // Limpar token
-      currentToken = null;
-      $("vToken").textContent = '----';
-      $("vTokenHidden").textContent = '----';
-      
-      // Esconder mensagem de sucesso
-      $("successMsg").classList.remove('show');
-      
-      // Resetar flag
-      isSaving = false;
-      $("btnSave").disabled = false;
-      
-      // Atualizar voucher
-      updateVoucher();
-      
-      // Focar no primeiro campo
-      $("inName").focus();
-      
-      // Scroll para o topo
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Recriar ícones
-      lucide.createIcons();
-    }
-  </script>
+  <script src="assets/js/novo-pedido-mobile.js"></script>
 </body>
 </html>

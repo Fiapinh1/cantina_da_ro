@@ -1,23 +1,35 @@
-const CACHE_NAME = 'cantina-da-ro-v2';
+﻿const CACHE_NAME = 'cantina-da-ro-v6';
 const urlsToCache = [
   '/cantina_da_ro/',
   '/cantina_da_ro/index.html',
   '/cantina_da_ro/novo-pedido-mobile.html',
   '/cantina_da_ro/relatorios-mobile.html',
   '/cantina_da_ro/validador.html',
+  '/cantina_da_ro/assets/css/index.css',
+  '/cantina_da_ro/assets/css/novo-pedido-mobile.css',
+  '/cantina_da_ro/assets/css/relatorios-mobile.css',
+  '/cantina_da_ro/assets/css/validador.css',
+  '/cantina_da_ro/assets/js/index.js',
+  '/cantina_da_ro/assets/js/novo-pedido-mobile.js',
+  '/cantina_da_ro/assets/js/relatorios-mobile.js',
+  '/cantina_da_ro/assets/js/validador.js',
   '/cantina_da_ro/manifest.json',
-  '/cantina_da_ro/logo.png',
-  '/cantina_da_ro/icon-180.png',
-  '/cantina_da_ro/icon-192.png',
-  '/cantina_da_ro/icon-512.png',
-  'https://unpkg.com/lucide@latest',
+  '/cantina_da_ro/assets/img/logo.png',
+  '/cantina_da_ro/assets/img/caldo_costela.png',
+  '/cantina_da_ro/assets/img/caldo_feijao.png',
+  '/cantina_da_ro/assets/img/caldo_frango.png',
+  '/cantina_da_ro/assets/icons/icon-180.png',
+  '/cantina_da_ro/assets/icons/icon-192.png',
+  '/cantina_da_ro/assets/icons/icon-512.png',
+  'https://unpkg.com/lucide@latest/dist/umd/lucide.js',
   'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js',
   'https://cdn.jsdelivr.net/npm/chart.js',
   'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap'
 ];
 
-// Instalação do Service Worker
+// InstalaÃ§Ã£o do Service Worker
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -27,7 +39,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Ativação do Service Worker
+// AtivaÃ§Ã£o do Service Worker
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -39,11 +51,11 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
-// Interceptar requisições
+// Interceptar requisiÃ§Ãµes
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -53,11 +65,11 @@ self.addEventListener('fetch', event => {
           return response;
         }
 
-        // Clone da requisição
+        // Clone da requisiÃ§Ã£o
         const fetchRequest = event.request.clone();
 
         return fetch(fetchRequest).then(response => {
-          // Verifica se é uma resposta válida
+          // Verifica se Ã© uma resposta vÃ¡lida
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
