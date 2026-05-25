@@ -286,13 +286,36 @@
 
       <div style="margin-bottom:14px;">
         <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Quantidade de Marmitas</label>
-        <input type="number" id="editQtyInput" min="1" placeholder="1" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
-        <small style="font-size:11px;color:var(--muted);display:block;margin-top:4px;">💡 Valor recalcula automático (R$ 20/marmita)</small>
+        <input type="number" id="editQtyInput" min="1" placeholder="1" readonly style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
+        <small id="editTotalHint" style="font-size:11px;color:var(--muted);display:block;margin-top:4px;">Valor recalcula automático (R$ 20/marmita)</small>
       </div>
 
       <div style="margin-bottom:14px;">
         <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Itens do Pedido</label>
-        <input type="text" id="editItemsInput" placeholder="Galinhada, Vinagrete" style="width:100%;padding:12px;border-radius:8px;border:2px solid rgba(255,107,53,.3);background:rgba(0,0,0,.2);color:var(--text);font-size:15px;font-family:'Poppins',sans-serif;">
+        <div class="edit-products">
+          <div class="edit-product-row">
+            <div class="edit-product-name">
+              <strong>Costela</strong>
+              <span>R$ 20,00 cada</span>
+            </div>
+            <div class="edit-qty-control">
+              <button type="button" onclick="adjustEditProductQty('editQtyCostela', -1)">-</button>
+              <input type="number" id="editQtyCostela" min="0" value="0" inputmode="numeric" oninput="updateEditProductSummary()">
+              <button type="button" onclick="adjustEditProductQty('editQtyCostela', 1)">+</button>
+            </div>
+          </div>
+          <div class="edit-product-row">
+            <div class="edit-product-name">
+              <strong>Frango</strong>
+              <span>R$ 20,00 cada</span>
+            </div>
+            <div class="edit-qty-control">
+              <button type="button" onclick="adjustEditProductQty('editQtyFrango', -1)">-</button>
+              <input type="number" id="editQtyFrango" min="0" value="0" inputmode="numeric" oninput="updateEditProductSummary()">
+              <button type="button" onclick="adjustEditProductQty('editQtyFrango', 1)">+</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div style="margin-bottom:20px;">

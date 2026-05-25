@@ -555,13 +555,74 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
     }
 
     // Editar contato
+    function parseOrderItemsForEdit(itemsText){
+      const result = { Costela: 0, Frango: 0 };
+      const text = (itemsText || '').toString();
+
+      text.split(',').forEach(rawItem => {
+        const item = rawItem.trim();
+        if(!item) return;
+
+        const match = item.match(/^(\d+)x\s+(.+)$/i);
+        const qty = match ? parseInt(match[1], 10) : 1;
+        const label = (match ? match[2] : item).trim().toLowerCase();
+
+        if(label.includes('costela')){
+          result.Costela += isNaN(qty) ? 0 : qty;
+        }
+
+        if(label.includes('frango')){
+          result.Frango += isNaN(qty) ? 0 : qty;
+        }
+      });
+
+      return result;
+    }
+
+    function getEditProductItems(){
+      const costela = parseInt(document.getElementById('editQtyCostela').value || '0', 10) || 0;
+      const frango = parseInt(document.getElementById('editQtyFrango').value || '0', 10) || 0;
+      const items = [];
+
+      if(costela > 0) items.push({ label:'Costela', qty:costela });
+      if(frango > 0) items.push({ label:'Frango', qty:frango });
+
+      return items;
+    }
+
+    function updateEditProductSummary(){
+      ['editQtyCostela', 'editQtyFrango'].forEach(id => {
+        const input = document.getElementById(id);
+        if(!input) return;
+        const value = Math.max(0, parseInt(input.value || '0', 10) || 0);
+        input.value = value;
+      });
+
+      const items = getEditProductItems();
+      const quantity = items.reduce((sum, item) => sum + item.qty, 0);
+      const total = quantity * 20;
+
+      document.getElementById('editQtyInput').value = quantity || '';
+      document.getElementById('editTotalHint').textContent = `Valor recalcula automático: R$ ${total.toFixed(2).replace('.', ',')} (${quantity} porção${quantity !== 1 ? 's' : ''})`;
+    }
+
+    function adjustEditProductQty(id, delta){
+      const input = document.getElementById(id);
+      if(!input) return;
+      const nextValue = Math.max(0, (parseInt(input.value || '0', 10) || 0) + delta);
+      input.value = nextValue;
+      updateEditProductSummary();
+    }
+
     function openEditModal(order){
       currentOrder = order;
+      const items = parseOrderItemsForEdit(order.itens);
       document.getElementById('editNameInput').value = order.nome || '';
       document.getElementById('editContactInput').value = order.contato || '';
-      document.getElementById('editQtyInput').value = order.quantidade || 1;
-      document.getElementById('editItemsInput').value = order.itens || '';
+      document.getElementById('editQtyCostela').value = items.Costela;
+      document.getElementById('editQtyFrango').value = items.Frango;
       document.getElementById('editPaymentInput').value = order.pagamento || 'aguardando';
+      updateEditProductSummary();
       document.getElementById('editModal').classList.add('active');
       lucide.createIcons();
     }
@@ -569,11 +630,14 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
     async function confirmEdit(){
       const nome = document.getElementById('editNameInput').value.trim();
       const contato = document.getElementById('editContactInput').value.trim();
-      const quantidade = parseInt(document.getElementById('editQtyInput').value);
-      const itens = document.getElementById('editItemsInput').value.trim();
+      const editItems = getEditProductItems();
+      const quantidade = editItems.reduce((sum, item) => sum + item.qty, 0);
+      const itens = editItems.map(item => `${item.qty}x ${item.label}`).join(', ');
+      const valor = `R$ ${(quantidade * 20).toFixed(2).replace('.', ',')}`;
       const pagamento = document.getElementById('editPaymentInput').value;
 
       if(!nome || !contato || !quantidade){
+        showToast('Informe o cliente e pelo menos um produto.', 'error');
         return;
       }
 
@@ -584,6 +648,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
             nome: nome, 
             contato: contato, 
             quantidade: quantidade, 
+            valor: valor,
             itens: itens, 
             pagamento: pagamento 
           })

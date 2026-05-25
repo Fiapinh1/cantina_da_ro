@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'cantina-da-ro-v7';
+﻿const CACHE_NAME = 'cantina-da-ro-v8';
 const urlsToCache = [
   '/cantina_da_ro/',
   '/cantina_da_ro/index.html',

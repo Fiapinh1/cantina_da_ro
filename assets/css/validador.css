@@ -107,15 +107,15 @@
     .stats-grid{
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      margin-bottom:24px;
+      gap:8px;
+      margin-bottom:18px;
     }
 
     .stat-card{
       background:rgba(26,24,22,.7);
       border:2px solid #ff6b35;
-      border-radius:12px;
-      padding:14px 10px;
+      border-radius:10px;
+      padding:10px 8px;
       text-align:center;
       transition:all .3s;
       box-shadow:0 4px 15px rgba(255,107,53,.2);
@@ -128,15 +128,15 @@
     }
 
     .stat-number{
-      font-size:28px;
+      font-size:24px;
       font-weight:900;
       color:#ff6b35;
-      margin:0 0 4px 0;
+      margin:0 0 2px 0;
       text-shadow:0 0 15px rgba(255,107,53,.6);
     }
 
     .stat-label{
-      font-size:11px;
+      font-size:10px;
       font-weight:600;
       color:#a8a29e;
       text-transform:uppercase;
@@ -575,7 +575,23 @@
 
     @media (max-width: 768px){
       body{ padding:16px; }
-      .stats-grid{ grid-template-columns:repeat(2,1fr); }
+      .stats-grid{
+        grid-template-columns:repeat(4,1fr);
+        gap:6px;
+        margin-bottom:16px;
+      }
+      .stat-card{
+        padding:8px 4px;
+        border-width:1px;
+        border-radius:9px;
+      }
+      .stat-number{
+        font-size:20px;
+      }
+      .stat-label{
+        font-size:8px;
+        letter-spacing:.5px;
+      }
       .token-input{ font-size:28px; letter-spacing:6px; }
       .back-btn{ top:16px; left:16px; }
       .toast{ right:16px; left:16px; min-width:auto; }
