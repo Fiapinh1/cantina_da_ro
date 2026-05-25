@@ -407,9 +407,9 @@
       color:#111827;
     }
 
-    /* IMPRESSÃƒO */
+    /* IMPRESSÃO */
     @media print{
-      /* ===== CONFIGURAÃ‡ÃƒO GLOBAL ===== */
+      /* ===== CONFIGURAÇÃO GLOBAL ===== */
       body{
         background:#fff !important;
         color:#000 !important;
@@ -450,9 +450,9 @@
         display:none !important;
       }
 
-      /* ===== CABEÃ‡ALHO PROFISSIONAL ===== */
+      /* ===== CABEÇALHO PROFISSIONAL ===== */
       #reportContent::before{
-        content: "ðŸ¥£ CANTINA DA RÃ”";
+        content: "🥣 CANTINA DA RÔ";
         display:block;
         font-size:24px;
         font-weight:900;
@@ -464,7 +464,7 @@
       }
       
       #reportContent::after{
-        content: "RelatÃ³rio de Vendas - " attr(data-date);
+        content: "Relatório de Vendas - " attr(data-date);
         display:block;
         font-size:12px;
         color:#666;
@@ -474,7 +474,7 @@
         border-bottom:3px solid #ff6b35;
       }
 
-      /* ===== CARDS DE ESTATÃSTICAS ===== */
+      /* ===== CARDS DE ESTATÍSTICAS ===== */
       .cards-grid{
         display:grid !important;
         grid-template-columns:repeat(2, 1fr);
@@ -525,7 +525,7 @@
         margin:2px 0 0 0 !important;
       }
 
-      /* ===== GRÃFICO ===== */
+      /* ===== GRÁFICO ===== */
       .chart-container{
         display:block !important;
         page-break-inside:avoid;
@@ -552,7 +552,7 @@
         margin:0 auto;
       }
 
-      /* ===== SEÃ‡ÃƒO DE PEDIDOS ===== */
+      /* ===== SEÇÃO DE PEDIDOS ===== */
       .top-items{
         page-break-inside:avoid;
         background:#fff !important;
@@ -666,9 +666,9 @@
         font-weight:700;
       }
       
-      /* ===== RODAPÃ‰ ===== */
+      /* ===== RODAPÉ ===== */
       body::after{
-        content: "Sistema Cantina da RÃ´ | RelatÃ³rio gerado em " attr(data-date);
+        content: "Sistema Cantina da Rô | Relatório gerado em " attr(data-date);
         display:block;
         position:fixed;
         bottom:1cm;
@@ -682,7 +682,7 @@
         background:#fff;
       }
       
-      /* ===== QUEBRAS DE PÃGINA ===== */
+      /* ===== QUEBRAS DE PÁGINA ===== */
       .cards-grid,
       .chart-container,
       .order-item{
@@ -693,14 +693,14 @@
         page-break-after:avoid !important;
       }
       
-      /* Garantir que Ã­cones nÃ£o apareÃ§am quebrados */
+      /* Garantir que ícones não apareçam quebrados */
       i, svg{
         display:inline-block !important;
         width:12px !important;
         height:12px !important;
       }
       
-      /* Remover todos espaÃ§os desnecessÃ¡rios */
+      /* Remover todos espaços desnecessários */
       * {
         margin-top:0 !important;
       }

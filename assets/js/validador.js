@@ -31,7 +31,7 @@
         updateStats();
       } catch(error){
         console.error('Erro ao carregar pedidos:', error);
-        showToast('Erro ao carregar pedidos. Verifique a conexÃ£o.', 'error');
+        showToast('Erro ao carregar pedidos. Verifique a conexão.', 'error');
         
         // Mostrar 0 nos stats com erro
         document.getElementById('statTotal').textContent = '0';
@@ -41,14 +41,14 @@
       }
     }
 
-    // Atualizar estatÃ­sticas
+    // Atualizar estatísticas
     function updateStats(){
       console.log('Atualizando stats. Total de pedidos:', allOrders.length);
       
       // MOSTRAR TODOS OS PEDIDOS (removido filtro de data)
       const todayOrders = allOrders.filter(o => o.status !== 'cancelado');
       
-      console.log('Pedidos vÃ¡lidos (nÃ£o cancelados):', todayOrders.length);
+      console.log('Pedidos válidos (não cancelados):', todayOrders.length);
       
       const validated = todayOrders.filter(o => o.status === 'entregue').length;
       const pending = todayOrders.filter(o => o.status === 'pendente').length;
@@ -67,7 +67,7 @@
       const token = document.getElementById('tokenInput').value.trim().toUpperCase();
       
       if(!token){
-        showToast('Digite um token vÃ¡lido!', 'error');
+        showToast('Digite um token válido!', 'error');
         return;
       }
 
@@ -75,35 +75,35 @@
       const order = allOrders.find(o => o.token.toUpperCase() === token);
 
       if(!order){
-        showResult('error', 'âŒ', 'Token NÃ£o Encontrado', `Token ${token} nÃ£o existe`);
+        showResult('error', '❌', 'Token Não Encontrado', `Token ${token} não existe`);
         return;
       }
 
       currentOrder = order;
 
-      // Verificar se jÃ¡ foi entregue
+      // Verificar se já foi entregue
       if(order.status === 'entregue'){
-        showResult('warning', 'âš ï¸', 'JÃ¡ Foi Entregue!', 'Este pedido jÃ¡ foi validado');
+        showResult('warning', '⚠️', 'Já Foi Entregue!', 'Este pedido já foi validado');
         fillDetails(order, false);
         return;
       }
 
       // Verificar se foi cancelado
       if(order.status === 'cancelado'){
-        showResult('error', 'âŒ', 'Pedido Cancelado', 'Este pedido foi cancelado');
+        showResult('error', '❌', 'Pedido Cancelado', 'Este pedido foi cancelado');
         fillDetails(order, false);
         return;
       }
 
       // VERIFICAR PAGAMENTO
       if(order.pagamento === 'aguardando'){
-        showResult('warning', 'âš ï¸', 'Pagamento Pendente!', 'Cliente precisa pagar antes');
+        showResult('warning', '⚠️', 'Pagamento Pendente!', 'Cliente precisa pagar antes');
         fillDetails(order, false, true);
         return;
       }
 
       // TUDO OK - PODE ENTREGAR
-      showResult('success', 'âœ“', 'Pedido VÃ¡lido!', 'Pronto para entrega');
+      showResult('success', '✓', 'Pedido Válido!', 'Pronto para entrega');
       fillDetails(order, true);
     }
 
@@ -153,7 +153,7 @@
           </div>
           <div class="detail-content">
             <p class="detail-label">Quantidade</p>
-            <p class="detail-value">${order.quantidade} porÃ§Ã£o${order.quantidade > 1 ? 's' : ''}</p>
+            <p class="detail-value">${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</p>
           </div>
         </div>
 
@@ -175,7 +175,7 @@
             <p class="detail-label">Pagamento</p>
             <div class="payment-status ${order.pagamento === 'pago' ? 'paid' : 'pending'}">
               <i data-lucide="${order.pagamento === 'pago' ? 'check-circle' : 'clock'}"></i>
-              ${order.pagamento === 'pago' ? 'âœ“ Pago' : 'â³ Aguardando'}
+              ${order.pagamento === 'pago' ? '✓ Pago' : '⏳ Aguardando'}
             </div>
           </div>
         </div>
@@ -195,7 +195,7 @@
       if(needsPayment){
         warningBox.innerHTML = `
           <div class="payment-warning">
-            <div class="payment-warning-icon">âš ï¸</div>
+            <div class="payment-warning-icon">⚠️</div>
             <div class="payment-warning-text">
               <p class="payment-warning-title">Pagamento Pendente</p>
               <p class="payment-warning-desc">O cliente precisa pagar antes de retirar (${order.valor})</p>
@@ -206,7 +206,7 @@
         warningBox.innerHTML = '';
       }
 
-      // BOTÃ•ES DE AÃ‡ÃƒO
+      // BOTÕES DE AÇÃO
       if(canDeliver){
         actionsBox.innerHTML = `
           <button class="action-btn btn-confirm" onclick="confirmDelivery()">
@@ -226,7 +226,7 @@
           </button>
           <button class="action-btn btn-new" onclick="newSearch()">
             <i data-lucide="x-circle"></i>
-            Cancelar (Cliente NÃ£o Pagou)
+            Cancelar (Cliente Não Pagou)
           </button>
         `;
       } else {
@@ -254,7 +254,7 @@
         if(error) throw error;
 
         addToHistory(currentOrder);
-        showToast(`âœ“ Pedido de ${currentOrder.nome} entregue!`);
+        showToast(`✓ Pedido de ${currentOrder.nome} entregue!`);
         
         setTimeout(() => {
           newSearch();
@@ -281,7 +281,7 @@
         if(error) throw error;
 
         addToHistory(currentOrder);
-        showToast(`âœ“ Pagamento recebido! Pedido de ${currentOrder.nome} entregue!`);
+        showToast(`✓ Pagamento recebido! Pedido de ${currentOrder.nome} entregue!`);
         
         setTimeout(() => {
           newSearch();
@@ -302,7 +302,7 @@
       currentOrder = null;
     }
 
-    // Adicionar ao histÃ³rico
+    // Adicionar ao histórico
     function addToHistory(order){
       const item = {
         nome: order.nome,
@@ -320,7 +320,7 @@
       renderHistory();
     }
 
-    // Renderizar histÃ³rico
+    // Renderizar histórico
     function renderHistory(){
       const list = document.getElementById('historyList');
       
@@ -328,7 +328,7 @@
         list.innerHTML = `
           <div class="empty-history">
             <i data-lucide="inbox" style="width:48px;height:48px;opacity:.3;margin-bottom:12px;"></i>
-            <p>Nenhuma validaÃ§Ã£o ainda</p>
+            <p>Nenhuma validação ainda</p>
           </div>
         `;
         lucide.createIcons();
@@ -339,11 +339,11 @@
         <div class="history-item">
           <p class="history-name">${item.nome}</p>
           <p class="history-details">
-            <span>ðŸ”‘ ${item.token}</span>
-            <span>ðŸ’° ${item.valor}</span>
-            <span>${item.quantidade} porÃ§Ã£o${item.quantidade > 1 ? 's' : ''}</span>
-            <span>${item.pagamento === 'pago' ? 'âœ… Pago' : 'â³ Pendente'}</span>
-            <span>ðŸ• ${item.timestamp}</span>
+            <span>🔑 ${item.token}</span>
+            <span>💰 ${item.valor}</span>
+            <span>${item.quantidade} porção${item.quantidade > 1 ? 's' : ''}</span>
+            <span>${item.pagamento === 'pago' ? '✅ Pago' : '⏳ Pendente'}</span>
+            <span>🕐 ${item.timestamp}</span>
           </p>
         </div>
       `).join('');
@@ -370,7 +370,7 @@
       if(e.key === 'Enter') searchToken();
     });
 
-    // Auto-focus no input apÃ³s validaÃ§Ã£o
+    // Auto-focus no input após validação
     document.getElementById('tokenInput').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
     });

@@ -1,20 +1,20 @@
-﻿# Cantina da RÃ´ - Sistema de Pedidos de Caldos
+﻿# Cantina da Rô - Sistema de Pedidos de Caldos
 
-## MudanÃ§as Realizadas
-- Renomeado de "Galinhada da RÃ´" para "Cantina da RÃ´"
-- Alterado o cardÃ¡pio de galinhadas para caldos (Caldos, FeijÃ£o, Costela, Frango)
-- SubstituÃ­do Google Sheets/Google Script por Supabase como banco de dados
+## Mudanças Realizadas
+- Renomeado de "Galinhada da Rô" para "Cantina da Rô"
+- Alterado o cardápio de galinhadas para caldos (Caldos, Feijão, Costela, Frango)
+- Substituído Google Sheets/Google Script por Supabase como banco de dados
 
-## ConfiguraÃ§Ã£o do Supabase
+## Configuração do Supabase
 
 ### Passo 1: Criar uma conta no Supabase
 1. Acesse https://supabase.com/
-2. Crie uma conta ou faÃ§a login
+2. Crie uma conta ou faça login
 3. Crie um novo projeto
 
 ### Passo 2: Criar a tabela "pedidos"
 No painel do Supabase:
-1. VÃ¡ para "Table Editor"
+1. Vá para "Table Editor"
 2. Clique em "New Table"
 3. Nomeie a tabela como "pedidos"
 4. Adicione as seguintes colunas:
@@ -32,7 +32,7 @@ No painel do Supabase:
    - `status` (text, default: 'pendente')
 
 ### Passo 3: Obter as credenciais
-1. VÃ¡ para "Settings" â†’ "API"
+1. Vá para "Settings" → "API"
 2. Copie a "Project URL" (ex: `https://seu-projeto.supabase.co`)
 3. Copie a "anon public" key
 
@@ -50,8 +50,8 @@ Substitua:
 
 ## Funcionalidades
 - Dashboard para gerenciar pedidos
-- CriaÃ§Ã£o de novos pedidos com geraÃ§Ã£o de token
-- ValidaÃ§Ã£o de pedidos por token
-- RelatÃ³rios e estatÃ­sticas
-- ImpressÃ£o de relatÃ³rios
-- ExportaÃ§Ã£o para CSV
+- Criação de novos pedidos com geração de token
+- Validação de pedidos por token
+- Relatórios e estatísticas
+- Impressão de relatórios
+- Exportação para CSV

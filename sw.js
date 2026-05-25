@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'cantina-da-ro-v6';
+﻿const CACHE_NAME = 'cantina-da-ro-v7';
 const urlsToCache = [
   '/cantina_da_ro/',
   '/cantina_da_ro/index.html',
@@ -27,7 +27,7 @@ const urlsToCache = [
   'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap'
 ];
 
-// InstalaÃ§Ã£o do Service Worker
+// Instalação do Service Worker
 self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
@@ -39,7 +39,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// AtivaÃ§Ã£o do Service Worker
+// Ativação do Service Worker
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -55,7 +55,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Interceptar requisiÃ§Ãµes
+// Interceptar requisições
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -65,11 +65,11 @@ self.addEventListener('fetch', event => {
           return response;
         }
 
-        // Clone da requisiÃ§Ã£o
+        // Clone da requisição
         const fetchRequest = event.request.clone();
 
         return fetch(fetchRequest).then(response => {
-          // Verifica se Ã© uma resposta vÃ¡lida
+          // Verifica se é uma resposta válida
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }

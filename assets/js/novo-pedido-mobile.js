@@ -106,7 +106,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       const digits = contact.replace(/\D/g, '');
       const last4 = digits.slice(-4) || '0000';
       
-      // Garantir que sempre tenha 4 dÃ­gitos (adiciona zeros Ã  esquerda se necessÃ¡rio)
+      // Garantir que sempre tenha 4 dígitos (adiciona zeros à esquerda se necessário)
       return last4.padStart(4, '0');
     }
 
@@ -121,8 +121,8 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       const qty = items.reduce((sum, item) => sum + item.qty, 0);
       const total = qty * unitPrice;
 
-      $("vName").textContent = name || "â€”";
-      $("vContact").textContent = contact || "â€”";
+      $("vName").textContent = name || "—";
+      $("vContact").textContent = contact || "—";
 
       const currency = new Intl.NumberFormat("pt-BR", { 
         style:"currency", 
@@ -130,11 +130,11 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       }).format(total);
 
       $("inTotal").value = currency;
-      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porÃ§Ã£o${qty !== 1 ? "s" : ""} - ${currency}`;
+      $("vQty").textContent = `${qty.toString().padStart(2,"0")} porção${qty !== 1 ? "s" : ""} - ${currency}`;
 
       // Atualizar hidden
-      $("vNameHidden").textContent = name || "â€”";
-      $("vContactHidden").textContent = contact || "â€”";
+      $("vNameHidden").textContent = name || "—";
+      $("vContactHidden").textContent = contact || "—";
       $("vQtyHidden").textContent = $("vQty").textContent;
 
       const paymentValue = $("inPayment").value === "pago" ? "Pago" : "Aguardando Pagamento";
@@ -185,7 +185,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       const contact = safeText($("inContact").value);
 
       if(!name || !contact){
-        alert("âš ï¸ Preencha nome e telefone primeiro!");
+        alert("⚠️ Preencha nome e telefone primeiro!");
         return;
       }
 
@@ -201,14 +201,14 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
     });
 
     // Salvar
-    // VariÃ¡veis de controle
+    // Variáveis de controle
     let isSaving = false;
     let countdownInterval = null;
 
     $("btnSave").addEventListener("click", async ()=>{
       // Prevenir duplo clique
       if(isSaving){
-        console.log('JÃ¡ estÃ¡ salvando, ignorando clique duplo');
+        console.log('Já está salvando, ignorando clique duplo');
         return;
       }
 
@@ -216,12 +216,12 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       const contact = safeText($("inContact").value);
 
       if(!name || !contact){
-        alert("âš ï¸ Preencha Nome e Telefone!");
+        alert("⚠️ Preencha Nome e Telefone!");
         return;
       }
 
       if(!currentToken){
-        alert("âš ï¸ Clique em 'Gerar Token' primeiro!");
+        alert("⚠️ Clique em 'Gerar Token' primeiro!");
         return;
       }
 
@@ -276,7 +276,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
 
       } catch (error) {
         console.error("Erro ao salvar:", error);
-        alert("âŒ Erro ao salvar! Verifique o console.");
+        alert("❌ Erro ao salvar! Verifique o console.");
         isSaving = false;
         btn.disabled = false;
       } finally {
@@ -289,7 +289,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
     // Download PNG
     $("btnPNG").addEventListener("click", async ()=>{
       if(!currentToken){
-        alert("âš ï¸ Gere o token primeiro!");
+        alert("⚠️ Gere o token primeiro!");
         return;
       }
       if(!requireSelectedItem()) return;
@@ -315,13 +315,13 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
     // Compartilhar (Web Share API)
     $("btnShare").addEventListener("click", async ()=>{
       if(!currentToken){
-        alert("âš ï¸ Gere o token primeiro!");
+        alert("⚠️ Gere o token primeiro!");
         return;
       }
       if(!requireSelectedItem()) return;
 
       if(!navigator.share){
-        alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento nÃ£o suportado neste navegador. Use "Baixar" e envie manualmente.');
+        alert('<i data-lucide="phone" style="width:16px;height:16px;vertical-align:middle;"></i> Compartilhamento não suportado neste navegador. Use "Baixar" e envie manualmente.');
         return;
       }
 
@@ -338,8 +338,8 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
         try {
           await navigator.share({
             files: [file],
-            title: 'Pedido Cantina da RÃ´',
-            text: `Pedido Cantina da RÃ´ - Token: ${currentToken}`
+            title: 'Pedido Cantina da Rô',
+            text: `Pedido Cantina da Rô - Token: ${currentToken}`
           });
         } catch(err){
           console.log('Compartilhamento cancelado');
@@ -349,7 +349,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
 
     updateVoucher();
 
-    // BotÃ£o Novo Pedido
+    // Botão Novo Pedido
     $("btnNewOrder").addEventListener("click", ()=>{
       // Limpar campos
       $("inName").value = "";
@@ -425,7 +425,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       // Scroll para o topo
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      // Recriar Ã­cones
+      // Recriar ícones
       lucide.createIcons();
     }
 

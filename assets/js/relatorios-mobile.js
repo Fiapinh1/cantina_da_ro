@@ -40,7 +40,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
         document.getElementById('reportContent').style.display = 'block';
         
         if(allOrders.length === 0){
-          document.getElementById('reportContent').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--muted);"><h3>Nenhum pedido</h3><p>Crie pedidos para ver relatÃ³rios</p></div>';
+          document.getElementById('reportContent').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--muted);"><h3>Nenhum pedido</h3><p>Crie pedidos para ver relatórios</p></div>';
           return;
         }
         
@@ -49,13 +49,13 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
 
       } catch(error){
         console.error('Erro:', error);
-        document.getElementById('loadingState').innerHTML = '<p style="color:#ef4444;">âŒ Erro ao carregar</p>';
+        document.getElementById('loadingState').innerHTML = '<p style="color:#ef4444;">❌ Erro ao carregar</p>';
       }
     }
 
     function generateReports(){
       try {
-        // Filtrar apenas pedidos NÃƒO cancelados
+        // Filtrar apenas pedidos NÃO cancelados
         const activeOrders = allOrders.filter(o => o.status !== 'cancelado');
         
         const totalPorcoes = activeOrders.reduce((sum, o) => sum + parseInt(o.quantidade || 0), 0);
@@ -78,7 +78,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
           currency: 'BRL'
         }).format(totalReceita);
         document.getElementById('totalClientes').textContent = totalClientes;
-        document.getElementById('mediaPedido').textContent = `${mediaPedido} porÃ§Ãµes`;
+        document.getElementById('mediaPedido').textContent = `${mediaPedido} porções`;
         document.getElementById('taxaEntrega').textContent = `${taxaEntrega}%`;
         document.getElementById('totalPendentes').textContent = pendentes;
 
@@ -143,7 +143,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
           topItemsList.innerHTML = '<p style="text-align:center;color:var(--muted);padding:20px;">Nenhum item</p>';
         } else {
           sortedItems.forEach(([item, count]) => {
-            const emoji = item.toLowerCase().includes('caldos') ? 'ðŸ¥£' : item.toLowerCase().includes('feijÃ£o') ? 'ðŸ²' : item.toLowerCase().includes('costela') ? 'ðŸ¥©' : item.toLowerCase().includes('frango') ? 'ðŸ—' : 'ðŸ½ï¸';
+            const emoji = item.toLowerCase().includes('caldos') ? '🥣' : item.toLowerCase().includes('feijão') ? '🍲' : item.toLowerCase().includes('costela') ? '🥩' : item.toLowerCase().includes('frango') ? '🍗' : '🍽️';
             const row = document.createElement('div');
             row.className = 'item-row';
             row.innerHTML = `
@@ -177,8 +177,8 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       ordersList.innerHTML = filtered.map(order => {
         const pagamento = order.pagamento || 'aguardando';
         const pagamentoBadge = pagamento === 'pago' 
-          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">âœ… PAGO</span>'
-          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">â³ AGUARDANDO</span>';
+          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">✅ PAGO</span>'
+          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">⏳ AGUARDANDO</span>';
         
         return `
         <div class="order-item">
@@ -190,11 +190,11 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
             }</div>
           </div>
           <div class="order-details-row">
-            <div class="order-detail">ðŸ“± ${order.contato}</div>
-            <div class="order-detail">ðŸ›ï¸ ${order.quantidade} porÃ§Ã£o${order.quantidade > 1 ? 's' : ''}</div>
+            <div class="order-detail">📱 ${order.contato}</div>
+            <div class="order-detail">🛍️ ${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</div>
             <div class="order-detail"><i data-lucide="dollar-sign" style="width:18px;height:18px;"></i> ${order.valor}</div>
-            <div class="order-detail">ðŸ’° ${pagamentoBadge}</div>
-            <div class="order-detail">ðŸ”‘ ${order.token}</div>
+            <div class="order-detail">💰 ${pagamentoBadge}</div>
+            <div class="order-detail">🔑 ${order.token}</div>
           </div>
         </div>
       `;
@@ -234,13 +234,13 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       document.body.removeChild(link);
       
       // Mostrar mensagem
-      alert('âœ… RelatÃ³rio exportado com sucesso!\nArquivo: pedidos-galinhada-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.csv');
+      alert('✅ Relatório exportado com sucesso!\nArquivo: pedidos-galinhada-' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.csv');
     }
 
-    // VariÃ¡vel global para filtro de impressÃ£o
+    // Variável global para filtro de impressão
     let currentPrintFilter = 'todos';
 
-    // Definir filtro rÃ¡pido
+    // Definir filtro rápido
     function setQuickFilter(filter){
       currentPrintFilter = filter;
       
@@ -265,7 +265,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
         activeBtn.style.transform = 'scale(1.05)';
       }
       
-      // Atualizar descriÃ§Ã£o
+      // Atualizar descrição
       const descriptions = {
         'todos': 'Mostrando: Todos os pedidos',
         'pagos': 'Mostrando: Apenas pedidos PAGOS',
@@ -276,7 +276,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       
       document.getElementById('filterDescription').textContent = descriptions[filter];
       
-      // Aplicar filtro visual na lista (temporÃ¡rio)
+      // Aplicar filtro visual na lista (temporário)
       applyVisualFilter(filter);
     }
 
@@ -384,7 +384,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
             </div>
             <div class="order-detail">
               <span class="order-detail-label">Pedido</span>
-              <span class="order-detail-value">${order.quantidade || 0} porÃ§Ã£o${Number(order.quantidade) > 1 ? 's' : ''}</span>
+              <span class="order-detail-value">${order.quantidade || 0} porção${Number(order.quantidade) > 1 ? 's' : ''}</span>
             </div>
             <div class="order-detail">
               <span class="order-detail-label">Valor</span>
@@ -448,7 +448,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
 
       return;
       
-      // Filtrar pedidos conforme seleÃ§Ã£o
+      // Filtrar pedidos conforme seleção
       let filteredOrders = allOrders.filter(o => o.status !== 'cancelado');
       
       switch(currentPrintFilter){
@@ -471,8 +471,8 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       legacyOrdersList.innerHTML = filteredOrders.map(order => {
         const pagamento = order.pagamento || 'aguardando';
         const pagamentoBadge = pagamento === 'pago' 
-          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">âœ… PAGO</span>'
-          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">â³ AGUARDANDO</span>';
+          ? '<span style="background:rgba(34,197,94,.2);color:#22c55e;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">✅ PAGO</span>'
+          : '<span style="background:rgba(251,191,36,.2);color:#fbbf24;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;">⏳ AGUARDANDO</span>';
         
         return `
         <div class="order-item">
@@ -484,11 +484,11 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
             }</div>
           </div>
           <div class="order-details-row">
-            <div class="order-detail">ðŸ“± ${order.contato}</div>
-            <div class="order-detail">ðŸ›ï¸ ${order.quantidade} porÃ§Ã£o${order.quantidade > 1 ? 's' : ''}</div>
+            <div class="order-detail">📱 ${order.contato}</div>
+            <div class="order-detail">🛍️ ${order.quantidade} porção${order.quantidade > 1 ? 's' : ''}</div>
             <div class="order-detail"><i data-lucide="dollar-sign" style="width:18px;height:18px;"></i> ${order.valor}</div>
-            <div class="order-detail">ðŸ’° ${pagamentoBadge}</div>
-            <div class="order-detail">ðŸ”‘ ${order.token}</div>
+            <div class="order-detail">💰 ${pagamentoBadge}</div>
+            <div class="order-detail">🔑 ${order.token}</div>
           </div>
         </div>
       `;
@@ -498,7 +498,7 @@ const SUPABASE_URL = "https://hxqcejkoqmivlqffjqzq.supabase.co";
       setTimeout(() => {
         window.print();
         
-        // Restaurar lista original apÃ³s impressÃ£o
+        // Restaurar lista original após impressão
         setTimeout(() => {
           ordersList.innerHTML = originalList;
           lucide.createIcons();

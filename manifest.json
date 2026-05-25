@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Cantina da RÃ´",
-  "short_name": "Cantina da RÃ´",
-  "description": "Sistema de gerenciamento de pedidos da Cantina da RÃ´ - Vendas de Caldos",
+  "name": "Cantina da Rô",
+  "short_name": "Cantina da Rô",
+  "description": "Sistema de gerenciamento de pedidos da Cantina da Rô - Vendas de Caldos",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

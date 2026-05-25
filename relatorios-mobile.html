@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="description" content="RelatÃ³rios e estatÃ­sticas - Galinhada da RÃ´">
+  <meta name="description" content="Relatórios e estatísticas - Galinhada da Rô">
   <meta name="theme-color" content="#ff6b35">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Cantina da RÃ´">
-  <title>RelatÃ³rios - Cantina da RÃ´</title>
+  <meta name="apple-mobile-web-app-title" content="Cantina da Rô">
+  <title>Relatórios - Cantina da Rô</title>
 
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
@@ -22,8 +22,8 @@
 <body>
   <nav class="navbar">
     <div class="navbar-brand">
-      <img src="assets/img/logo.png" alt="Logo Cantina da RÃ´" class="brand-logo">
-      <span>Cantina da RÃ´</span>
+      <img src="assets/img/logo.png" alt="Logo Cantina da Rô" class="brand-logo">
+      <span>Cantina da Rô</span>
     </div>
     <div class="navbar-menu">
       <button class="nav-btn" onclick="window.location.href='index.html'">
@@ -36,7 +36,7 @@
       </button>
       <button class="nav-btn active">
         <i data-lucide="bar-chart-3"></i>
-        <span>RelatÃ³rios</span>
+        <span>Relatórios</span>
       </button>
     </div>
   </nav>
@@ -44,13 +44,13 @@
   <div class="container">
     
     <div class="header">
-      <h1><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> RelatÃ³rios</h1>
-      <p>AnÃ¡lise das vendas</p>
+      <h1><i data-lucide="bar-chart-3" style="width:20px;height:20px;vertical-align:middle;"></i> Relatórios</h1>
+      <p>Análise das vendas</p>
       
-      <!-- Filtros RÃ¡pidos para ImpressÃ£o -->
+      <!-- Filtros Rápidos para Impressão -->
       <div style="margin-top:16px;padding:12px;background:rgba(255,255,255,.05);border-radius:12px;border:2px solid rgba(255,107,53,.2);">
         <p style="margin:0 0 10px 0;font-size:12px;font-weight:700;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:1px;">
-          ðŸŽ¯ Filtros RÃ¡pidos
+          🎯 Filtros Rápidos
         </p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;">
           <button onclick="setQuickFilter('todos')" id="filterTodos" class="quick-filter-btn active" style="
@@ -65,7 +65,7 @@
             font-size:12px;
             transition:all .3s;
           ">
-            ðŸ“‹ Todos
+            📋 Todos
           </button>
           <button onclick="setQuickFilter('pagos')" id="filterPagos" class="quick-filter-btn" style="
             padding:10px;
@@ -79,7 +79,7 @@
             font-size:12px;
             transition:all .3s;
           ">
-            âœ… Pagos
+            ✅ Pagos
           </button>
           <button onclick="setQuickFilter('pendentes-pag')" id="filterPendentesPag" class="quick-filter-btn" style="
             padding:10px;
@@ -93,7 +93,7 @@
             font-size:12px;
             transition:all .3s;
           ">
-            â³ Aguardando
+            ⏳ Aguardando
           </button>
           <button onclick="setQuickFilter('entregues')" id="filterEntregues" class="quick-filter-btn" style="
             padding:10px;
@@ -107,7 +107,7 @@
             font-size:12px;
             transition:all .3s;
           ">
-            ðŸ“¦ Entregues
+            📦 Entregues
           </button>
           <button onclick="setQuickFilter('pendentes-ent')" id="filterPendentesEnt" class="quick-filter-btn" style="
             padding:10px;
@@ -121,7 +121,7 @@
             font-size:12px;
             transition:all .3s;
           ">
-            â±ï¸ Pendentes
+            ⏱️ Pendentes
           </button>
         </div>
         <p style="margin:10px 0 0 0;font-size:11px;color:var(--muted);text-align:center;">
@@ -145,7 +145,7 @@
           gap:8px;
         ">
           <i data-lucide="printer"></i>
-          Imprimir RelatÃ³rio
+          Imprimir Relatório
         </button>
         
         <button onclick="exportToExcel()" style="
@@ -177,7 +177,7 @@
       
       <div class="cards-grid">
         <div class="card">
-          <div class="card-title">ðŸ— Vendas</div>
+          <div class="card-title">🍗 Vendas</div>
           <div class="metric">
             <div class="metric-label">Marmitas Vendidas</div>
             <div class="metric-value" id="totalMarmitas">0</div>
@@ -195,13 +195,13 @@
             <div class="metric-value" id="totalClientes">0</div>
           </div>
           <div class="metric">
-            <div class="metric-label">MÃ©dia por Pedido</div>
+            <div class="metric-label">Média por Pedido</div>
             <div class="metric-value" id="mediaPedido" style="font-size:22px;">0</div>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-title">âœ… Entregas</div>
+          <div class="card-title">✅ Entregas</div>
           <div class="metric">
             <div class="metric-label">Taxa de Entrega</div>
             <div class="metric-value" id="taxaEntrega">0%</div>
@@ -228,7 +228,7 @@
         <div class="print-header print-only">
           <div class="print-brand-row">
             <div>
-              <div class="print-brand">Cantina da RÃ´</div>
+              <div class="print-brand">Cantina da Rô</div>
               <div class="print-title" id="printFilterTitle">Lista de Pedidos</div>
             </div>
             <div class="print-date" id="printDate">Gerado em --</div>
@@ -239,7 +239,7 @@
               <div class="print-summary-value" id="printTotalOrders">0</div>
             </div>
             <div class="print-summary-item">
-              <div class="print-summary-label">PorÃ§Ãµes</div>
+              <div class="print-summary-label">Porções</div>
               <div class="print-summary-value" id="printTotalQty">0</div>
             </div>
             <div class="print-summary-item">
